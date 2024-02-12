@@ -1,0 +1,57 @@
+version: '3.3'
+
+networks:
+  mynetwork:
+    driver: bridge
+
+
+services:
+  # PostgreSQL service
+  database:
+    image: postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - mynetwork
+    container_name: postgres_container
+
+  # Django service
+  django:
+    build:
+      context: backend/.
+      dockerfile: Dockerfile
+    image: video_transriber_backend_image
+    privileged: true
+    env_file: .env
+    depends_on:
+      - database
+    ports:
+      - "8000:8000"
+    networks:
+      - mynetwork
+    volumes:
+      - ./backend:/app  # Mount your project directory to the /app directory in the container
+    container_name: django_container
+
+  react_frontend:
+    build:
+      context: frontend/.
+      dockerfile: Dockerfile
+    image: video_transcriber_frontend_image
+    environment: 
+      - REACT_APP_URL=http://django:8000/
+    ports:
+      - "3000:3000"
+    networks: 
+      - mynetwork
+    volumes:
+      - ./frontend:/app/frontend/
+    depends_on:
+      - django
+    container_name: react_container
+
+

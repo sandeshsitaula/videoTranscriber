@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+sleep 6s
+# Check if migrations need to be applied
+python manage.py showmigrations | grep -q "0 "  # Checks if there are 0 unapplied migrations
+MIGRATION_STATUS=$?
+
+# Apply migrations if needed
+if [ $MIGRATION_STATUS -ne 0 ]; then
+    echo "Applying migrations..."
+    python manage.py migrate
+fi
+
+# Start the Django development server
+echo "Starting Django development server..."
+
+
+python manage.py runserver 0.0.0.0:8000
