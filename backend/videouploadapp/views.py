@@ -12,9 +12,7 @@ def video_upload(request):
         total_chunks = int(request.POST.get('totalChunks'))
         
         # Define the directory where you want to save the audio file
-        audio_dir = '~/media'
-        print('hello')
-        
+        audio_dir = 'media'
         # Create the directory if it doesn't exist
         if not os.path.exists(audio_dir):
             os.makedirs(audio_dir)
@@ -30,7 +28,8 @@ def video_upload(request):
         # If it's the last chunk, merge all chunks and convert to audio
         if chunk_number == total_chunks - 1:
             # Extract the filename from the uploaded video file
-            video_filename = os.path.splitext(video_chunk.name)[0]
+            video_filename = request.POST.get('videoName')
+            print(video_filename)
             
             # Define the audio file name with the .wav extension
             audio_file_name = f'{video_filename}.wav'

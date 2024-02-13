@@ -6,10 +6,16 @@ const CHUNK_SIZE = 1 * 1024 * 1024; // 1MB chunk size
 const UploadForm = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-
+  const [videoName,setVideoName]=useState('')
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
+    var tempVideoName=event.target.files[0].name.split('.').slice(0,-1).join(".")
+    console.log(tempVideoName)
+    setVideoName(tempVideoName)
+
+
   };
+
 
   const handleUpload = async () => {
     if (!file) return;
@@ -23,12 +29,13 @@ const UploadForm = () => {
       while (start < file.size) {
         const formData = new FormData();
         formData.append('video', file.slice(start, end));
+        formData.append('videoName', videoName);
 
         // Add metadata to identify the chunk
         formData.append('chunkNumber', chunkNumber);
         formData.append('totalChunks', Math.ceil(file.size / CHUNK_SIZE));
 
-        await fetch('http://localhost:8000/api/videoupload/', {
+        await fetch('http://meet.fractalnetworks.co:8000/api/videoupload/', {
           method: 'POST',
           body: formData
         });

@@ -4,7 +4,8 @@ FROM python:3.11
 # Set environment variables
 ENV PYTHONUNBUFFERED 1
 
-
+RUN apt-get update \
+ && apt-get install -y ffmpeg
 # Set the working directory
 WORKDIR /app
 
