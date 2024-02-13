@@ -17,7 +17,7 @@ services:
       - "5432:5432"
     networks:
       - mynetwork
-    container_name: postgres_container
+    container_name: postgres_container_video
 
   # Django service
   django:
@@ -35,7 +35,7 @@ services:
       - mynetwork
     volumes:
       - ./backend:/app  # Mount your project directory to the /app directory in the container
-    container_name: django_container
+    container_name: django_container_video
 
   react_frontend:
     build:
@@ -52,6 +52,6 @@ services:
       - ./frontend:/app/frontend/
     depends_on:
       - django
-    container_name: react_container
+    container_name: react_container_video
 
 

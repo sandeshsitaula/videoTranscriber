@@ -56,9 +56,9 @@ MIDDLEWARE = [
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://react_frontend:3000",
-    "http://localhost:3000",
-    "http://react_container:3000",  # Use the service name, replace 3000 with your actual port
+    "http://react_frontend:5000",
+    "http://localhost:5000",
+    "http://react_container:5000",  # Use the service name, replace 3000 with your actual port
     # Add more origins if needed
 ]
 
