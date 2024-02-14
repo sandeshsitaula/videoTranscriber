@@ -100,7 +100,11 @@ DATABASES = {
     }
 }
 
+# Set the maximum size for request bodies (including file uploads) to be held in
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB in bytes
 
+# Set the maximum size for file uploads (in memory) before they are streameddisk
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB in bytes
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

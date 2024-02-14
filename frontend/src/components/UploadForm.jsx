@@ -1,7 +1,7 @@
 // UploadForm.js
 import  { useState } from 'react';
-
-const CHUNK_SIZE = 1 * 1024 * 1024; // 1MB chunk size
+import axiosInstance from '../axiosInstance'
+const CHUNK_SIZE = 10 * 1024 * 1024; // 1MB chunk size
 
 const UploadForm = () => {
   const [file, setFile] = useState(null);
@@ -36,18 +36,15 @@ const UploadForm = () => {
         formData.append('totalChunks', Math.ceil(file.size / CHUNK_SIZE));
 
          response=await
-fetch('http://meet.fractalnetworks.co:8000/api/videoupload/', {
-          method: 'POST',
-          body: formData
-        });
+axiosInstance.post('videoupload/',
+formData ) ;
 
         chunkNumber++;
         start = end;
         end = Math.min(start + CHUNK_SIZE, file.size);
       }
 
-      const result=await response.json()
-      console.log(result)
+      console.log(response.data)
       console.log('Upload complete');
     } catch (error) {
       console.error('Error uploading chunk:', error);
