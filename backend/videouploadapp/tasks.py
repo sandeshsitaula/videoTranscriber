@@ -6,7 +6,6 @@ def generate_subtitles(audio_path,video_name):
     subtitle_string=""
     try:
         if_video_exists=subtitle_storage_model.objects.filter(video_name=video_name)[:1]
-        print(len(if_video_exists)==0)
         if len(if_video_exists)==0:
 
             model = whisper.load_model("tiny")

@@ -58,8 +58,8 @@ def video_upload(request):
                 for i in range(total_chunks):
                     os.remove(os.path.join(video_dir, f'temp_chunk_{i}.mp4'))
 
-                generate_subtitles(audio_file_path,concatenated_chunks_path)
-                return JsonResponse({'status': 'success'})
+                generated_subtitle_data=generate_subtitles(audio_file_path,concatenated_chunks_path)
+                return JsonResponse({'status': 'success','data':generated_subtitle_data})
             else:
                 return JsonResponse({'status': 'chunk_uploaded'})
 

@@ -25,7 +25,7 @@ const UploadForm = () => {
       var start = 0;
       var end = Math.min(CHUNK_SIZE, file.size);
       let chunkNumber = 0;
-
+      let response
       while (start < file.size) {
         const formData = new FormData();
         formData.append('video', file.slice(start, end));
@@ -35,7 +35,8 @@ const UploadForm = () => {
         formData.append('chunkNumber', chunkNumber);
         formData.append('totalChunks', Math.ceil(file.size / CHUNK_SIZE));
 
-        await fetch('http://meet.fractalnetworks.co:8000/api/videoupload/', {
+         response=await
+fetch('http://meet.fractalnetworks.co:8000/api/videoupload/', {
           method: 'POST',
           body: formData
         });
@@ -45,6 +46,8 @@ const UploadForm = () => {
         end = Math.min(start + CHUNK_SIZE, file.size);
       }
 
+      const result=await response.json()
+      console.log(result)
       console.log('Upload complete');
     } catch (error) {
       console.error('Error uploading chunk:', error);
