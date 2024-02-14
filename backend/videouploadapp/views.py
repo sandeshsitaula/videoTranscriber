@@ -78,7 +78,6 @@ def cut_video_request(request):
         data=json.loads(request.body)
         subtitle_to_cut=data.get('subtitleToCut')
         video_name=data.get('videoName')
-        print(subtitle_to_cut,video_name)
 
         response=cut_video(video_name,subtitle_to_cut)
         print(response)
