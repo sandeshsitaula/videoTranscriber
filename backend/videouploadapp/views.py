@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from videouploadapp.tasks import generate_subtitles,cut_video
+from django.http import StreamingHttpResponse
 @csrf_exempt
 def video_upload(request):
     try:
@@ -69,7 +70,7 @@ def video_upload(request):
     except Exception as e:
         error=str(e)
         print(error)
-        return JsonResponse({'status':"Error",'error':f"Unexpected error {error}"},status=400)
+        return JsonResponse({'status':"Error",'message':f"Unexpected error {error}"},status=400)
 
 
 @csrf_exempt
@@ -89,14 +90,33 @@ def cut_video_request(request):
     except Exception as e:
         error=str(e)
         print(error)
-        return JsonResponse({'status':"Error","error":f"unexpected error:{error}"},status=400)
+        return JsonResponse({'status':"Error","message":f"unexpected error:{error}"},status=400)
 
 @csrf_exempt
 def file_download(request):
     try:
         data=json.loads(request.body)
         filename=data.get('filename')
+        print(filename)
+        file_full_path = os.path.abspath(filename)
+        print(file_full_path)
+        if not os.path.exists(file_full_path):
+            return HttpResponse("File not found", status=404)
+
+        def file_iterator(file_path, chunk_size=8192):
+            with open(file_path, 'rb') as f:
+                while True:
+                    chunk = f.read(chunk_size)
+                    if not chunk:
+                        break
+                    yield chunk
+
+        response = StreamingHttpResponse(file_iterator(file_full_path))
+        response['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(file_full_path)
+        return response
+
+
     except Exception as e:
         error=str(e)
         print(error)
-        return JsonResponse({'status':"Error","error":f"Unexpected error : {error}"},status=400)
+        return JsonResponse({'status':"Error","message":f"Unexpected error : {error}"},status=400)

@@ -64,7 +64,7 @@ def cut_video_command(input_video, output_video, start_time, end_time):
 
 def cut_video(video_name,subtitle_to_cut):
     try:
-        new_subtitle_array=subtitle_to_cut.replace('\n',"").split(' ')
+        new_subtitle_array=subtitle_to_cut.strip().split(' ')
         video_dir='media/video'
         cut_video_dir='media/cut'
         if not os.path.exists(cut_video_dir):
@@ -78,11 +78,10 @@ def cut_video(video_name,subtitle_to_cut):
         if start_index is None:
             return {'status':'error',"message":"Your subtitle substring doesnot exist"}
 
+        #since they are stored as string changing them to float
         timestamp_start=float(get_data_from_db[0].timestamp_array[start_index].split(',')[0].strip('()'))
-
         timestamp_end=float(get_data_from_db[0].timestamp_array[end_index].split(',')[1].strip('()'))
-        print(get_data_from_db[0].timestamp_array)
-        print(timestamp_start,timestamp_end)
+
         cut_video_command(input_video_path,output_video_path,timestamp_start,timestamp_end)
         return {'status':'OK','original_video':input_video_path,'cut_video':output_video_path,'message':"video cut successfully"}
 
@@ -90,30 +89,3 @@ def cut_video(video_name,subtitle_to_cut):
         err=str(e)
         print(err)
         return {'status':'error',"message":f"error {err}"}
-
-'''
-
-
-
-def cut_video(input_video, output_video, start_time, end_time):
-    start_time_str = str(int(start_time))
-    end_time_str = str(int(end_time))
-    # Command to cut the video using ffmpeg
-    command = ['ffmpeg', '-y', '-copyts', '-i', input_video, '-ss',
-start_time_str, '-to', end_time_str, '-c:v', 'libx264', '-preset', 'ultrafast',
-'-crf', '23', '-c:a', 'aac', '-b:a', '128k', output_video]    # Run the command
-    subprocess.run(command)
-
-
-
-start_index, end_index = find_indices_of_input(word_array, input_text)
-print(timestamp_array[start_index],timestamp_array[end_index])
-
-input_video = 'taskiq.mp4'
-output_video = 'cut_taskiq.mp4'
-start_time = timestamp_array[start_index][0]
-end_time = timestamp_array[end_index][1]
-
-cut_video(input_video, output_video, start_time, end_time)
-print(start_index,end_index)
-'''

@@ -65,14 +65,47 @@ const UploadForm = () => {
     }
   };
 
-  const handleFileDownload=(target)=>{
+   const handleFileDownload=async(target)=>{
     if (loading){
       alert("In progress.Wait a while")
       return
     }
     setLoading(true)
+    try{
+    const postData={
+         'filename':target
+      }
+      const response =await axiosInstance.post('filedownload/',postData,{
+        responseType:'blob'
+      })
+          // Create a blob object from the response data
+    const blob = new Blob([response.data], { type: 'application/octet-stream'
+});
 
+    // Create a temporary anchor element to trigger the download
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', target); // Set the download attribute tothe filename
+    document.body.appendChild(link);
+    // Trigger the download
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+      console.log(response.data)
+      setLoading(false);
+    } catch (error) {
+      console.log(error)
+      setLoading(false);
+      if (error.response){
+        alert(error.response.data.message)
+      }else{
+        alert(error)
+      }
   }
+   }
   return (
     <>
     {showModal && <CutVideoModal videoName={videoName}
@@ -95,11 +128,11 @@ className="subtitleText">
       <Button variant="primary" onClick={()=>setShowModal(true)}>Cut
 Video</Button>
 {originalVideoName.length>0 && cutVideoName.length>0 &&  <div
-style={{display:'flex'}}>
+style={{display:'flex',marginTop:'2rem',justifyContent:'center'}}>
      <Button variant="primary" disabled={loading}
 onClick={()=>handleFileDownload(originalVideoName)}>Download Original
 Video</Button>
- <Button variant="primary" disabled={loading}
+ <Button  style={{marginLeft:'2rem'}}variant="primary" disabled={loading}
 onClick={()=>handleFileDownload(cutVideoName)}>Download Cut
 Video</Button>
     </div>
