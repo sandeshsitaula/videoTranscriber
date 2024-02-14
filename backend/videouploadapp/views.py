@@ -83,7 +83,7 @@ def cut_video_request(request):
         print(response)
         if response['status']=='OK':
 
-            return JsonResponse({'status':"success","message":"Video  successfully cut you can download now "},status=200)
+            return JsonResponse({'status':"success",'original_video':response['original_video'],'cut_video':response['cut_video'], "message" : "Video  successfully cut you can download now "},status=200)
         else:
             return JsonResponse({'status':"some error occured","message":response['message']},status=400)
     except Exception as e:

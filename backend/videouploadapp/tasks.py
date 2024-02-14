@@ -84,7 +84,7 @@ def cut_video(video_name,subtitle_to_cut):
         print(get_data_from_db[0].timestamp_array)
         print(timestamp_start,timestamp_end)
         cut_video_command(input_video_path,output_video_path,timestamp_start,timestamp_end)
-        return {'status':'OK','message':"video cut successfully"}
+        return {'status':'OK','original_video':input_video_path,'cut_video':output_video_path,'message':"video cut successfully"}
 
     except Exception as e:
         err=str(e)

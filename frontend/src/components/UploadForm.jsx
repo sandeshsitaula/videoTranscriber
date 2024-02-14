@@ -1,5 +1,5 @@
 // UploadForm.js
-import  { useState } from 'react';
+import  { useState ,useEffect} from 'react';
 import {Button} from 'react-bootstrap'
 import axiosInstance from '../axiosInstance'
 import {CutVideoModal} from './CutVideoModal'
@@ -7,13 +7,20 @@ import {CutVideoModal} from './CutVideoModal'
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10MB chunk size
 
 const UploadForm = () => {
+
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [videoName,setVideoName]=useState('')
   const [subtitleData,setSubtitleData]=useState('')
   const [showModal,setShowModal]=useState(false)
   const [subtitleToCut,setSubtitleToCut]=useState('')
+  const [originalVideoName,setOrignalVideoName]=useState('')
+  const [cutVideoName,setCutVideoName]=useState('')
 
+
+  useEffect(()=>{
+    console.log(originalVideoName,cutVideoName)
+  })
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
     var tempVideoName=event.target.files[0].name.split('.').slice(0,-1).join(".")
@@ -48,7 +55,7 @@ formData ) ;
         end = Math.min(start + CHUNK_SIZE, file.size);
       }
 
-      console.log(response.data)
+//       console.log(response.data)
       setSubtitleData(response.data.data)
       console.log('Upload complete');
     } catch (error) {
@@ -63,7 +70,8 @@ formData ) ;
     <>
     {showModal && <CutVideoModal videoName={videoName}
 subtitleToCut={subtitleToCut} setSubtitleToCut={setSubtitleToCut}
-setModal={setShowModal} />}
+setModal={setShowModal} setOriginalVideoName={setOrignalVideoName}
+setCutVideoName={setCutVideoName} />}
 
     <div style={{backgroundColor:'#242424'}}>
     <div style={{color:'white'}}

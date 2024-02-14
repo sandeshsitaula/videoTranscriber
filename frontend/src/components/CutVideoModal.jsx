@@ -27,11 +27,17 @@ import axiosInstance from '../axiosInstance'
       const response =await axiosInstance.post('cutvideo/',postData)
       console.log(response.data)
       alert(response.data.message);
+      props.setOriginalVideoName(response.data.original_video)
+      props.setCutVideoName(response.data.cut_video)
       setLoading(false);
 
     } catch (error) {
       console.log(error)
-      alert(error.response.data.message);
+      if (error.response){
+        alert(error.response.data.message)
+      }else{
+        alert(error)
+      }
       setLoading(false);
     }
   }
