@@ -31,7 +31,7 @@ import axiosInstance from '../axiosInstance'
 
     } catch (error) {
       console.log(error)
-      alert(error.error);
+      alert(error.response.data.message);
       setLoading(false);
     }
   }

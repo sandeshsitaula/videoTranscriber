@@ -67,6 +67,9 @@ def cut_video(video_name,subtitle_to_cut):
 
         start_index, end_index = find_indices_of_input(get_data_from_db[0].subtitle_array, new_subtitle_array)
         print(start_index,end_index)
+        if start_index is None:
+            return {'status':'error',"message":"Your subtitle substring doesnot exist"}
+
         print('-----------')
         return {'status':'OK','message':"video cut successfully"}
 
