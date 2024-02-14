@@ -48,6 +48,7 @@ def video_upload(request):
                 with open(concatenated_chunks_path, 'wb+') as destination:
                     for i in range(total_chunks):
                         chunk_path = os.path.join(video_dir, f'temp_chunk_{i}.mp4')
+
                         with open(chunk_path, 'rb') as source:
                             destination.write(source.read())
 

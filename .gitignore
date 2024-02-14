@@ -10,7 +10,7 @@ __pycache__/
 *.pyd
 *.pyz
 *.pyw
-
+*.kate-swp
 # Virtual environment
 venv/
 env/

@@ -12,8 +12,6 @@ const UploadForm = () => {
     var tempVideoName=event.target.files[0].name.split('.').slice(0,-1).join(".")
     console.log(tempVideoName)
     setVideoName(tempVideoName)
-
-
   };
 
 
