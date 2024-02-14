@@ -89,4 +89,14 @@ def cut_video_request(request):
     except Exception as e:
         error=str(e)
         print(error)
-        return JsonResponse({'status':"Error","error":f"unexpected error:{error}"})
+        return JsonResponse({'status':"Error","error":f"unexpected error:{error}"},status=400)
+
+@csrf_exempt
+def file_download(request):
+    try:
+        data=json.loads(request.body)
+        filename=data.get('filename')
+    except Exception as e:
+        error=str(e)
+        print(error)
+        return JsonResponse({'status':"Error","error":f"Unexpected error : {error}"},status=400)

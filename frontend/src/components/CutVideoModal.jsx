@@ -13,7 +13,7 @@ import axiosInstance from '../axiosInstance'
     if (loading) {
       return;
     }
-    if (props.subtitleToCut.length<=1){
+    if (props.subtitleToCut.length<=0){
         alert("enter some subtitle to cut")
         return
     }

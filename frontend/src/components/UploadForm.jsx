@@ -16,6 +16,7 @@ const UploadForm = () => {
   const [subtitleToCut,setSubtitleToCut]=useState('')
   const [originalVideoName,setOrignalVideoName]=useState('')
   const [cutVideoName,setCutVideoName]=useState('')
+  const [loading,setLoading]=useState(false)
 
 
   useEffect(()=>{
@@ -46,9 +47,7 @@ const UploadForm = () => {
         formData.append('chunkNumber', chunkNumber);
         formData.append('totalChunks', Math.ceil(file.size / CHUNK_SIZE));
 
-         response=await
-axiosInstance.post('videoupload/',
-formData ) ;
+         response=await axiosInstance.post('videoupload/',formData ) ;
 
         chunkNumber++;
         start = end;
@@ -66,6 +65,14 @@ formData ) ;
     }
   };
 
+  const handleFileDownload=(target)=>{
+    if (loading){
+      alert("In progress.Wait a while")
+      return
+    }
+    setLoading(true)
+
+  }
   return (
     <>
     {showModal && <CutVideoModal videoName={videoName}
@@ -83,9 +90,20 @@ className="fileUpload">
     </div>
     {subtitleData &&<div style={{marginTop:'5rem',color:'white'}}
 className="subtitleText">
+
     <div style={{textAlign:'center'}}>
       <Button variant="primary" onClick={()=>setShowModal(true)}>Cut
 Video</Button>
+{originalVideoName.length>0 && cutVideoName.length>0 &&  <div
+style={{display:'flex'}}>
+     <Button variant="primary" disabled={loading}
+onClick={()=>handleFileDownload(originalVideoName)}>Download Original
+Video</Button>
+ <Button variant="primary" disabled={loading}
+onClick={()=>handleFileDownload(cutVideoName)}>Download Cut
+Video</Button>
+    </div>
+}
     </div>
 
     <h4>Generated Subtitles</h4>
