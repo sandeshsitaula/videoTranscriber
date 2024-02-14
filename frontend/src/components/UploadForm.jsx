@@ -4,7 +4,7 @@ import {Button} from 'react-bootstrap'
 import axiosInstance from '../axiosInstance'
 import {CutVideoModal} from './CutVideoModal'
 
-const CHUNK_SIZE = 10 * 1024 * 1024; // 1MB chunk size
+const CHUNK_SIZE = 10 * 1024 * 1024; // 10MB chunk size
 
 const UploadForm = () => {
   const [file, setFile] = useState(null);
@@ -12,6 +12,7 @@ const UploadForm = () => {
   const [videoName,setVideoName]=useState('')
   const [subtitleData,setSubtitleData]=useState('')
   const [showModal,setShowModal]=useState(false)
+  const [subtitleToCut,setSubtitleToCut]=useState('')
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -60,7 +61,10 @@ formData ) ;
 
   return (
     <>
-    {showModal && <CutVideoModal setModal={setShowModal} />}
+    {showModal && <CutVideoModal videoName={videoName}
+subtitleToCut={subtitleToCut} setSubtitleToCut={setSubtitleToCut}
+setModal={setShowModal} />}
+
     <div style={{backgroundColor:'#242424'}}>
     <div style={{color:'white'}}
 className="fileUpload">

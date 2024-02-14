@@ -3,8 +3,8 @@ import os
 import subprocess
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
-from videouploadapp.tasks import generate_subtitles
+import json
+from videouploadapp.tasks import generate_subtitles,cut_video
 @csrf_exempt
 def video_upload(request):
     try:
@@ -72,4 +72,22 @@ def video_upload(request):
         return JsonResponse({'status':"Error",'error':f"Unexpected error {error}"},status=400)
 
 
-def cut_video(request):
+@csrf_exempt
+def cut_video_request(request):
+    try:
+        data=json.loads(request.body)
+        subtitle_to_cut=data.get('subtitleToCut')
+        video_name=data.get('videoName')
+        print(subtitle_to_cut,video_name)
+
+        response=cut_video(video_name,subtitle_to_cut)
+        print(response)
+        if response['status']=='OK':
+
+            return JsonResponse({'status':"success","message":"Video  successfully cut you can download now "},status=200)
+        else:
+            return JsonResponse({'status':"some error occured","message":response.message},status=400)
+    except Exception as e:
+        error=str(e)
+        print(error)
+        return JsonResponse({'status':"Error","error":f"unexpected error:{error}"})

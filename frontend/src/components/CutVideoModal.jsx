@@ -1,11 +1,11 @@
   import {Modal,FormControl,Form,Col,Button} from 'react-bootstrap'
 import {useState} from 'react'
+import axiosInstance from '../axiosInstance'
  export const CutVideoModal=(props)=>{
     const [loading, setLoading] = useState(false);
-    const [subtitleToCut,setSubtitleToCut]=useState('')
 
     function handleChange(e){
-    setSubtitleToCut(e.target.value)
+    props.setSubtitleToCut(e.target.value)
     console.log(e.target.value)
     }
 
@@ -13,17 +13,24 @@ import {useState} from 'react'
     if (loading) {
       return;
     }
-    if (subtitleToCut.length<=1){
+    if (props.subtitleToCut.length<=1){
         alert("enter some subtitle to cut")
         return
     }
     setLoading(true);
     try {
-      const response =
+     const postData={
+         'subtitleToCut':props.subtitleToCut,
+        'videoName':props.videoName,
+
+      }
+      const response =await axiosInstance.post('cutvideo/',postData)
+      console.log(response.data)
       alert(response.data.message);
       setLoading(false);
 
     } catch (error) {
+      console.log(error)
       alert(error.error);
       setLoading(false);
     }
@@ -49,7 +56,7 @@ keyboard={false}>
                   placeholder="Paste the part of generated subtitle"
                   as="textarea"
                   onChange={(e)=>{handleChange(e)}}
-                  value={subtitleToCut}
+                  value={props.subtitleToCut}
                   rows={5} />
 
                       <Button
