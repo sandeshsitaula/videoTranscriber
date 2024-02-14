@@ -93,26 +93,47 @@ def cut_video_request(request):
         return JsonResponse({'status':"Error","message":f"unexpected error:{error}"},status=400)
 
 @csrf_exempt
-def file_download(request):
+def file_download(request,filename):
     try:
-        data=json.loads(request.body)
-        filename=data.get('filename')
-        print(filename)
+
         file_full_path = os.path.abspath(filename)
         print(file_full_path)
         if not os.path.exists(file_full_path):
             return HttpResponse("File not found", status=404)
 
-        def file_iterator(file_path, chunk_size=8192):
+        def file_iterator(file_path, chunk_size=1*1024*1024):
             with open(file_path, 'rb') as f:
-                while True:
-                    chunk = f.read(chunk_size)
-                    if not chunk:
-                        break
-                    yield chunk
+                f.seek(0, os.SEEK_END)
+                file_size = f.tell()
 
+                range_header = request.headers.get('Range')
+                if range_header:
+                    start_byte, end_byte = range_header.strip().split('=')[1].split('-')
+                    start_byte = int(start_byte)
+                    end_byte = int(end_byte) if end_byte else file_size - 1
+
+                    f.seek(start_byte)
+                    remaining_bytes = end_byte - start_byte + 1
+                    while remaining_bytes > 0:
+                        chunk = f.read(min(chunk_size, remaining_bytes))
+                        if not chunk:
+                            break
+                        yield chunk
+                        remaining_bytes -= len(chunk)
+                else:
+                    f.seek(0)
+                    while True:
+                        chunk = f.read(chunk_size)
+                        if not chunk:
+                            break
+                        yield chunk
+
+        file_size = os.path.getsize(file_full_path)
+        print(file_size)
         response = StreamingHttpResponse(file_iterator(file_full_path))
         response['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(file_full_path)
+        response['Content-Type'] = 'application/octet-stream'  # Set the Content-Type header
+        response['Content-Length'] = file_size
         return response
 
 

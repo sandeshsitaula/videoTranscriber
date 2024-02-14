@@ -1,7 +1,8 @@
-from django.urls import path 
+from django.urls import path,re_path
+
 from videouploadapp import views
 urlpatterns = [
     path('videoupload/',views.video_upload),
     path('cutvideo/',views.cut_video_request),
-    path('filedownload/',views.file_download),
+    re_path(r'^filedownload/(?P<filename>.+)/$', views.file_download),
 ]

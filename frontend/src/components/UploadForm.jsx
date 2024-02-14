@@ -66,35 +66,25 @@ const UploadForm = () => {
   };
 
    const handleFileDownload=async(target)=>{
+     console.log('hello')
     if (loading){
       alert("In progress.Wait a while")
       return
     }
     setLoading(true)
     try{
-    const postData={
-         'filename':target
-      }
-      const response =await axiosInstance.post('filedownload/',postData,{
-        responseType:'blob'
-      })
-          // Create a blob object from the response data
-    const blob = new Blob([response.data], { type: 'application/octet-stream'
-});
+        const downloadUrl = `http://meet.fractalnetworks.co:8000/api/filedownload/${target}`;
 
-    // Create a temporary anchor element to trigger the download
-    const url = window.URL.createObjectURL(blob);
+    // Create a dynamic <a> tag
     const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', target); // Set the download attribute tothe filename
+    link.href = downloadUrl;
+    link.setAttribute('download', ''); // Set the download attribute to trigger download
     document.body.appendChild(link);
-    // Trigger the download
+
+    // Initiate the download
     link.click();
 
-    // Clean up
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-      console.log(response.data)
+
       setLoading(false);
     } catch (error) {
       console.log(error)
@@ -105,7 +95,9 @@ const UploadForm = () => {
         alert(error)
       }
   }
-   }
+  }
+
+
   return (
     <>
     {showModal && <CutVideoModal videoName={videoName}
@@ -129,11 +121,10 @@ className="subtitleText">
 Video</Button>
 {originalVideoName.length>0 && cutVideoName.length>0 &&  <div
 style={{display:'flex',marginTop:'2rem',justifyContent:'center'}}>
-     <Button variant="primary" disabled={loading}
-onClick={()=>handleFileDownload(originalVideoName)}>Download Original
+
+   <Button  variant="primary" onClick={()=>handleFileDownload(originalVideoName)} disabled={loading}>Download Original
 Video</Button>
- <Button  style={{marginLeft:'2rem'}}variant="primary" disabled={loading}
-onClick={()=>handleFileDownload(cutVideoName)}>Download Cut
+   <Button  variant="primary" onClick={()=>handleFileDownload(cutVideoName)} disabled={loading}>Download Cut
 Video</Button>
     </div>
 }
