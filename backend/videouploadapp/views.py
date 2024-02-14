@@ -70,3 +70,6 @@ def video_upload(request):
         error=str(e)
         print(error)
         return JsonResponse({'status':"Error",'error':f"Unexpected error {error}"},status=400)
+
+
+def cut_video(request):

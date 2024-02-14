@@ -1,5 +1,6 @@
 // UploadForm.js
 import  { useState } from 'react';
+import {Button} from 'react-bootstrap'
 import axiosInstance from '../axiosInstance'
 const CHUNK_SIZE = 10 * 1024 * 1024; // 1MB chunk size
 
@@ -7,13 +8,13 @@ const UploadForm = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [videoName,setVideoName]=useState('')
+  const [subtitleData,setSubtitleData]=useState('')
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
     var tempVideoName=event.target.files[0].name.split('.').slice(0,-1).join(".")
     console.log(tempVideoName)
     setVideoName(tempVideoName)
   };
-
 
   const handleUpload = async () => {
     if (!file) return;
@@ -43,6 +44,7 @@ formData ) ;
       }
 
       console.log(response.data)
+      setSubtitleData(response.data.data)
       console.log('Upload complete');
     } catch (error) {
       console.error('Error uploading chunk:', error);
@@ -52,11 +54,24 @@ formData ) ;
   };
 
   return (
-    <div>
+    <div style={{backgroundColor:'#242424'}}>
+    <div style={{color:'white'}}
+className="fileUpload">
       <input type="file" onChange={handleFileChange} />
       <button onClick={handleUpload} disabled={uploading}>
         {uploading ? 'Uploading...' : 'Submit'}
       </button>
+    </div>
+    {subtitleData &&<div style={{marginTop:'5rem',color:'white'}}
+className="subtitleText">
+    <div style={{textAlign:'center'}}>
+      <Button variant="primary">Cut Video</Button>
+    </div>
+    <h4>Generated Subtitles</h4>
+    <p style={{marginTop:'2rem'}}>
+    {subtitleData}
+    </p>
+    </div>}
     </div>
   );
 };
