@@ -2,6 +2,8 @@
 import  { useState } from 'react';
 import {Button} from 'react-bootstrap'
 import axiosInstance from '../axiosInstance'
+import {CutVideoModal} from './CutVideoModal'
+
 const CHUNK_SIZE = 10 * 1024 * 1024; // 1MB chunk size
 
 const UploadForm = () => {
@@ -9,6 +11,8 @@ const UploadForm = () => {
   const [uploading, setUploading] = useState(false);
   const [videoName,setVideoName]=useState('')
   const [subtitleData,setSubtitleData]=useState('')
+  const [showModal,setShowModal]=useState(false)
+
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
     var tempVideoName=event.target.files[0].name.split('.').slice(0,-1).join(".")
@@ -47,6 +51,7 @@ formData ) ;
       setSubtitleData(response.data.data)
       console.log('Upload complete');
     } catch (error) {
+      alert(error.error)
       console.error('Error uploading chunk:', error);
     } finally {
       setUploading(false);
@@ -54,6 +59,8 @@ formData ) ;
   };
 
   return (
+    <>
+    {showModal && <CutVideoModal setModal={setShowModal} />}
     <div style={{backgroundColor:'#242424'}}>
     <div style={{color:'white'}}
 className="fileUpload">
@@ -65,14 +72,19 @@ className="fileUpload">
     {subtitleData &&<div style={{marginTop:'5rem',color:'white'}}
 className="subtitleText">
     <div style={{textAlign:'center'}}>
-      <Button variant="primary">Cut Video</Button>
+      <Button variant="primary" onClick={()=>setShowModal(true)}>Cut
+Video</Button>
     </div>
+
     <h4>Generated Subtitles</h4>
+
     <p style={{marginTop:'2rem'}}>
     {subtitleData}
     </p>
+
     </div>}
     </div>
+    </>
   );
 };
 
