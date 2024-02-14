@@ -4,6 +4,7 @@ import subprocess
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from videouploadapp.tasks import generate_subtitles
 @csrf_exempt
 def video_upload(request):
     try:
@@ -51,12 +52,13 @@ def video_upload(request):
                             destination.write(source.read())
 
                 # Run ffmpeg to convert the video to audio
-                subprocess.run(['ffmpeg', '-i', concatenated_chunks_path, '-vn', '-acodec', 'pcm_s16le', '-ar', '44100', '-ac', '2', audio_file_path], check=True)
+                subprocess.run(['ffmpeg', '-y','-i', concatenated_chunks_path, '-vn', '-acodec', 'pcm_s16le', '-ar', '44100', '-ac', '2', audio_file_path], check=True)
 
                 # Clean up temporary files
                 for i in range(total_chunks):
                     os.remove(os.path.join(video_dir, f'temp_chunk_{i}.mp4'))
 
+                generate_subtitles(audio_file_path,concatenated_chunks_path)
                 return JsonResponse({'status': 'success'})
             else:
                 return JsonResponse({'status': 'chunk_uploaded'})
