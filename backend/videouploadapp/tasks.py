@@ -96,6 +96,14 @@ def cut_video(video_name,subtitle_to_cut):
         timestamp_end=get_data_from_db[0].timestamp_array[end_index].split(',')[1].strip('()')
 
         cut_video_command(input_video_path,output_video_path,timestamp_start,timestamp_end)
+        #saved to cut video storage model
+        cut_video_subtitle_storage_model.objects.create(
+            original_video_path=input_video_path,
+            cut_video_path=output_video_path,
+            subtitle_string=new_subtitle_string
+            )
+
+
         return {'status':'OK','original_video':input_video_path,'cut_video':output_video_path,'message':"video cut successfully"}
 
     except Exception as e:
