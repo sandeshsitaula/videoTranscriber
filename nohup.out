@@ -3244,3 +3244,4 @@ kf.service.services: KServiceTypeTrader: serviceType "ThumbCreator" not found
 kf.sonnet.core: No language dictionaries for the language: "en_US"
 kf.sonnet.core: No language dictionaries for the language: "en_US"
 kf.sonnet.core: No language dictionaries for the language: "en_US"
+kf.service.services: KServiceTypeTrader: serviceType "ThumbCreator" not found
