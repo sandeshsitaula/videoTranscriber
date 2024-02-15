@@ -85,7 +85,6 @@ def cut_video(video_name,subtitle_to_cut):
         # Take the first 8 characters of the UUID string
         short_id = uuid_str[:8]
         output_video_path=os.path.join(cut_video_dir,f'{video_name}_{short_id}_cut.mp4' )
-        print(output_video_path)
         get_data_from_db=subtitle_storage_model.objects.filter(video_name=input_video_path)[:1]
 
         start_index, end_index = find_indices_of_input(get_data_from_db[0].subtitle_array, new_subtitle_array)
