@@ -43,7 +43,6 @@ def generate_subtitles(audio_path,video_name):
 
 # Find the start and end indices of the subtitle array based on the matching words
 def find_indices_of_input(array, input_words):
-    print(array,'***********',input_words)
     start_idx=None
     end_idx=None
     for i, subtitle in enumerate(array):
@@ -54,11 +53,17 @@ def find_indices_of_input(array, input_words):
 
     return start_idx, end_idx
 
+def change_time_format(input_time):
+    pass
+
+
 def cut_video_command(input_video, output_video, start_time, end_time):
-    start_time_str = str(int(start_time))
-    end_time_str = str(int(end_time))
+
+    # end_time_str = str(int(end_time))
+    start_time=str(float(start_time)-0.250)
+    end_time=str(float(end_time)+0.250)
     # Command to cut the video using ffmpeg
-    command = ['ffmpeg', '-y', '-copyts', '-i', input_video, '-ss',start_time_str, '-to', end_time_str, '-c:v', 'libx264', '-preset', 'ultrafast','-crf', '23', '-c:a', 'aac', '-b:a', '128k', output_video]    # Run the command
+    command = ['ffmpeg', '-y', '-copyts', '-i', input_video, '-ss',start_time, '-to', end_time, '-c:v', 'libx264', '-preset', 'ultrafast','-crf', '23', '-c:a', 'aac', '-b:a', '128k', output_video]    # Run the command
     subprocess.run(command)
 
 
@@ -79,8 +84,8 @@ def cut_video(video_name,subtitle_to_cut):
             return {'status':'error',"message":"Your subtitle substring doesnot exist"}
 
         #since they are stored as string changing them to float
-        timestamp_start=float(get_data_from_db[0].timestamp_array[start_index].split(',')[0].strip('()'))
-        timestamp_end=float(get_data_from_db[0].timestamp_array[end_index].split(',')[1].strip('()'))
+        timestamp_start=get_data_from_db[0].timestamp_array[start_index].split(',')[0].strip('()')
+        timestamp_end=get_data_from_db[0].timestamp_array[end_index].split(',')[1].strip('()')
 
         cut_video_command(input_video_path,output_video_path,timestamp_start,timestamp_end)
         return {'status':'OK','original_video':input_video_path,'cut_video':output_video_path,'message':"video cut successfully"}
