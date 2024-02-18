@@ -17,7 +17,7 @@ function App() {
       { <Router>
         <Routes>
           <Route path="/" element={<OriginalVideoList />} />
-          <Route path="/cutVideoList/:video_id" element={<CutVideoList />} />
+          <Route path="/cutvideolist/:video_id" element={<CutVideoList />} />
         </Routes>
       </Router>  }
       </>

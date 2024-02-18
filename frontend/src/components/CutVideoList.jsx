@@ -1,32 +1,39 @@
 import {useState,useEffect} from 'react'
 import axiosInstance from '../axiosInstance'
+import {useParams,Link} from 'react-router-dom'
 export const CutVideoList=()=>{
-    const [videoList,setVideoList]=useState(null)
+     const {video_id}=useParams()
+    console.log(video_id)
+    const [cutVideoList,setCutVideoList]=useState([])
 useEffect(()=>{
+
    async function getVideos(){
-    const response=await axiosInstance.get('getallvideos/')
-    console.log(response.data)
-    setVideoList(response.data.data)
+       try{
+    const response=await axiosInstance.get(`getcutvideos/${video_id}/`)
+    setCutVideoList(response.data.data)
+       }catch(error){
+           console.log(error)
+    }
 }
 getVideos()
 },[])
-useEffect(()=>{
-    console.log(videoList)
-})
+
 return(
   <>
-  <h3>All Videos</h3>
-  {videoList && videoList.map((video)=>{
-      var video_name=video.video_path.split('/')[2]
-      console.log(video_name)
+  <h3>All Cut Videos</h3>
+  {cutVideoList.length!=0 ? cutVideoList.map((video)=>{
+      console.log(video)
+      var video_name=video.cut_video_path.split('/')[2]
       return(
-      <div
+      <Link key={video.cut_video_id}
+to={`http://meet.fractalnetworks.co:80/${video.cut_video_path}`}><div
 style={{cursor:'pointer',color:'white',backgroundColor:'gray',marginTop:'1rem',
 padding:'1rem'}} >
-      {video.video_name}
+      {video_name}
       </div>
+      </Link>
       )
-})}
+}):"No Videos to Load"}
   </>
 )
 }
