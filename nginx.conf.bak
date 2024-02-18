@@ -1,0 +1,29 @@
+events {
+    worker_connections 1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+
+    server {
+        listen 80;
+        server_name localhost;
+
+   location /media/ {
+    alias /usr/share/nginx/html/videos/;
+    expires 30d;
+    # Enable HLS
+    hls;
+    hls_path /usr/share/nginx/html/hls/;
+    hls_fragment 5s;
+    hls_playlist_length 60s;
+
+    # Try to serve the requested file directly
+    try_files $uri $uri/ =404;
+}
+
+    }
+}

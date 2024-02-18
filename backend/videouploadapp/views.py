@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from videouploadapp.tasks import generate_subtitles,cut_video
 from django.http import StreamingHttpResponse
+from videouploadapp.models import cut_video_subtitle_storage_model,subtitle_storage_model
+from django.core.serializers import serialize
 @csrf_exempt
 def video_upload(request):
     try:
@@ -36,7 +38,6 @@ def video_upload(request):
             if chunk_number == total_chunks - 1:
                 # Extract the filename from the uploaded video file
                 video_filename = request.POST.get('videoName')
-                print(video_filename)
 
                 # Define the audio file name with the .wav extension
                 audio_file_name = f'{video_filename}.wav'
@@ -81,7 +82,6 @@ def cut_video_request(request):
         video_name=data.get('videoName')
 
         response=cut_video(video_name,subtitle_to_cut)
-        print(response)
         if response['status']=='OK':
 
             return JsonResponse({'status':"success",'original_video':response['original_video'],'cut_video':response['cut_video'], "message" : "Video  successfully cut you can download now "},status=200)
@@ -93,11 +93,39 @@ def cut_video_request(request):
         return JsonResponse({'status':"Error","message":f"unexpected error:{error}"},status=400)
 
 @csrf_exempt
+def get_all_original_video_list(request):
+    try:
+        videos=subtitle_storage_model.objects.all().order_by('-id')
+        video_data=[]
+        for video in videos:
+            video_data.append(video.video_name)
+
+        return JsonResponse({'data':video_data})
+    except Exception as e:
+        error=str(e)
+        print(error)
+        return JsonResponse({"status":"error","message":f"unexpected error {error}"},400)
+
+@csrf_exempt
+def get_cutvideo_list(request,video_id):
+    try:
+        original_video=subtitle_storage_model.objects.get(id=video_id)
+        all_cut_videos=cut_video_subtitle_storage_model.objects.filter(original_video_path=original_video.video_name)
+        cut_video_data=[]
+        for video in all_cut_videos:
+            cut_video_data.append(video.cut_video_path)
+
+        return JsonResponse({"status":"Ok",'data':cut_video_data})
+    except Exception as e:
+        error=str(e)
+        print(error)
+        return JsonResponse({'status':'error','message':f"unexpected error {error}"},400)
+
+@csrf_exempt
 def file_download(request,filename):
     try:
 
         file_full_path = os.path.abspath(filename)
-        print(file_full_path)
         if not os.path.exists(file_full_path):
             return HttpResponse("File not found", status=404)
 
@@ -129,7 +157,6 @@ def file_download(request,filename):
                         yield chunk
 
         file_size = os.path.getsize(file_full_path)
-        print(file_size)
         response = StreamingHttpResponse(file_iterator(file_full_path))
         response['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(file_full_path)
         response['Content-Type'] = 'application/octet-stream'  # Set the Content-Type header
