@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-7&a2%5g-(es(e*499trzu$czrhv20t7dq%3y*5uyb-jz(_er)a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['meet.fractalnetworks.co']
+ALLOWED_HOSTS = ['meet.fractalnetworks.co','django','django:8000']
 
 
 # Application definition
