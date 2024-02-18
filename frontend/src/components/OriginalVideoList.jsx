@@ -17,9 +17,11 @@ return(
   <>
   <h3>All Videos</h3>
   {videoList && videoList.map((video)=>{
+      var video_name=video.video_path.split('/')[2]
+      console.log(video_name)
       return(
       <div style={{cursor:'pointer',color:'white',backgroundColor:'gray',marginTop:'1rem',padding:'1rem'}} >
-      {video}
+      {video.video_name}
       </div>
       )
 })}

@@ -98,7 +98,7 @@ def get_all_original_video_list(request):
         videos=subtitle_storage_model.objects.all().order_by('-id')
         video_data=[]
         for video in videos:
-            video_data.append(video.video_name)
+            video_data.append({'video_id':video.id,'video_path':video.video_name})
 
         return JsonResponse({'data':video_data})
     except Exception as e:
@@ -113,7 +113,7 @@ def get_cutvideo_list(request,video_id):
         all_cut_videos=cut_video_subtitle_storage_model.objects.filter(original_video_path=original_video.video_name)
         cut_video_data=[]
         for video in all_cut_videos:
-            cut_video_data.append(video.cut_video_path)
+            cut_video_data.append({'cut_video_id':video.id,'cut_video_path':video.cut_video_path})
 
         return JsonResponse({"status":"Ok",'data':cut_video_data})
     except Exception as e:
