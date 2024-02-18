@@ -3,7 +3,7 @@
     background-color: white;
     /* snap begins */
     width: 100%;
-    height: 100%;
+    height: 100vh;
     position: relative;
     scroll-snap-align: start;
     /* snap ends */
