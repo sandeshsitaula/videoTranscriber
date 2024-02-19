@@ -6,7 +6,6 @@ function Video({url, song, description, channel, likes, comments, shares}) {
 const [playing, setPlaying] = useState(true);
     const videoRef = useRef(null);
     const onVideoPress = () => {
-        console.log(playing)
         if(playing) {
             videoRef.current.pause();
             setPlaying(false)
@@ -37,7 +36,6 @@ const [playing, setPlaying] = useState(true);
                     setPlaying(true)
                 } else {
                         if (videoElement.src){
-                            console.log('closing')
                             videoRef.current.pause()
                             setPlaying(false)
                     }

@@ -7,4 +7,5 @@ urlpatterns = [
     re_path(r'^filedownload/(?P<filename>.+)/$', views.file_download),
     path('getallvideos/',views.get_all_original_video_list),
     path('getcutvideos/<int:video_id>/',views.get_cutvideo_list),
+    path('streamcutvideo/<int:cut_video_id>/',views.stream_cut_video),
 ]

@@ -4,7 +4,7 @@ import subprocess
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from videouploadapp.tasks import generate_subtitles,cut_video
+from videouploadapp.tasks import generate_subtitles,cut_video,cut_video_streamer
 from django.http import StreamingHttpResponse
 from videouploadapp.models import cut_video_subtitle_storage_model,subtitle_storage_model
 from django.core.serializers import serialize
@@ -121,6 +121,17 @@ def get_cutvideo_list(request,video_id):
         print(error)
         return JsonResponse({'status':'error','message':f"unexpected error {error}"},400)
 
+@csrf_exempt
+def stream_cut_video(request,cut_video_id):
+    try:
+        video=cut_video_subtitle_storage_model.objects.get(id=cut_video_id)
+        #defined in tasks.py
+        cut_video_streamer(video.cut_video_path)
+        return JsonResponse({'status':'ok','message':"Started Streaming"})
+    except Exception as e:
+        error=str(e)
+        print(error)
+        return JsonResponse({'status':"error","message":f"unexpected error occured"})
 @csrf_exempt
 def file_download(request,filename):
     try:

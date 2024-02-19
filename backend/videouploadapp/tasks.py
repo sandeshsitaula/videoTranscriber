@@ -110,3 +110,20 @@ def cut_video(video_name,subtitle_to_cut):
         err=str(e)
         print(err)
         return {'status':'error',"message":f"error {err}"}
+
+
+
+def cut_video_streamer(cut_video_path):
+    print('video streaming started')
+    video_name=cut_video_path.split('/')[-1]
+    video_id=video_name.split('_')[-2]
+    print(video_id)
+    stream_url = f"rtmp://localhost/stream/{video_id}"
+    print(stream_url)
+    command = [
+        'ffmpeg', '-re', '-i', cut_video_path,
+        '-c:v', 'libx264', '-preset', 'veryfast', '-tune', 'zerolatency',
+        '-c:a', 'aac', '-f', 'flv', stream_url
+    ]
+
+    subprocess.run(command)
