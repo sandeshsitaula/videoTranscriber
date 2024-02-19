@@ -20,7 +20,10 @@
 * {
   scrollbar-width: none;
 }
-
+/* Hide scrollbar */
+body::-webkit-scrollbar {
+    display: none;
+}
 /* Hide scrollbar for Webkit/Blink */
 *::-webkit-scrollbar {
   display: none;
