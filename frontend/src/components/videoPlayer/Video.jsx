@@ -1,5 +1,5 @@
 import React, { useRef, useState ,useEffect} from 'react';
-import './Video.css';
+import './css/Video.css';
 import VideoFooter from "./VideoFooter"
 import VideoSidebar from './VideoSidebar';
 function Video({url, song, description, channel, likes, comments, shares}) {

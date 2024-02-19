@@ -1,5 +1,5 @@
 import React from 'react';
-import "./VideoFooter.css"
+import "./css/VideoFooter.css"
 // import MusicNoteIcon from '@material-ui/icons/MusicNote';
 // import Ticker from 'react-ticker'
 import { FaMusic } from "react-icons/fa";

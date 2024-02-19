@@ -1,7 +1,7 @@
 // UploadForm.js
 import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import axiosInstance from "../axiosInstance";
+import axiosInstance from "../../axiosInstance";
 import { CutVideoModal } from "./CutVideoModal";
 
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10MB chunk size

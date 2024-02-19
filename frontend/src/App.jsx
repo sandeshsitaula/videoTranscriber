@@ -6,9 +6,9 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import {OriginalVideoList} from './pages/OriginalVideoList'
-import {CutVideoList} from './components/CutVideoList'
-import Video from './components/Video'
-// import UploadForm from './components/UploadForm'
+import {CutVideoList} from './pages/CutVideoList'
+import Video from './components/videoPlayer/Video'
+import UploadForm from './components/cutVideo/UploadForm'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -19,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<OriginalVideoList />} />
           <Route path="/video" element={<Video />} />
+          <Route path="/cutvideo" element={<UploadForm />} />
           <Route path="/cutvideolist/:video_id" element={<CutVideoList />} />
         </Routes>
       </Router>  }

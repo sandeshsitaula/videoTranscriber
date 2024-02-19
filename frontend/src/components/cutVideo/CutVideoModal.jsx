@@ -1,6 +1,6 @@
 import { Modal, FormControl, Form, Col, Button } from "react-bootstrap";
 import { useState } from "react";
-import axiosInstance from "../axiosInstance";
+import axiosInstance from "../../axiosInstance";
 export const CutVideoModal = (props) => {
   const [loading, setLoading] = useState(false);
 

@@ -1,10 +1,9 @@
 import {useState,useEffect,useRef} from 'react'
 import axiosInstance from '../axiosInstance'
-import Video from './Video'
+import Video from '../components/videoPlayer/Video'
 import {useParams,Link} from 'react-router-dom'
 
 export const CutVideoList=()=>{
-   
 
      const {video_id}=useParams()
     console.log(video_id)
@@ -24,7 +23,8 @@ getVideos()
 
 return(
   <>
-    <div className="snap-y snap-mandatory overflow-y-scroll h-screen flex-grow z-0">
+    <div className="snap-y snap-mandatory overflow-y-scroll h-screen flex-grow
+z-0">
   {cutVideoList.length!=0 ? cutVideoList.map((video)=>{
       console.log(video)
       var comments=100
