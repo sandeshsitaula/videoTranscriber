@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import './Video.css';
 import VideoFooter from "./VideoFooter"
 import VideoSidebar from './VideoSidebar';
-import useScrollSnap from "react-use-scroll-snap";
 function Video({url, song, description, channel, likes, messages, shares}) {
 const [playing, setPlaying] = useState(false);
     const videoRef = useRef(null);
@@ -16,7 +15,7 @@ const [playing, setPlaying] = useState(false);
         }
     }
     return (
-        <div className="video">
+        <div className="video snap-always snap-center">
             <video className="video__player" ref={videoRef} onClick={onVideoPress}  src={url}></video>
           <VideoFooter channel={channel} description={description} song={song}/>
             <VideoSidebar messages={messages} shares={shares} likes={likes}/>
