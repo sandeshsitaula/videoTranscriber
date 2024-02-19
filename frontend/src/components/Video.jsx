@@ -6,7 +6,6 @@ function Video({url, song, description, channel, likes, messages, shares}) {
 const [playing, setPlaying] = useState(true);
     const videoRef = useRef(null);
     const onVideoPress = () => {
-        console.log(playing)
         if(playing) {
             videoRef.current.pause();
             setPlaying(false)
@@ -27,9 +26,7 @@ const [playing, setPlaying] = useState(true);
 
         const handleIntersection = (entries) => {
             entries.forEach(entry => {
-                console.log(entry)
                 if (entry.isIntersecting) {
-                    console.log(videoElement,url)
                     // Load video content when it comes into view
                     videoElement.src = url;
                         videoElement.addEventListener('loadedmetadata', () => {
@@ -43,7 +40,6 @@ const [playing, setPlaying] = useState(true);
                     })
                 } else {
                         if (videoElement.src){
-                        console.log('stop')
                             videoElement.pause()
                             setPlaying(false)
                     }
