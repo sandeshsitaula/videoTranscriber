@@ -23,7 +23,9 @@ return(
       var video_name=video.video_path.split('/')[2]
       return(
      <Link key={video.video_id} to={`/cutvideolist/${video.video_id}`}>
-     <div style={{cursor:'pointer',color:'white',backgroundColor:'gray',marginTop:'1rem',padding:'1rem'}} >
+     <div
+style={{cursor:'pointer',color:'white',backgroundColor:'gray',marginTop:'1rem',
+padding:'1rem'}} >
       {video_name}
       </div>
       </Link>

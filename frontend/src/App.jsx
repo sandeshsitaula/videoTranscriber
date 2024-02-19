@@ -5,7 +5,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import {OriginalVideoList} from './components/OriginalVideoList'
+import {OriginalVideoList} from './pages/OriginalVideoList'
 import {CutVideoList} from './components/CutVideoList'
 import Video from './components/Video'
 // import UploadForm from './components/UploadForm'

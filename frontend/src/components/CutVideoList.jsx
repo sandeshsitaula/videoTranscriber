@@ -27,10 +27,10 @@ return(
     <div className="snap-y snap-mandatory overflow-y-scroll h-screen flex-grow z-0">
   {cutVideoList.length!=0 ? cutVideoList.map((video)=>{
       console.log(video)
-      var messages="demo"
+      var comments=100
       var likes=100
       var shares=100
-      var description="demo testing purposes"
+      var description="demo testing purposes description"
       var channel="demo channel"
       var song="demo song"
       var url=`http://meet.fractalnetworks.co:80/${video.cut_video_path}`
@@ -49,7 +49,7 @@ padding:'1rem'}} >
 
                     <Video
                 key={video.cut_video_id}
-                messages={messages}
+                comments={comments}
                 likes={likes}
                 shares={shares}
                 description={description}

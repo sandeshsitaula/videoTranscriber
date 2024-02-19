@@ -1,6 +1,6 @@
 .videoFooter {
     position: relative;
-    bottom: 150px;
+    bottom: 180px;
     margin-left: 40px;
     color: white;
     display: flex;
@@ -17,11 +17,7 @@
 .videoFooter_icon {
     position: absolute;
 }
-.videoFooter_ticker > .ticker {
-    height: fit-content;
-    width: 70%;
-    margin-left: 30px;
-}
+
 .videoFooter_record {
     animation: spinTheRecord infinite 5s linear;
     height: 40px;

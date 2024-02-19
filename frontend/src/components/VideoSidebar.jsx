@@ -5,27 +5,29 @@ import MessageIcon from "@material-ui/icons/Message"
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder"
 import ShareIcon from "@material-ui/icons/Share"
 */
+import { FaHeart } from "react-icons/fa";
+import { FaCommentDots } from "react-icons/fa";
+import { FaShare } from "react-icons/fa";
 import "./IconBar.css"
-function VideoSidebar({messages, shares, likes}) {
+function VideoSidebar({comments, shares, likes}) {
     const [liked, setLiked ] = useState(false);
 
     return (
         <div className="videoSidebar">
             <div className="videoSidebar__button">
-                {/*liked ?
-                    (<FavoriteIcon fontSize="large" onClick={e =>
-setLiked(false)}/>) : (<FavoriteBorderIcon fontSize="large" onClick={e =>
-setLiked(true)}/>)
+                {liked ?
+                    (<FaHeart style={{color:'skyblue',marginLeft:'5px',fontSize:'2rem'}}onClick={e=>setLiked(false)}/>) :
+                    (<FaHeart style={{color:'white',marginLeft:'5px',fontSize:'2rem'}} fontSize="large" onClick={e =>setLiked(true)}/>)
 
-                */}
-                <p>{liked ?`${likes} + 1`: `${likes}`}</p>
+                }
+      <p>{liked ? `${likes + 1}` : `${likes}`}</p>
+      </div>
+            <div className="videoSidebar__button">
+              <FaCommentDots style={{color:'white',fontSize:'2rem',marginLeft:'5px'}} />
+                <p>{comments}</p>
             </div>
             <div className="videoSidebar__button">
-            {/*   <MessageIcon fontSize="large"/> */}
-                <p>{messages}</p>
-            </div>
-            <div className="videoSidebar__button">
-            {/*   <ShareIcon fontSize="large"/> */}
+               <FaShare style={{color:'white',fontSize:'2rem',marginLeft:'5px'}}/>
                 <p>{shares}</p>
             </div>
         </div>
