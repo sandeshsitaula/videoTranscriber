@@ -1,8 +1,18 @@
-import {useState,useEffect} from 'react'
+import {useState,useEffect,useRef} from 'react'
 import axiosInstance from '../axiosInstance'
 import Video from './Video'
+import useScrollSnap from "react-use-scroll-snap";
 import {useParams,Link} from 'react-router-dom'
+
 export const CutVideoList=()=>{
+    const scrollRef = useRef(null);
+   useScrollSnap({
+     ref:scrollRef,
+    snapType: 'mandatory',
+    snapAlign: 'start',
+    // Add other configurations as needed
+  });
+
      const {video_id}=useParams()
     console.log(video_id)
     const [cutVideoList,setCutVideoList]=useState([])
@@ -21,6 +31,7 @@ getVideos()
 
 return(
   <>
+  <div style={{overflowY:'hidden',scrollSnapType: 'y mandatory' }} ref={scrollRef} >
   {cutVideoList.length!=0 ? cutVideoList.map((video)=>{
       console.log(video)
       var messages="demo"
@@ -52,6 +63,7 @@ padding:'1rem'}} >
               />
 
 }):"No Videos to Load"}
+</div>
   </>
 )
 }

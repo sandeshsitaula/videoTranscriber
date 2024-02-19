@@ -2,10 +2,8 @@ import React, { useRef, useState } from 'react';
 import './Video.css';
 import VideoFooter from "./VideoFooter"
 import VideoSidebar from './VideoSidebar';
+import useScrollSnap from "react-use-scroll-snap";
 function Video({url, song, description, channel, likes, messages, shares}) {
-
-
-
 const [playing, setPlaying] = useState(false);
     const videoRef = useRef(null);
     const onVideoPress = () => {

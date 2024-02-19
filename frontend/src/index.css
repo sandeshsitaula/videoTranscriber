@@ -6,7 +6,7 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #282828;
-
+  overscroll-behavior: none;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -14,3 +14,12 @@
 }
 
 
+/* Hide scrollbar for Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for Webkit/Blink */
+*::-webkit-scrollbar {
+  display: none;
+}
