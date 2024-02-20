@@ -26,7 +26,7 @@ const [playing, setPlaying] = useState(true);
         const options = {
             root: null,
             rootMargin: '0px',
-            threshold: 0.5// Adjust threshold as needed
+            threshold: 0.2// Adjust threshold as needed
         };
 
         const handleIntersection = async (entries) => {
