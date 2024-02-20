@@ -2,7 +2,7 @@ import {useState,useEffect,useRef} from 'react'
 import axiosInstance from '../axiosInstance'
 import Video from '../components/videoPlayer/Video'
 import {useParams,Link} from 'react-router-dom'
-
+import './CutVideo.css'
 export const CutVideoList=()=>{
 
      const {video_id}=useParams()
@@ -23,8 +23,8 @@ getVideos()
 
 return(
   <>
-    <div className="snap-y snap-mandatory overflow-y-scroll h-screen flex-grow
-z-0">
+    <div className="app">
+       <div className="container">
   {cutVideoList.length!=0 ? cutVideoList.map((video)=>{
       console.log(video)
       var comments=100
@@ -68,8 +68,10 @@ padding:'1rem'}} >
               />
 
                     )
+
 }):"No Videos to Load"}
 </div>
+ </div>
   </>
 
 )

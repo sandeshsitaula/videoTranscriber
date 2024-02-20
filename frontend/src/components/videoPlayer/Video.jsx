@@ -71,10 +71,20 @@ const [playing, setPlaying] = useState(true);
 
 
     return (
-        <div className="video snap-always snap-center">
-            <video className="video__player" ref={videoRef} onClick={onVideoPress} ></video>
-          <VideoFooter channel={channel} description={description} song={song}/>
+        <div className="video">
+            <video className="player" ref={videoRef} onClick={onVideoPress} ></video>
             <VideoSidebar comments={comments} shares={shares} likes={likes}/>
+
+              <div className="bottom-controls">
+        <div className="footer-left">
+          {/* The left part of the container */}
+          <VideoFooter channel={channel} description={description}song={song} />
+
+        </div>
+            <VideoSidebar comments={comments} shares={shares} likes={likes}/>
+
+      </div>
+
         </div>
     )
 }

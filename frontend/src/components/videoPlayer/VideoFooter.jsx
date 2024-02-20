@@ -4,21 +4,24 @@ import "./css/VideoFooter.css"
 // import Ticker from 'react-ticker'
 import { FaMusic } from "react-icons/fa";
 function VideoFooter({channel, description, song}) {
-    return (
-        <div className="videoFooter">
-            <div className="videoFooter_text">
-                <h3>@{channel}</h3>
-                <p>{description}</p>
-                <div style={{textAlign:'center',display:'flex',marginBottom:'1rem'}}>
-                <FaMusic style={{fontSize:'2rem',marginRight:'1rem'}}/>
 
-                                <p>{song}</p>
+  return (
+    <div className="footer-container">
+      <div className="footer-left">
+        <div className="text">
+          <h3>@{channel}</h3>
+          <p>{description}</p>
+          <div className="ticker">
+                          <FaMusic style={{fontSize:'2rem',marginRight:'1rem'}}/>
 
-                </div>
-            </div>
-            <img className="videoFooter_record"
-src="https://static.thenounproject.com/png/934821-200.png" alt=""/>
+            {/* eslint-disable-next-line jsx-a11y/no-distracting-elements */}
+            <marquee direction="left" scrollamount="2">
+              <span>{song}</span>
+            </marquee>
+          </div>
         </div>
-    )
+      </div>
+    </div>
+  );
 }
 export default VideoFooter;

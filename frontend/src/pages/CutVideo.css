@@ -1,0 +1,27 @@
+
+.app {
+  height: 100vh;
+  background-color: #000;
+  display: grid;
+  place-items: center;
+}
+
+.container {
+  position: relative;
+  height: 100%;
+/*  width: 375px;*/
+  border-radius: 25px;
+  overflow: scroll;
+  scroll-snap-type: y mandatory;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+.container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+
