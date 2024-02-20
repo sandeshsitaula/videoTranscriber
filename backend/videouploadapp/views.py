@@ -126,8 +126,9 @@ def stream_cut_video(request,cut_video_id):
     try:
         video=cut_video_subtitle_storage_model.objects.get(id=cut_video_id)
         #defined in tasks.py
-        cut_video_streamer(video.cut_video_path)
+        cut_video_streamer(video.cut_video_path,video.original_video_path)
         return JsonResponse({'status':'ok','message':"Started Streaming"})
+
     except Exception as e:
         error=str(e)
         print(error)

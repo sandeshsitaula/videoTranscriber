@@ -33,7 +33,14 @@ z-0">
       var description="demo testing purposes description"
       var channel="demo channel"
       var song="demo song"
-      var url=`http://meet.fractalnetworks.co:80/${video.cut_video_path}`
+      var cut_video_id=video.cut_video_id
+      console.log(cut_video_id)
+      var video_name=video.cut_video_path.split('/')[2]
+      var video_ids_list=video_name.split('_')
+      var video_id=video_ids_list[video_ids_list.length-2]
+     console.log(video_id)
+      var url=`http://meet.fractalnetworks.co:8080/hls/${video_id}.m3u8`
+      console.log(url)
       var video_name=video.cut_video_path.split('/')[2]
      {/* return(
       <Link key={video.cut_video_id}
@@ -50,6 +57,8 @@ padding:'1rem'}} >
                     <Video
                 key={video.cut_video_id}
                 comments={comments}
+                cut_video_id={cut_video_id}
+                video_id={video_id}
                 likes={likes}
                 shares={shares}
                 description={description}

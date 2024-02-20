@@ -113,15 +113,16 @@ def cut_video(video_name,subtitle_to_cut):
 
 
 
-def cut_video_streamer(cut_video_path):
+def cut_video_streamer(cut_video_path,original):
     print('video streaming started')
+    print(original)
     video_name=cut_video_path.split('/')[-1]
     video_id=video_name.split('_')[-2]
     print(video_id)
-    stream_url = f"rtmp://localhost/stream/{video_id}"
+    stream_url = f"rtmp://nginx-rtmp:1935/stream/{video_id}"
     print(stream_url)
     command = [
-        'ffmpeg', '-re', '-i', cut_video_path,
+        'ffmpeg', '-re', '-i', original,
         '-c:v', 'libx264', '-preset', 'veryfast', '-tune', 'zerolatency',
         '-c:a', 'aac', '-f', 'flv', stream_url
     ]
