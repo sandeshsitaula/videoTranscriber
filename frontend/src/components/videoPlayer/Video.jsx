@@ -8,7 +8,7 @@ import VideoSidebar from './VideoSidebar';
 function Video({url, song, description, cut_video_id,video_id,channel, likes, comments, shares}) {
 const [playing, setPlaying] = useState(true);
     const videoRef = useRef(null);
-      const [hls, setHls] = useState(null);
+    const hlsLoaded = useRef(false);
 
     const onVideoPress = () => {
         if(playing) {
@@ -26,49 +26,31 @@ const [playing, setPlaying] = useState(true);
         const options = {
             root: null,
             rootMargin: '0px',
-            threshold: 0.1// Adjust threshold as needed
+            threshold: 0.5// Adjust threshold as needed
         };
 
         const handleIntersection = async (entries) => {
             entries.forEach(async(entry) => {
                 if (entry.isIntersecting) {
-                    console.log("intersecting")
                     // Load video content when it comes into view
-                    if (!videoElement.src){
-                      const response=await  axiosInstance.get(`streamcutvideo/${cut_video_id}`)
-                  function loadNextStream(){
-                     const newHls = new Hls();
+                        if (hlsLoaded.current) {
+                         videoRef.current.play();
+                    setPlaying(true)
+                        return;
+                        }
+
+                     const response = await axiosInstance.get(`streamcutvideo/${cut_video_id}`);
+
+                    const newHls = new Hls();
                     newHls.loadSource(url);
                     newHls.attachMedia(videoRef.current);
-                    newHls.on(Hls.Events.ERROR, function(event, data) {
-                    if (data.fatal) {
-                        console.log(data)
-                    }
-                    })
-                setHls(newHls);
-                    }
-                      if (Hls.isSupported() && !hls) {
-                            console.log("supported")
-                              loadNextStream()
-
-                            // loadNextStream();
-                    } else if (!Hls.isSupported() &&
-                      videoRef.current.canPlayType('application/vnd.apple.mpegurl') && !hls) {
-                        console.log('couldnot play')
-                    }
-                    videoRef.current.currentTime = 0; // Set the current time to 0
-                    }
-                     videoRef.current.play();
-                    setPlaying(true)
+                    hlsLoaded.current = true;
+                            videoRef.current.play(); // Start playing the video immediately after attaching HLS instance
+                            setPlaying(true);
+                            console.log(newHls);
                 } else {
-
-                        if (videoElement.src){
-                          console.log(videoRef.current)
-                            videoRef.current.pause()
-                            setPlaying(false)
-                    }
-                    // Unload video content when it goes out of view
-//                     videoElement.src = '';
+                        videoRef.current.pause()
+                        setPlaying(false)
                 }
             });
         };
@@ -85,6 +67,8 @@ const [playing, setPlaying] = useState(true);
             }
         };
     }, [url]);
+
+
 
     return (
         <div className="video snap-always snap-center">

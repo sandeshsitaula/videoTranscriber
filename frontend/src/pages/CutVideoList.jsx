@@ -39,7 +39,7 @@ z-0">
       var video_ids_list=video_name.split('_')
       var video_id=video_ids_list[video_ids_list.length-2]
      console.log(video_id)
-      var url=`http://meet.fractalnetworks.co:8080/hls/${video_id}.m3u8`
+      var url=`http://meet.fractalnetworks.co:8080/hls/playlist_${video_id}.m3u8`
       console.log(url)
       var video_name=video.cut_video_path.split('/')[2]
      {/* return(
