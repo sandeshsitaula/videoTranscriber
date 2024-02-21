@@ -114,11 +114,8 @@ def cut_video(video_name,subtitle_to_cut):
 
 
 def cut_video_streamer(cut_video_path,original):
-    print('video streaming started')
-    print(original)
     video_name=cut_video_path.split('/')[-1]
     video_id=video_name.split('_')[-2]
-    print(video_id)
     output_directory='media/hls'
     if os.path.exists(f'{output_directory}/playlist_{video_id}.m3u8'):
         return
