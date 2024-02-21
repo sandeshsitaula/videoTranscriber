@@ -5,12 +5,17 @@ import axiosInstance from '../../axiosInstance'
 import Hls from 'hls.js';
 
 import VideoSidebar from './VideoSidebar';
-function Video({url, song, description, cut_video_id,video_id,channel, likes, comments, shares}) {
-const [playing, setPlaying] = useState(true);
+function Video({mutedRef,url, song, description, cut_video_id,video_id,channel, likes, comments, shares}) {
+const [playing, setPlaying] = useState(false);
     const videoRef = useRef(null);
+//       const mutedRef = useRef(true); // Assuming initially muted
     const hlsLoaded = useRef(false);
 
     const onVideoPress = () => {
+    if (mutedRef.current) {
+      mutedRef.current = false; // If currently muted, unmute it
+      videoRef.current.muted = false;
+    }
         if(playing) {
             videoRef.current.pause();
             setPlaying(false)
@@ -45,8 +50,8 @@ const [playing, setPlaying] = useState(true);
                     newHls.loadSource(url);
                     newHls.attachMedia(videoRef.current);
                     hlsLoaded.current = true;
-                            videoRef.current.play(); // Start playing the video immediately after attaching HLS instance
-                            setPlaying(true);
+//                             videoRef.current.play(); // Start playing the video immediately after attaching HLS instance
+//                             setPlaying(true);
                             console.log(newHls);
                 } else {
                         videoRef.current.pause()
@@ -68,11 +73,15 @@ const [playing, setPlaying] = useState(true);
         };
     }, [url]);
 
+      useEffect(()=>{
+        console.log(mutedRef.current)
+      videoRef.current.muted = false;
+    },[mutedRef.current])
 
 
     return (
         <div className="video">
-            <video className="player" ref={videoRef} onClick={onVideoPress} ></video>
+            <video className="player" ref={videoRef} onClick={onVideoPress} playsInline autoPlay={true} muted={mutedRef.current} ></video>
             <VideoSidebar comments={comments} shares={shares} likes={likes}/>
 
               <div className="bottom-controls">

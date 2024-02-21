@@ -4,7 +4,7 @@ import Video from '../components/videoPlayer/Video'
 import {useParams,Link} from 'react-router-dom'
 import './CutVideo.css'
 export const CutVideoList=()=>{
-
+    const mutedRef=useRef(true)
      const {video_id}=useParams()
     console.log(video_id)
     const [cutVideoList,setCutVideoList]=useState([])
@@ -59,6 +59,7 @@ padding:'1rem'}} >
                 comments={comments}
                 cut_video_id={cut_video_id}
                 video_id={video_id}
+                mutedRef={mutedRef}
                 likes={likes}
                 shares={shares}
                 description={description}
