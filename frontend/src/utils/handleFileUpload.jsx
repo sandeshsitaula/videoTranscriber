@@ -1,5 +1,6 @@
 import axiosInstance from "../axiosInstance";
-export const handleFileUpload = async (file, videoName) => {
+export const handleFileUpload = async (file, videoName,eventName="") => {
+console.log("in file upload",videoName,eventName,file)
   const CHUNK_SIZE = 10 * 1024 * 1024; // 10MB chunk size
 
   var start = 0;
@@ -9,8 +10,13 @@ export const handleFileUpload = async (file, videoName) => {
   while (start < file.size) {
     const formData = new FormData();
     formData.append("video", file.slice(start, end));
-    formData.append("videoName", videoName);
 
+    if (eventName!=""){
+     formData.append("eventName",eventName)
+    }
+else{
+    formData.append("videoName", videoName);
+}
     // Add metadata to identify the chunk
     formData.append("chunkNumber", chunkNumber);
     formData.append("totalChunks", Math.ceil(file.size / CHUNK_SIZE));

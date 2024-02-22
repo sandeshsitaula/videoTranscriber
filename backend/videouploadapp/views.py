@@ -15,8 +15,17 @@ def video_upload(request):
             video_chunk = request.FILES['video']
             chunk_number = int(request.POST.get('chunkNumber'))
             total_chunks = int(request.POST.get('totalChunks'))
-
+            event_name=request.POST.get('eventName')
+            video_filename = request.POST.get('videoName')
+            print(chunk_number,total_chunks,'video=',video_filename,'event=',event_name)
             # Define the directory where you want to save the audio file
+            if event_name is not None:
+                extension_type='webm'
+                filename=event_name
+            else:
+                extension_type='mp4'
+                filename=video_filename
+
             audio_dir = 'media/audio'
             video_dir='media/video'
             # Create the directory if it doesn't exist
@@ -27,7 +36,7 @@ def video_upload(request):
                 os.makedirs(video_dir)
 
             # Define the filename for the temporary chunk
-            temp_chunk_path=os.path.join(video_dir,f'temp_chunk_{chunk_number}.mp4')
+            temp_chunk_path=os.path.join(video_dir,f'temp_chunk_{chunk_number}.{extension_type}')
 
             # Save the chunk to a temporary location
             with open(temp_chunk_path, 'wb+') as destination:
@@ -37,19 +46,18 @@ def video_upload(request):
             # If it's the last chunk, merge all chunks and convert to audio
             if chunk_number == total_chunks - 1:
                 # Extract the filename from the uploaded video file
-                video_filename = request.POST.get('videoName')
 
                 # Define the audio file name with the .wav extension
-                audio_file_name = f'{video_filename}.wav'
+                audio_file_name = f'{filename}.wav'
                 audio_file_path = os.path.join(audio_dir, audio_file_name)
 
                 # Concatenate all chunks into one video file
 
-                concatenated_chunks_path=os.path.join(video_dir,f'{video_filename}.mp4')
+                concatenated_chunks_path=os.path.join(video_dir,f'{filename}.{extension_type}')
 
                 with open(concatenated_chunks_path, 'wb+') as destination:
                     for i in range(total_chunks):
-                        chunk_path = os.path.join(video_dir, f'temp_chunk_{i}.mp4')
+                        chunk_path = os.path.join(video_dir, f'temp_chunk_{i}.{extension_type}')
 
                         with open(chunk_path, 'rb') as source:
                             destination.write(source.read())
@@ -59,7 +67,7 @@ def video_upload(request):
 
                 # Clean up temporary files
                 for i in range(total_chunks):
-                    os.remove(os.path.join(video_dir, f'temp_chunk_{i}.mp4'))
+                    os.remove(os.path.join(video_dir, f'temp_chunk_{i}.{extension_type}'))
 
                 generated_subtitle_data=generate_subtitles(audio_file_path,concatenated_chunks_path)
                 return JsonResponse({'status': 'success','data':generated_subtitle_data})
