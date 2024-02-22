@@ -7,7 +7,7 @@
   scroll-snap-stop:always;
 }
 
-.video::before {
+/*.video::before {
   content: '';
   display: block;
 	box-shadow: 0 -33px 48px rgba(0, 0, 0, 0.5) inset;
@@ -19,7 +19,7 @@
   left: 0;
   position: absolute;
   background: transparent;
-}
+}*/
 
 .player {
   position: absolute;

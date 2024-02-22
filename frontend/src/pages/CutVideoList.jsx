@@ -22,7 +22,7 @@ export const CutVideoList = () => {
   return (
     <>
       <div className="app">
-        <div className="container">
+        <div className="containers">
           {cutVideoList.length != 0
             ? cutVideoList.map((video) => {
                 var comments = 100;

@@ -2,7 +2,6 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #282828;
@@ -21,13 +20,20 @@ html {
 /* Hide scrollbar for Firefox */
 * {
   scrollbar-width: none;
+      -ms-overflow-style: none;
 }
 /* Hide scrollbar */
 body::-webkit-scrollbar {
     display: none;
 width:0;
   }
-
+  ::-moz-scrollbar {
+  display: none;
+  }
+::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
 /* Hide scrollbar for Webkit/Blink */
 *::-webkit-scrollbar {
   display: none;

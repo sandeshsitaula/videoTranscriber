@@ -6,20 +6,20 @@
   place-items: center;
 }
 
-.container {
+.containers {
   position: relative;
   height: 100%;
-/*  width: 375px;*/
-  border-radius: 25px;
+  padding:0px;
+ width: 337px;
   overflow: scroll;
   scroll-snap-type: y mandatory;
 }
 
-.container::-webkit-scrollbar {
+.containers::-webkit-scrollbar {
   display: none;
 }
 
-.container {
+.containers {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
