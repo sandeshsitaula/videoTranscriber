@@ -4,7 +4,6 @@ import { Button } from "react-bootstrap";
 import axiosInstance from "../../axiosInstance";
 import { CutVideoModal } from "./CutVideoModal";
 
-
 const UploadForm = (props) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -16,7 +15,6 @@ const UploadForm = (props) => {
   const [cutVideoName, setCutVideoName] = useState("");
   const [loading, setLoading] = useState(false);
 
-
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
     var tempVideoName = event.target.files[0].name
@@ -25,26 +23,20 @@ const UploadForm = (props) => {
       .join(".");
     setVideoName(tempVideoName);
   };
-async function handleUpload(){
-  console.log(file)
-   if (!file) return;
+  async function handleUpload() {
+    if (!file) return;
     setUploading(true);
-
-  try{
-  const result=await props.handleFileUpload(file,videoName)
-  console.log(result.data)
-  setSubtitleData(result.data.data);
-  }  catch (error) {
+    try {
+      //handle uplad is in utils folder 
+      const result = await props.handleFileUpload(file, videoName);
+      setSubtitleData(result.data.data);
+    } catch (error) {
       alert(error.error);
       console.error("Error uploading chunk:", error);
     } finally {
       setUploading(false);
     }
-  };
-
-
-
-
+  }
 
   const handleFileDownload = async (target) => {
     if (loading) {
@@ -62,7 +54,6 @@ async function handleUpload(){
 
       // Initiate the download
       link.click();
-
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -91,8 +82,7 @@ async function handleUpload(){
       <div style={{ backgroundColor: "#242424" }}>
         <div style={{ color: "white" }} className="fileUpload">
           <input type="file" onChange={handleFileChange} />
-          <button onClick={()=>handleUpload()}
-disabled={uploading}>
+          <button onClick={() => handleUpload()} disabled={uploading}>
             {uploading ? "Uploading..." : "Submit"}
           </button>
         </div>

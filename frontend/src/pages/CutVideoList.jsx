@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axiosInstance from "../axiosInstance";
 import Video from "../components/videoPlayer/Video";
 import { useParams, Link } from "react-router-dom";
-import "./CutVideo.css";
+import "./css/CutVideo.css";
 export const CutVideoList = () => {
   const mutedRef = useRef(true);
   const { video_id } = useParams();
@@ -37,17 +37,7 @@ export const CutVideoList = () => {
                 var video_id = video_ids_list[video_ids_list.length - 2];
                 var url = `http://meet.fractalnetworks.co:8080/hls/playlist_${video_id}.m3u8`;
                 var video_name = video.cut_video_path.split("/")[2];
-                {
-                  /* return(
-      <Link key={video.cut_video_id}
-to={`http://meet.fractalnetworks.co:80/${video.cut_video_path}`}><div
-style={{cursor:'pointer',color:'white',backgroundColor:'gray',marginTop:'1rem',
-padding:'1rem'}} >
-      {video_name}
-      </div>
-      </Link>
-      )*/
-                }
+              
                 return (
                   <Video
                     key={video.cut_video_id}
