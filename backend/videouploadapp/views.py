@@ -9,6 +9,7 @@ from django.http import StreamingHttpResponse
 from videouploadapp.models import cut_video_subtitle_storage_model,subtitle_storage_model
 from django.core.serializers import serialize
 @csrf_exempt
+
 def video_upload(request):
     try:
         if request.method == 'POST' and request.FILES.get('video'):

@@ -4,9 +4,8 @@ import { Button } from "react-bootstrap";
 import axiosInstance from "../../axiosInstance";
 import { CutVideoModal } from "./CutVideoModal";
 
-const CHUNK_SIZE = 10 * 1024 * 1024; // 10MB chunk size
 
-const UploadForm = () => {
+const UploadForm = (props) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [videoName, setVideoName] = useState("");
@@ -17,48 +16,25 @@ const UploadForm = () => {
   const [cutVideoName, setCutVideoName] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    console.log(originalVideoName, cutVideoName);
-  });
+
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
     var tempVideoName = event.target.files[0].name
       .split(".")
       .slice(0, -1)
       .join(".");
-    console.log(tempVideoName);
     setVideoName(tempVideoName);
   };
-
-  const handleUpload = async () => {
-    if (!file) return;
+async function handleUpload(){
+  console.log(file)
+   if (!file) return;
     setUploading(true);
 
-    try {
-      var start = 0;
-      var end = Math.min(CHUNK_SIZE, file.size);
-      let chunkNumber = 0;
-      let response;
-      while (start < file.size) {
-        const formData = new FormData();
-        formData.append("video", file.slice(start, end));
-        formData.append("videoName", videoName);
-
-        // Add metadata to identify the chunk
-        formData.append("chunkNumber", chunkNumber);
-        formData.append("totalChunks", Math.ceil(file.size / CHUNK_SIZE));
-
-        response = await axiosInstance.post("videoupload/", formData);
-
-        chunkNumber++;
-        start = end;
-        end = Math.min(start + CHUNK_SIZE, file.size);
-      }
-
-      //       console.log(response.data)
-      setSubtitleData(response.data.data);
-      console.log("Upload complete");
-    } catch (error) {
+  try{
+  const result=await props.handleFileUpload(file,videoName)
+  console.log(result.data)
+  setSubtitleData(result.data.data);
+  }  catch (error) {
       alert(error.error);
       console.error("Error uploading chunk:", error);
     } finally {
@@ -66,8 +42,11 @@ const UploadForm = () => {
     }
   };
 
+
+
+
+
   const handleFileDownload = async (target) => {
-    console.log("hello");
     if (loading) {
       alert("In progress.Wait a while");
       return;
@@ -75,7 +54,6 @@ const UploadForm = () => {
     setLoading(true);
     try {
       const downloadUrl = `http://meet.fractalnetworks.co:8000/api/filedownload/${target}`;
-
       // Create a dynamic <a> tag
       const link = document.createElement("a");
       link.href = downloadUrl;
@@ -113,7 +91,8 @@ const UploadForm = () => {
       <div style={{ backgroundColor: "#242424" }}>
         <div style={{ color: "white" }} className="fileUpload">
           <input type="file" onChange={handleFileChange} />
-          <button onClick={handleUpload} disabled={uploading}>
+          <button onClick={()=>handleUpload()}
+disabled={uploading}>
             {uploading ? "Uploading..." : "Submit"}
           </button>
         </div>
