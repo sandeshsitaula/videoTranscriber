@@ -6,6 +6,7 @@ import Hls from "hls.js";
 
 import VideoSidebar from "./VideoSidebar";
 function Video({
+
   mutedRef,
   url,
   song,

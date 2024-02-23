@@ -10,10 +10,10 @@ import UploadForm from "./components/cutVideo/UploadForm";
 import {PlayOriginalVideo} from './components/videoPlayer/PlayOriginalVideo';
 import { handleFileUpload } from "./utils/handleFileUpload";
 function App() {
-
   return (
     <>
       {
+
         <Router>
           <Routes>
             <Route path="/" element={<OriginalVideoList />} />

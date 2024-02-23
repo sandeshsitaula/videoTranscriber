@@ -7,7 +7,6 @@ export const PlayOriginalVideo = () => {
   const { video_id } = useParams();
     const {video_name}=useParams();
 
-console.log(video_id,video_name)
    var comments = 100;
                 var likes = 100;
                 var shares = 100;
@@ -15,14 +14,11 @@ console.log(video_id,video_name)
                 var channel = "demo channel";
                 var song = "demo song";
                 var url =`https://app.meet.fractalnetworks.co/hls/playlist_${video_name}.m3u8`;
-console.log(url)
 
   return (
     <>
       <div className="app">
         <div className="containers">
-
-                return (
                   <Video
                     comments={comments}
                     video_id={video_id}
