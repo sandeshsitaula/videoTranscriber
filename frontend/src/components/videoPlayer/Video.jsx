@@ -10,11 +10,12 @@ function Video({
   url,
   song,
   description,
-  cut_video_id,
+  video_id,
   channel,
   likes,
   comments,
   shares,
+  type,
 }) {
   const [playing, setPlaying] = useState(true);
   const videoRef = useRef(null);
@@ -53,9 +54,14 @@ function Video({
             setPlaying(true);
             return;
           }
-
+          var backend_url=""
+          if (type=="cut"){
+            backend_url=`streamcutvideo/${video_id}`
+          }else{
+            backend_url=`streamoriginalvideo/${video_id}`
+          }
           const response = await axiosInstance.get(
-            `streamcutvideo/${cut_video_id}`
+            backend_url
           );
 
           const newHls = new Hls();

@@ -118,7 +118,8 @@ def video_streamer(video_path,typeof):
     if typeof=="cut":
         video_id=video_name.split('_')[-2]
     else:
-        video_id=video_name[-1]
+        print('video_id',video_name)
+        video_id=video_name.split('.')[0]
         print(video_id)
 
     output_directory='media/hls'

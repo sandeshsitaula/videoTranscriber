@@ -7,6 +7,7 @@ import {CaptureEvent} from './pages/CaptureEvent'
 import { CutVideoList } from "./pages/CutVideoList";
 import Video from "./components/videoPlayer/Video";
 import UploadForm from "./components/cutVideo/UploadForm";
+import {PlayOriginalVideo} from './components/videoPlayer/PlayOriginalVideo';
 import { handleFileUpload } from "./utils/handleFileUpload";
 function App() {
 
@@ -22,6 +23,8 @@ function App() {
               element={<UploadForm handleFileUpload={handleFileUpload} />}
             />
             <Route path="/cutvideolist/:video_id" element={<CutVideoList />} />
+            <Route path="/playvideo/:video_id/:video_name"
+element={<PlayOriginalVideo />} />
             <Route path="/captureevent" element={<CaptureEvent handleFileUpload={handleFileUpload} />}/>
           </Routes>
         </Router>

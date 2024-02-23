@@ -65,7 +65,8 @@ services:
     networks:
       - mynetwork
     container_name: nginx_container_video
-  link:
+
+  link_frontend:
     image: fractalnetworks/gateway-client:latest
     environment:
       LINK_DOMAIN: meet.fractalnetworks.co
@@ -77,7 +78,7 @@ services:
       - mynetwork
     cap_add:
       - NET_ADMIN
-  link1:
+  link_backend:
     image: fractalnetworks/gateway-client:latest
     environment:
       LINK_DOMAIN: api.meet.fractalnetworks.co
@@ -90,3 +91,15 @@ services:
     cap_add:
       - NET_ADMIN
 
+  link_nginx:
+    image: fractalnetworks/gateway-client:latest
+    environment:
+      LINK_DOMAIN: app.meet.fractalnetworks.co
+      EXPOSE: nginx:80
+      GATEWAY_CLIENT_WG_PRIVKEY: SKlWH2Qsq8n/5GBoYihAOSYKIZl8ouRtV3/zpvHMXVw=
+      GATEWAY_LINK_WG_PUBKEY: CmtxVjYsPP3+R3QUWIGWNS+onQqf/XasbPm0AQMQfig=
+      GATEWAY_ENDPOINT: 167.235.132.246:32771
+    networks:
+      - mynetwork
+    cap_add:
+      - NET_ADMIN

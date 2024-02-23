@@ -35,21 +35,21 @@ export const CutVideoList = () => {
                 var video_name = video.cut_video_path.split("/")[2];
                 var video_ids_list = video_name.split("_");
                 var video_id = video_ids_list[video_ids_list.length - 2];
-                var url = `http://meet.fractalnetworks.co:8080/hls/playlist_${video_id}.m3u8`;
+                var url = `https://app.meet.fractalnetworks.co/hls/playlist_${video_id}.m3u8`;
                 var video_name = video.cut_video_path.split("/")[2];
               
                 return (
                   <Video
                     key={video.cut_video_id}
                     comments={comments}
-                    cut_video_id={cut_video_id}
-                    video_id={video_id}
+                    video_id={cut_video_id}
                     mutedRef={mutedRef}
                     likes={likes}
                     shares={shares}
                     description={description}
                     channel={channel}
                     song={song}
+                    type="cut"
                     url={url}
                   />
                 );

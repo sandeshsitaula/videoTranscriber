@@ -22,6 +22,7 @@ export const OriginalVideoList = () => {
       {videoList &&
         videoList.map((video) => {
           var video_name = video.video_path.split("/")[2];
+          var video_name_without_ext=video_name.split('.')[0]
           return (
             <div key={video.video_id} style={{ cursor: "pointer",
                   color: "white",
@@ -36,7 +37,7 @@ export const OriginalVideoList = () => {
               </div>
             </Link>
 
-           <Link>
+           <Link to ={`/playvideo/${video.video_id}/${video_name_without_ext}`}>
            <Button variant="danger">Play Video</Button>
            </Link>
             </div>
