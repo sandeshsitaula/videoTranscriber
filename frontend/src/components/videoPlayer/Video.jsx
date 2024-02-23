@@ -116,6 +116,7 @@ function Video({
         muted={mutedRef.current}
         ref={videoRef}
         allow="autoplay"
+        loop
         playsInline
         autoPlay={true}
       >
