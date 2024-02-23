@@ -4,10 +4,9 @@ import subprocess
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from videouploadapp.tasks import generate_subtitles,cut_video,cut_video_streamer
+from videouploadapp.tasks import generate_subtitles,cut_video,video_streamer
 from django.http import StreamingHttpResponse
 from videouploadapp.models import cut_video_subtitle_storage_model,subtitle_storage_model
-from django.core.serializers import serialize
 @csrf_exempt
 def video_upload(request):
     try:
@@ -17,7 +16,6 @@ def video_upload(request):
             total_chunks = int(request.POST.get('totalChunks'))
             event_name=request.POST.get('eventName')
             video_filename = request.POST.get('videoName')
-            print(chunk_number,total_chunks,'video=',video_filename,'event=',event_name)
             # Define the directory where you want to save the audio file
             if event_name is not None:
                 extension_type='webm'
@@ -130,17 +128,29 @@ def get_cutvideo_list(request,video_id):
         return JsonResponse({'status':'error','message':f"unexpected error {error}"},400)
 
 @csrf_exempt
+def stream_original_video(request,video_id):
+    try:
+        video=subtitle_storage_model.objects.get(id=video_id)
+        video_streamer(video.video_name,"original")
+        return JsonResponse({'status':"ok",'message':"Started Streaming"})
+    except Exception as e:
+        error=str(e)
+        print(error)
+        return JsonResponse({'status':'error','message':f"unexpected error : {error}"})
+@csrf_exempt
 def stream_cut_video(request,cut_video_id):
     try:
         video=cut_video_subtitle_storage_model.objects.get(id=cut_video_id)
         #defined in tasks.py
-        cut_video_streamer(video.cut_video_path,video.original_video_path)
+        video_streamer(video.cut_video_path,"cut")
         return JsonResponse({'status':'ok','message':"Started Streaming"})
 
     except Exception as e:
         error=str(e)
         print(error)
         return JsonResponse({'status':"error","message":f"unexpected error occured"})
+
+
 @csrf_exempt
 def file_download(request,filename):
     try:
@@ -182,7 +192,6 @@ def file_download(request,filename):
         response['Content-Type'] = 'application/octet-stream'  # Set the Content-Type header
         response['Content-Length'] = file_size
         return response
-
 
     except Exception as e:
         error=str(e)

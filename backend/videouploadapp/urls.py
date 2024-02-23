@@ -8,4 +8,5 @@ urlpatterns = [
     path('getallvideos/',views.get_all_original_video_list),
     path('getcutvideos/<int:video_id>/',views.get_cutvideo_list),
     path('streamcutvideo/<int:cut_video_id>/',views.stream_cut_video),
+    path('streamoriginalvideo/<int:video_id>/',views.stream_original_video),
 ]

@@ -80,11 +80,12 @@ function handleEventNameChange(e){
     }
 
   }
-//       <button onClick={uploadVideo}>Upload Video</button>
 return(
     <>
-    <div style={{display:'flex'}}>
-    <video ref={videoRef} width="640" height="480" autoPlay />
+    <div
+style={{display:'flex',backgroundColor:"#282828",flexDirection:'column',alignItems:
+'center' } } >
+    <video style={{height:'80vh',marginBottom:'1rem'}} ref={videoRef} playsinline autoPlay />
     <div>
       <Button style={{marginRight:'1rem'}} onClick={startRecording}>Start
 Recording</Button>

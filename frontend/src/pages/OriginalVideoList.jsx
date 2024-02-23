@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../axiosInstance";
 import { Link } from "react-router-dom";
+import {Button} from 'react-bootstrap'
 export const OriginalVideoList = () => {
   const [videoList, setVideoList] = useState(null);
   useEffect(() => {
@@ -22,19 +23,24 @@ export const OriginalVideoList = () => {
         videoList.map((video) => {
           var video_name = video.video_path.split("/")[2];
           return (
-            <Link key={video.video_id} to={`/cutvideolist/${video.video_id}`}>
-              <div
-                style={{
-                  cursor: "pointer",
+            <div key={video.video_id} style={{ cursor: "pointer",
                   color: "white",
                   backgroundColor: "gray",
                   marginTop: "1rem",
-                  padding: "1rem",
-                }}
-              >
+                  display:'flex',
+                  justifyContent:'space-between',
+                  padding: "1rem",}}>
+            <Link key={video.video_id} to={`/cutvideolist/${video.video_id}`}>
+              <div style={{color:'white'}}>
                 {video_name}
               </div>
             </Link>
+
+           <Link>
+           <Button variant="danger">Play Video</Button>
+           </Link>
+            </div>
+
           );
         })}
     </>

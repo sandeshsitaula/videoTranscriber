@@ -113,9 +113,14 @@ def cut_video(video_name,subtitle_to_cut):
 
 
 
-def cut_video_streamer(cut_video_path,original):
-    video_name=cut_video_path.split('/')[-1]
-    video_id=video_name.split('_')[-2]
+def video_streamer(video_path,typeof):
+    video_name=video_path.split('/')[-1]
+    if typeof=="cut":
+        video_id=video_name.split('_')[-2]
+    else:
+        video_id=video_name[-1]
+        print(video_id)
+
     output_directory='media/hls'
     if os.path.exists(f'{output_directory}/playlist_{video_id}.m3u8'):
         return
@@ -123,11 +128,10 @@ def cut_video_streamer(cut_video_path,original):
     playlist_path=f'{output_directory}/playlist_{video_id}.m3u8'
     # ffmpeg_command = ['ffmpeg','-i', original,'-c:v', 'libx264','-c:a', 'aac','-hls_time', '10','-hls_list_size', '0','-hls_segment_filename', f'{output_directory}/segment_{video_id}_%d.ts',f'{output_directory}/playlist_{video_id}.m3u8']
     ffmpeg_command = [
-        'ffmpeg', '-i', cut_video_path, '-c:v', 'libx264', '-c:a', 'aac', '-hls_time', '10',
+        'ffmpeg', '-i', video_path, '-c:v', 'libx264', '-c:a', 'aac', '-hls_time', '10',
         '-hls_list_size', '0', '-hls_segment_filename', f'{output_directory}/segment_{video_id}_%d.ts',
         '-hls_flags', 'append_list', playlist_path
     ]
-    print(ffmpeg_command)
 
 
     subprocess.run(ffmpeg_command)
