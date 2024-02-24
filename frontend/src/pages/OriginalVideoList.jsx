@@ -21,6 +21,7 @@ export const OriginalVideoList = () => {
       <h3>All Videos</h3>
       {videoList &&
         videoList.map((video) => {
+          console.log(video)
           var video_name = video.video_path.split("/")[2];
           var video_name_without_ext=video_name.split('.')[0]
           return (

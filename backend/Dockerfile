@@ -5,7 +5,8 @@ FROM python:3.11
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update \
- && apt-get install -y ffmpeg
+ && apt-get install -y ffmpeg \
+ && apt-get install -y mkvtoolnix
 # Set the working directory
 WORKDIR /app
 

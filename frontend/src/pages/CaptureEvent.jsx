@@ -11,8 +11,8 @@ export function CaptureEvent(props){
   const [isIOS, setIsIOS] = useState(false);
   const [backCameraExists,setBackCameraExists]=useState(true)
   const videoRef = useRef(null);
-  useEffect(() => {
 
+  useEffect(() => {
     const userAgent = window.navigator.userAgent.toLowerCase();
     setIsIOS(userAgent.includes('iphone') || userAgent.includes('ipad'));
     async function cameraChecker(){
@@ -30,19 +30,20 @@ export function CaptureEvent(props){
 
 const startNewRecording=()=>{
 //   setRecordedChunks([])
+stopRecording()
   startRecording()
 }
 
-  const startRecording = async () => {
+  const startRecording = async (facingMode="user") => {
     try {
-      // Specify the desired camera using the facingMode constraint
+      alert('instartrecording',facingMode)
     const constraints = {
       video: {
         facingMode: facingMode // 'user' for front camera, 'environment' for back camera
       },
       audio: true
     };
-  const mergedStream = await navigator.mediaDevices.getUserMedia( constraints);
+  const mergedStream = await navigator.mediaDevices.getUserMedia(constraints);
 
       videoRef.current.srcObject = mergedStream;
   // Capture audio from the surrounding environment
@@ -61,7 +62,7 @@ const startNewRecording=()=>{
       const recorder = new MediaRecorder(mergedStream, options);
       recorder.ondataavailable = handleDataAvailable;
       recorder.start();
-      if (facingMode === 'user') {
+      if (facingMode =='user') {
         setFrontMediaRecorder(recorder);
       } else {
         setBackMediaRecorder(recorder);
@@ -73,27 +74,25 @@ const startNewRecording=()=>{
   };
 
 const stopRecording = () => {
-  if (facingMode === 'user') {
     if (frontMediaRecorder) {
       frontMediaRecorder.stop();
-      const tracks = videoRef.current.srcObject.getTracks();
-      tracks.forEach(track => track.stop()); // Stop tracks associated with the front camera
       setFrontMediaRecorder(null);
-      videoRef.current.srcObject = null; // Reset srcObject
     }
-  } else {
     if (backMediaRecorder) {
       backMediaRecorder.stop();
-      const tracks = videoRef.current.srcObject.getTracks();
-      tracks.forEach(track => track.stop()); // Stop tracks associated with the back camera
+
       setBackMediaRecorder(null);
-      videoRef.current.srcObject = null; // Reset srcObject
     }
+  if (videoRef.current.srcObject){
+    const tracks = videoRef.current.srcObject.getTracks();
+      tracks.forEach(track => track.stop()); // Stop tracks associated with the back camera
+      videoRef.current.srcObject = null; // Reset srcObject
+
   }
 };
 
 
-const handleDataAvailable = (event, facingMode) => {
+const handleDataAvailable = (event) => {
   if(event.data.size>0){
     setRecordedChunks(prevChunks => [...prevChunks, event.data]);
   }
@@ -140,25 +139,23 @@ function handleEventNameChange(e){
     }
 
   }
+    const toggleFacingMode = () => {
+      alert('inside toggle funtion')
+    setFacingMode('environment');
+    alert("after togle funcion")
+  };
 const swapCamera = () => {
-  if (frontMediaRecorder) {
-    frontMediaRecorder.stop();
-  }
-  if (backMediaRecorder) {
-    backMediaRecorder.stop();
-  }
-
-  // Stop and remove tracks from the video element
-  if (videoRef.current.srcObject) {
-    const tracks = videoRef.current.srcObject.getTracks();
-    tracks.forEach(track => track.stop());
-  }
-
-  // Switch facing mode
-  setFacingMode(prevFacingMode => (prevFacingMode === 'user' ? 'environment' : 'user'));
-
+  if (frontMediaRecorder){
+        stopRecording()
+        alert('changing to env')
+        startRecording('environment')
+      }
+      if (backMediaRecorder){
+        stopRecording()
+        alert('changing to user')
+        startRecording('user')
+      }
   // Start recording with the updated facing mode
-  startRecording();
 };
 return(
     <>
