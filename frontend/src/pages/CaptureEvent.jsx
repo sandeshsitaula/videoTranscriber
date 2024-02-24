@@ -3,7 +3,9 @@ import {Button,FormControl} from 'react-bootstrap'
 export function CaptureEvent(props){
   const [eventName,setEventName]=useState('')
   const [uploading,setUploading]=useState(false)
-  const [mediaRecorder, setMediaRecorder] = useState(null);
+  const [frontMediaRecorder, setFrontMediaRecorder] = useState(null);
+  const [backMediaRecorder, setBackMediaRecorder] = useState(null);
+
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [facingMode,setFacingMode]=useState('user')
   const [isIOS, setIsIOS] = useState(false);
@@ -26,12 +28,13 @@ export function CaptureEvent(props){
     cameraChecker()
   }, []);
 
-
+const startNewRecording=()=>{
+//   setRecordedChunks([])
+  startRecording()
+}
 
   const startRecording = async () => {
     try {
-  setRecordedChunks([])
-// Capture video from the screen without audio
       // Specify the desired camera using the facingMode constraint
     const constraints = {
       video: {
@@ -43,7 +46,6 @@ export function CaptureEvent(props){
 
       videoRef.current.srcObject = mergedStream;
   // Capture audio from the surrounding environment
-
 
       if (MediaRecorder.isTypeSupported('video/webm; codecs=vp9')) {
     var options = {mimeType: 'video/webm; codecs=vp9'};
@@ -59,36 +61,49 @@ export function CaptureEvent(props){
       const recorder = new MediaRecorder(mergedStream, options);
       recorder.ondataavailable = handleDataAvailable;
       recorder.start();
-      setMediaRecorder(recorder);
+      if (facingMode === 'user') {
+        setFrontMediaRecorder(recorder);
+      } else {
+        setBackMediaRecorder(recorder);
+      }
+
     } catch (error) {
       console.error('Error accessing media devices:', error);
     }
   };
 
 const stopRecording = () => {
-  setMediaRecorder((prevRecorder) => {
-    if (prevRecorder) {
-      prevRecorder.stop();
-    const tracks = videoRef.current.srcObject.getTracks();
-      tracks.forEach(track => track.stop());
-      videoRef.current.srcObject = null;
+  if (facingMode === 'user') {
+    if (frontMediaRecorder) {
+      frontMediaRecorder.stop();
+      const tracks = videoRef.current.srcObject.getTracks();
+      tracks.forEach(track => track.stop()); // Stop tracks associated with the front camera
+      setFrontMediaRecorder(null);
+      videoRef.current.srcObject = null; // Reset srcObject
     }
-    return null; // Set mediaRecorder to null
-  });
-  alert("recording stopped")
-  console.log("Recording stopped");
+  } else {
+    if (backMediaRecorder) {
+      backMediaRecorder.stop();
+      const tracks = videoRef.current.srcObject.getTracks();
+      tracks.forEach(track => track.stop()); // Stop tracks associated with the back camera
+      setBackMediaRecorder(null);
+      videoRef.current.srcObject = null; // Reset srcObject
+    }
+  }
 };
 
-  const handleDataAvailable = (event) => {
-    if (event.data.size > 0) {
-      setRecordedChunks(prevChunks => [...prevChunks, event.data]);
-    }
-  };
+
+const handleDataAvailable = (event, facingMode) => {
+  if(event.data.size>0){
+    setRecordedChunks(prevChunks => [...prevChunks, event.data]);
+  }
+};
+
 function handleEventNameChange(e){
   setEventName(e.target.value)
 }
   async function handleUpload(){
-    if (mediaRecorder){
+    if (frontMediaRecorder||backMediaRecorder){
       alert("Recording in progress")
       return
     }
@@ -104,12 +119,17 @@ function handleEventNameChange(e){
       setUploading(true)
       var response
       if (isIOS){
-     response=await props.handleFileUpload(recordedChunks[0],eventName)
+     response=await props.handleFileUpload(recordedChunks,eventName)
+         console.log(response)
+    console.log(response.data.data)
       }else{
-     response=await props.handleFileUpload(recordedChunks[0],"",eventName)
+             alert(recordedChunks)
+             console.log(recordedChunks)
+     response=await props.handleFileUpload(recordedChunks,"",eventName)
+         console.log(response)
+    console.log(response.data.data)
       }
 
-    console.log(response.data.data)
     alert("sucessfully uploaded")
     } catch (error) {
       alert(error.error);
@@ -120,9 +140,26 @@ function handleEventNameChange(e){
     }
 
   }
- const swapCamera = () => {
-    setFacingMode(prev => (prev === 'user' ? 'environment' : 'user'));
-  };
+const swapCamera = () => {
+  if (frontMediaRecorder) {
+    frontMediaRecorder.stop();
+  }
+  if (backMediaRecorder) {
+    backMediaRecorder.stop();
+  }
+
+  // Stop and remove tracks from the video element
+  if (videoRef.current.srcObject) {
+    const tracks = videoRef.current.srcObject.getTracks();
+    tracks.forEach(track => track.stop());
+  }
+
+  // Switch facing mode
+  setFacingMode(prevFacingMode => (prevFacingMode === 'user' ? 'environment' : 'user'));
+
+  // Start recording with the updated facing mode
+  startRecording();
+};
 return(
     <>
     <div
@@ -130,9 +167,9 @@ style={{display:'flex',backgroundColor:"#282828",flexDirection:'column',alignIte
 'center' } } >
     <video muted={true} style={{height:'80vh',marginBottom:'1rem'}} ref={videoRef} playsInline autoPlay />
     <div>
-      <Button style={{marginRight:'1rem'}} onClick={startRecording}>StartRecording</Button>
+      <Button style={{marginRight:'1rem'}} onClick={startNewRecording}>Start New Recording</Button>
       <Button style={{marginRight:'1rem'}} onClick={stopRecording}>Stop Recording</Button>
-      {mediaRecorder && backCameraExists && <Button onClick={swapCamera}>Swap Camera</Button>}
+      {(frontMediaRecorder||backMediaRecorder) && backCameraExists && <Button onClick={swapCamera}>Swap Camera</Button>}
 
       <br />
       <br />

@@ -16,7 +16,10 @@ def video_upload(request):
             total_chunks = int(request.POST.get('totalChunks'))
             event_name=request.POST.get('eventName')
             video_filename = request.POST.get('videoName')
+            total_videos=request.POST.get('totalVideos')
+            current_video=request.POST.get('currentVideo')
             # Define the directory where you want to save the audio file
+            print(video_filename,event_name,total_videos,current_video)
             if event_name is not None:
                 extension_type='webm'
                 filename=event_name

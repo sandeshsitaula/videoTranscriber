@@ -16,7 +16,7 @@ const UploadForm = (props) => {
   const [loading, setLoading] = useState(false);
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    setFile(event.target.files);
     var tempVideoName = event.target.files[0].name
       .split(".")
       .slice(0, -1)
