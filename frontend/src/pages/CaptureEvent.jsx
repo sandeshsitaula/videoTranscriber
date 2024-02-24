@@ -29,7 +29,7 @@ export function CaptureEvent(props){
   }, []);
 
 const startNewRecording=()=>{
-//   setRecordedChunks([])
+  setRecordedChunks([])
 stopRecording()
   startRecording()
 }
