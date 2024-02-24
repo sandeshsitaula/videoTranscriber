@@ -16,10 +16,12 @@ def video_upload(request):
             total_chunks = int(request.POST.get('totalChunks'))
             event_name=request.POST.get('eventName')
             video_filename = request.POST.get('videoName')
-            total_videos=request.POST.get('totalVideos')
-            current_video=request.POST.get('currentVideo')
+            total_videos = int(request.POST.get('totalVideos'))
+            current_video = int(request.POST.get('currentVideo'))
             # Define the directory where you want to save the audio file
             print(video_filename,event_name,total_videos,current_video)
+
+            #To give proper extension type
             if event_name is not None:
                 extension_type='webm'
                 filename=event_name
@@ -37,41 +39,66 @@ def video_upload(request):
                 os.makedirs(video_dir)
 
             # Define the filename for the temporary chunk
-            temp_chunk_path=os.path.join(video_dir,f'temp_chunk_{chunk_number}.{extension_type}')
-
+            temp_chunk_path=os.path.join(video_dir,f'temp_chunk_{filename}{chunk_number}.{extension_type}')
+            print('worrking till here1')
             # Save the chunk to a temporary location
             with open(temp_chunk_path, 'wb+') as destination:
                 for chunk in video_chunk.chunks():
                     destination.write(chunk)
 
+            print('worrking till here2')
             # If it's the last chunk, merge all chunks and convert to audio
             if chunk_number == total_chunks - 1:
                 # Extract the filename from the uploaded video file
-
                 # Define the audio file name with the .wav extension
-                audio_file_name = f'{filename}.wav'
-                audio_file_path = os.path.join(audio_dir, audio_file_name)
 
                 # Concatenate all chunks into one video file
-
                 concatenated_chunks_path=os.path.join(video_dir,f'{filename}.{extension_type}')
 
                 with open(concatenated_chunks_path, 'wb+') as destination:
                     for i in range(total_chunks):
-                        chunk_path = os.path.join(video_dir, f'temp_chunk_{i}.{extension_type}')
+                        chunk_path = os.path.join(video_dir, f'temp_chunk_{filename}{i}.{extension_type}')
 
                         with open(chunk_path, 'rb') as source:
                             destination.write(source.read())
+                print('worrking till here3')
 
-                # Run ffmpeg to convert the video to audio
-                subprocess.run(['ffmpeg', '-y','-i', concatenated_chunks_path, '-vn', '-acodec', 'pcm_s16le', '-ar', '44100', '-ac', '2', audio_file_path], check=True)
+                print(current_video,'current')
+                #if last video then run this if
+                if  current_video==total_videos-1:
+                    #for concatenating multiple
+                    print('inside video concat')
+                    base_filename_temp=filename.split('_')
+                    base_filename = '_'.join(base_filename_temp[:-1])
+                    video_base_filepath=os.path.join(video_dir,base_filename)
+                    if total_videos>1:
+                        print("inside videos concatenation")
+                        input_files = [f"{video_base_filepath}_{i}.{extension_type}" for i in range(total_videos)]
+
+
+                        print('inputfile',input_files)
+                        command = f"ffmpeg -y {' '.join(['-i ' + input_file for input_file in input_files])} -c:v copy -c:a copy {base_filename}.{extension_type}"
+
+                    # Execute the FFmpeg command
+                        subprocess.run(command, shell=True, check=True)
+                        concatenated_chunks_path=f'{base_filename}.{extension_type}'
+                        print("concated_chunks",concatenated_chunks_path)
+
+                    audio_file_name = f'{base_filename}.wav'
+                    audio_file_path = os.path.join(audio_dir, audio_file_name)
+                    print('audiofilepath',audio_file_path)
+                    # Run ffmpeg to convert the video to audio
+                    subprocess.run(['ffmpeg', '-y','-i', concatenated_chunks_path, '-vn', '-acodec', 'pcm_s16le', '-ar', '44100', '-ac', '2', audio_file_path], check=True)
+                    generated_subtitle_data=generate_subtitles(audio_file_path,concatenated_chunks_path)
+                    return JsonResponse({'status': 'success','data':generated_subtitle_data})
 
                 # Clean up temporary files
-                for i in range(total_chunks):
-                    os.remove(os.path.join(video_dir, f'temp_chunk_{i}.{extension_type}'))
 
-                generated_subtitle_data=generate_subtitles(audio_file_path,concatenated_chunks_path)
-                return JsonResponse({'status': 'success','data':generated_subtitle_data})
+                for i in range(total_chunks):
+                    os.remove(os.path.join(video_dir, f'temp_chunk_{filename}{i}.{extension_type}'))
+                return JsonResponse({'status':'sucess','message':"In progress"})
+
+
             else:
                 return JsonResponse({'status': 'chunk_uploaded'})
 
