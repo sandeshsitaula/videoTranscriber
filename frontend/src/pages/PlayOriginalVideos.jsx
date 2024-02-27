@@ -27,17 +27,12 @@ export const PlayOriginalVideos = () => {
     if (videoList.length==0){
       return
     }
+    alert("next video in loading")
     const nextVideos = videoList.slice(loadedVideosCount, loadedVideosCount + videosPerLoad);
     setLoadedVideos(prevVideos => [...prevVideos, ...nextVideos]);
     setLoadedVideosCount(prevCount => prevCount + videosPerLoad);
   };
 
-  const loadIntialVideos=()=>{
-        const nextVideos = videoList.slice(0, 5);
-        console.log(nextVideos)
-    setLoadedVideos(prevVideos => [...prevVideos, ...nextVideos]);
-    setLoadedVideosCount(prevCount => prevCount + videosPerLoad);
-  }
   // Effect to load the next batch of videos when the component mounts
   useEffect(() => {
     loadNextVideos();
@@ -60,6 +55,9 @@ export const PlayOriginalVideos = () => {
             type="original"
             url={`https://app.test.fractalnetworks.co/hls/playlist_${video.video_path.split("/")[2].split(".")[0]}.m3u8`}
             lastId={videoList[0].video_id}
+            currIndex={index}
+            totalLoadedVideoCount={loadedVideosCount}
+            loadNextVideos={loadNextVideos}
           />
         ))}
         {videoList.length === 0 && "No Videos to Load"}

@@ -16,7 +16,10 @@ function Video({
   comments,
   shares,
   type,
-  lastId=-1
+  lastId=-1,
+  currIndex=null,
+  totalLoadedVideoCount=null,
+  loadNextVideos=null
 }) {
   const [playing, setPlaying] = useState(true);
   const videoRef = useRef(null);
@@ -77,13 +80,17 @@ useEffect(()=>{
           if (hlsLoaded.current) {
             videoRef.current.play();
             setPlaying(true);
-            return;
           }
           //videoRef.current.play(); // Start playing the video immediately after attaching HLS instance
-          setPlaying(true);
           if (!mutedRef.current) {
             videoRef.current.muted = false;
           }
+          if (totalLoadedVideoCount && currIndex && totalLoadedVideoCount-2==currIndex){
+            alert("correct pos")
+            loadNextVideos()
+          }
+          alert(totalLoadedVideoCount)
+          alert(currIndex)
         } else {
           videoRef.current.pause();
           setPlaying(false);
