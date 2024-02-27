@@ -86,11 +86,8 @@ useEffect(()=>{
             videoRef.current.muted = false;
           }
           if (totalLoadedVideoCount && currIndex && totalLoadedVideoCount-2==currIndex){
-            alert("correct pos")
             loadNextVideos()
           }
-          alert(totalLoadedVideoCount)
-          alert(currIndex)
         } else {
           videoRef.current.pause();
           setPlaying(false);
