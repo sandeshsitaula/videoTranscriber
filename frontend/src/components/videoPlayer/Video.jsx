@@ -17,6 +17,7 @@ function Video({
   comments,
   shares,
   type,
+  lastId=-1
 }) {
   const [playing, setPlaying] = useState(true);
   const videoRef = useRef(null);
@@ -51,8 +52,12 @@ useEffect(()=>{
     var newHls = new Hls();
     newHls.loadSource(url);
     newHls.attachMedia(videoRef.current);
-
-          hlsLoaded.current = true;
+    hlsLoaded.current = true;
+    if (lastId==-1 || lastId==video_id){
+      alert('no id provided or last id and videoid are same with id')
+      alert(lastId)
+      videoRef.current.play()
+    }
   } else{
     alert("not supported")
   }
@@ -77,8 +82,7 @@ useEffect(()=>{
             setPlaying(true);
             return;
           }
-
-          //                             videoRef.current.play(); // Start playing the video immediately after attaching HLS instance
+          //videoRef.current.play(); // Start playing the video immediately after attaching HLS instance
           setPlaying(true);
           if (!mutedRef.current) {
             console.log("not muted");
@@ -125,10 +129,8 @@ useEffect(()=>{
         className="player"
         muted={mutedRef.current}
         ref={videoRef}
-        allow="autoplay"
         loop
         playsInline
-        autoPlay={true}
       >
       </video>
 

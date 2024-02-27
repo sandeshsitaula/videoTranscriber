@@ -37,6 +37,8 @@ export const PlayOriginalVideos = () => {
                 console.log(video_name)
                 console.log(video_id)
                 var url = `https://app.test.fractalnetworks.co/hls/playlist_${video_name}.m3u8`;
+                var lastId=videoList[0].video_id
+                // alert(lastId)
 
 
                 return (
@@ -52,6 +54,7 @@ export const PlayOriginalVideos = () => {
                     song={song}
                     type="original"
                     url={url}
+                    lastId={lastId}
                   />
                 );
               })
