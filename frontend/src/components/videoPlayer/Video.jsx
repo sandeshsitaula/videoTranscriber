@@ -24,6 +24,7 @@ function Video({
   const [playing, setPlaying] = useState(true);
   const videoRef = useRef(null);
   const hlsLoaded = useRef(false);
+  const listUpdated=useRef(null)
 
   const onVideoPress = () => {
     if (mutedRef.current) {
@@ -85,8 +86,11 @@ useEffect(()=>{
           if (!mutedRef.current) {
             videoRef.current.muted = false;
           }
-          if (totalLoadedVideoCount && currIndex && totalLoadedVideoCount-2==currIndex){
+          if (totalLoadedVideoCount && currIndex && !listUpdated.current && totalLoadedVideoCount-2==currIndex){
             loadNextVideos()
+            listUpdated.current=true
+
+            console.log("updated"+listUpdated.current)
           }
         } else {
           videoRef.current.pause();

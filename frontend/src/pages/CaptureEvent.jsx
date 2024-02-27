@@ -18,7 +18,6 @@ if (userAgent.includes('android')){
         setBackCameraExists(true);
 }
     else if(userAgent.includes('iphone')||userAgent.includes('ipad')){
-      alert(userAgent)
       setISIOS(true)
       setBackCameraExists(true);
   }else{
@@ -44,7 +43,6 @@ if (userAgent.includes('android')){
 
  async function startIntialCamera(facingMode) {
     try {
-      alert("inintialstartrecording", facingMode);
          const mergedStream = await recordingLogic(facingMode);
 setIntialState(true)
 if (!mergedStream) {
@@ -89,19 +87,18 @@ if (!mergedStream) {
 
   const startRecording = async (facingMode = "user") => {
     try {
-      alert("instartrecording", facingMode);
       const mergedStream = await recordingLogic(facingMode);
 
 if (!mergedStream) {
     console.error('Failed to obtain a valid media stream');
     return;
 }
-          if (MediaRecorder.isTypeSupported("video/webm; codecs=vp9")) {
-      var options = { mimeType: "video/webm; codecs=vp9" };
+      if (MediaRecorder.isTypeSupported("video/webm; codecs=vp9")) {
+      var options = { mimeType: "video/webm; codecs=vp9", videoBitsPerSecond:8000000 };
     } else if (MediaRecorder.isTypeSupported("video/webm")) {
-      var options = { mimeType: "video/webm" };
+      var options = { mimeType: "video/webm",videoBitsPerSecond:8000000 };
     } else if (MediaRecorder.isTypeSupported("video/mp4")) {
-      var options = { mimeType: "video/mp4", videoBitsPerSecond: 100000 };
+      var options = { mimeType: "video/mp4", videoBitsPerSecond: 8000000 };
     } else {
       alert("no suitable mimetype found for this device");
       console.error("no suitable mimetype found for this device");
@@ -164,14 +161,8 @@ if (!mergedStream) {
       var response;
       if (isIOS) {
         response = await props.handleFileUpload(recordedChunks, eventName);
-        console.log(response);
-        console.log(response.data.data);
       } else {
-        alert(recordedChunks);
-        console.log(recordedChunks);
         response = await props.handleFileUpload(recordedChunks, "", eventName);
-        console.log(response);
-        console.log(response.data.data);
       }
 
       alert("sucessfully uploaded");
@@ -188,7 +179,6 @@ if (!mergedStream) {
     if (frontMediaRecorder) {
       stopRecording();
       setFacingMode('environment')
-      alert("changing to env");
       if (intialState) {
         console.log("in intial state");
         startIntialCamera("environment");
@@ -199,7 +189,6 @@ if (!mergedStream) {
     if (backMediaRecorder) {
       setFacingMode('user')
       stopRecording();
-      alert("changing to user");
       if (intialState) {
         startIntialCamera("user");
       } else {
