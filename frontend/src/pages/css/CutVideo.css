@@ -1,6 +1,7 @@
 
 .app {
   height: 100vh;
+  min-height: -webkit-fill-available;
   background-color: #000;
   display: grid;
   place-items: center;

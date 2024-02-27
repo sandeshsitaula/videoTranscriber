@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-7&a2%5g-(es(e*499trzu$czrhv20t7dq%3y*5uyb-jz(_er)a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS =['meet.fractalnetworks.co','https://api.meet.fractalnetworks.co','django','django : 8000','api.meet.fractalnetworks.co']
-CSRF_TRUSTED_ORIGINS = ['https://api.meet.fractalnetworks.co']
+ALLOWED_HOSTS =['meet.fractalnetworks.co','https://api.meet.fractalnetworks.co','django','django : 8000','api.meet.fractalnetworks.co','api.test.fractalnetworks.co']
+CSRF_TRUSTED_ORIGINS = ['https://api.test.fractalnetworks.co']
 
 # Application definition
 
@@ -59,10 +59,10 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://react_frontend:5000",
     "http://meet.fractalnetworks.co:5000",
-    "http://meet.fractalnetworks.co",
+    "https://test.fractalnetworks.co",
     "http://localhost:5000",
     "https://meet.fractalnetworks.co",
-    "https://api.meet.fractalnetworks.co",
+    "https://api.test.fractalnetworks.co",
     "http://react_container:5000",  # Use the service name, replace 3000 with your actual port
     # Add more origins if needed
 ]

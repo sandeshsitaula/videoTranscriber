@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { OriginalVideoList } from "./pages/OriginalVideoList";
 import {CaptureEvent} from './pages/CaptureEvent'
 import { CutVideoList } from "./pages/CutVideoList";
+
+import { PlayOriginalVideos } from "./pages/PlayOriginalVideos";
 import Video from "./components/videoPlayer/Video";
 import UploadForm from "./components/cutVideo/UploadForm";
 import {PlayOriginalVideo} from './components/videoPlayer/PlayOriginalVideo';
@@ -13,7 +15,6 @@ function App() {
   return (
     <>
       {
-
         <Router>
           <Routes>
             <Route path="/" element={<OriginalVideoList />} />
@@ -26,6 +27,7 @@ function App() {
             <Route path="/playvideo/:video_id/:video_name"
 element={<PlayOriginalVideo />} />
             <Route path="/captureevent" element={<CaptureEvent handleFileUpload={handleFileUpload} />}/>
+            <Route path="/playall" element={<PlayOriginalVideos />} />
           </Routes>
         </Router>
       }

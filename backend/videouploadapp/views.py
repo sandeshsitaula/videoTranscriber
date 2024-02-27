@@ -162,6 +162,7 @@ def get_cutvideo_list(request,video_id):
         print(error)
         return JsonResponse({'status':'error','message':f"unexpected error {error}"},400)
 
+
 @csrf_exempt
 def stream_original_video(request,video_id):
     try:

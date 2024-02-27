@@ -3,15 +3,14 @@ import axiosInstance from "../axiosInstance";
 import Video from "../components/videoPlayer/Video";
 import { useParams, Link } from "react-router-dom";
 import "./css/CutVideo.css";
-export const CutVideoList = () => {
+export const PlayOriginalVideos = () => {
   const mutedRef = useRef(true);
-  const { video_id } = useParams();
-  const [cutVideoList, setCutVideoList] = useState([]);
+  const [videoList, setVideoList] = useState([]);
   useEffect(() => {
     async function getVideos() {
       try {
-        const response = await axiosInstance.get(`getcutvideos/${video_id}/`);
-        setCutVideoList(response.data.data);
+        const response = await axiosInstance.get(`getallvideos/`);
+        setVideoList(response.data.data);
       } catch (error) {
         console.log(error);
       }
@@ -23,32 +22,35 @@ export const CutVideoList = () => {
     <>
       <div className="app">
         <div className="containers">
-          {cutVideoList.length != 0
-            ? cutVideoList.map((video) => {
+          {videoList.length != 0
+            ? videoList.map((video) => {
                 var comments = 100;
                 var likes = 100;
                 var shares = 100;
                 var description = "demo testing purposes description";
                 var channel = "demo channel";
                 var song = "demo song";
-                var cut_video_id = video.cut_video_id;
-                var video_name = video.cut_video_path.split("/")[2];
-                var video_ids_list = video_name.split("_");
-                var video_id = video_ids_list[video_ids_list.length - 2];
-                var url = `https://app.test.fractalnetworks.co/hls/playlist_${video_id}.m3u8`;
-              
+                var video_id=video.video_id
+                var video_path= video.video_path.split("/")[2];
+                console.log(video_path)
+                var video_name = video_path.split('.')[0];
+                console.log(video_name)
+                console.log(video_id)
+                var url = `https://app.test.fractalnetworks.co/hls/playlist_${video_name}.m3u8`;
+
+
                 return (
                   <Video
-                    key={video.cut_video_id}
+                    key={video.video_id}
                     comments={comments}
-                    video_id={cut_video_id}
+                    video_id={video_id}
                     mutedRef={mutedRef}
                     likes={likes}
                     shares={shares}
                     description={description}
                     channel={channel}
                     song={song}
-                    type="cut"
+                    type="original"
                     url={url}
                   />
                 );

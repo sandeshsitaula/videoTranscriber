@@ -13,7 +13,7 @@ export const PlayOriginalVideo = () => {
                 var description = "demo testing purposes description";
                 var channel = "demo channel";
                 var song = "demo song";
-                var url =`https://app.meet.fractalnetworks.co/hls/playlist_${video_name}.m3u8`;
+                var url =`https://app.test.fractalnetworks.co/hls/playlist_${video_name}.m3u8`;
 
   return (
     <>
