@@ -136,7 +136,7 @@ def cut_video_request(request):
 @csrf_exempt
 def get_all_original_video_list(request):
     try:
-        videos=subtitle_storage_model.objects.all().order_by('-id')
+        videos=subtitle_storage_model.objects.all().order_by('-id')[:5]
         video_data=[]
         for video in videos:
             video_data.append({'video_id':video.id,'video_path':video.video_name})

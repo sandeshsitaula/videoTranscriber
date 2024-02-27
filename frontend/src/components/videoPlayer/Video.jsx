@@ -36,7 +36,21 @@ function Video({
       setPlaying(true);
     }
   };
-
+useEffect(()=>{
+    var backend_url=""
+          if (type=="cut"){
+            backend_url=`streamcutvideo/${video_id}`
+          }else{
+            backend_url=`streamoriginalvideo/${video_id}`
+          }
+          const response = await axiosInstance.get(
+            backend_url
+          );
+          const newHls = new Hls();
+          newHls.loadSource(url);
+          newHls.attachMedia(videoRef.current);
+          hlsLoaded.current = true;
+},[])
   useEffect(() => {
     const videoElement = videoRef.current;
 
@@ -55,20 +69,8 @@ function Video({
             setPlaying(true);
             return;
           }
-          var backend_url=""
-          if (type=="cut"){
-            backend_url=`streamcutvideo/${video_id}`
-          }else{
-            backend_url=`streamoriginalvideo/${video_id}`
-          }
-          const response = await axiosInstance.get(
-            backend_url
-          );
 
-          const newHls = new Hls();
-          newHls.loadSource(url);
-          newHls.attachMedia(videoRef.current);
-          hlsLoaded.current = true;
+
           //                             videoRef.current.play(); // Start playing the video immediately after attaching HLS instance
           setPlaying(true);
           if (!mutedRef.current) {
