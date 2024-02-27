@@ -37,6 +37,7 @@ function Video({
     }
   };
 useEffect(()=>{
+  async function prefetcher(){
     var backend_url=""
           if (type=="cut"){
             backend_url=`streamcutvideo/${video_id}`
@@ -46,10 +47,17 @@ useEffect(()=>{
           const response = await axiosInstance.get(
             backend_url
           );
-          const newHls = new Hls();
-          newHls.loadSource(url);
-          newHls.attachMedia(videoRef.current);
+      if (Hls.isSupported()) {
+    var newHls = new Hls();
+    newHls.loadSource(url);
+    newHls.attachMedia(videoRef.current);
+
           hlsLoaded.current = true;
+  } else{
+    alert("not supported")
+  }
+}
+          prefetcher()
 },[])
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -69,7 +77,6 @@ useEffect(()=>{
             setPlaying(true);
             return;
           }
-
 
           //                             videoRef.current.play(); // Start playing the video immediately after attaching HLS instance
           setPlaying(true);
@@ -123,10 +130,7 @@ useEffect(()=>{
         playsInline
         autoPlay={true}
       >
-        <source src={url} type="video/mp4" />
-        Your browser does not support the video tag.
       </video>
-      <VideoSidebar comments={comments} shares={shares} likes={likes} />
 
       <div className="bottom-controls">
         <div className="footer-left">
