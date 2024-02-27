@@ -1,11 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from "../axiosInstance";
 import Video from "../components/videoPlayer/Video";
-import { useParams, Link } from "react-router-dom";
 import "./css/CutVideo.css";
+
 export const PlayOriginalVideos = () => {
   const mutedRef = useRef(true);
-  const [videoList, setVideoList] = useState([]);
+  const [videoList, setVideoList] = useState([]); // State to store all videos
+  const [loadedVideos, setLoadedVideos] = useState([]); // State to store the loaded videos
+  const [loadedVideosCount, setLoadedVideosCount] = useState(0); // State to keep track of loaded videos count
+  const videosPerLoad = 5; // Number of videos to load per batch
+
   useEffect(() => {
     async function getVideos() {
       try {
@@ -18,49 +22,50 @@ export const PlayOriginalVideos = () => {
     getVideos();
   }, []);
 
+  // Function to load the next batch of videos
+  const loadNextVideos = () => {
+    if (videoList.length==0){
+      return
+    }
+    const nextVideos = videoList.slice(loadedVideosCount, loadedVideosCount + videosPerLoad);
+    setLoadedVideos(prevVideos => [...prevVideos, ...nextVideos]);
+    setLoadedVideosCount(prevCount => prevCount + videosPerLoad);
+  };
+
+  const loadIntialVideos=()=>{
+        const nextVideos = videoList.slice(0, 5);
+        console.log(nextVideos)
+    setLoadedVideos(prevVideos => [...prevVideos, ...nextVideos]);
+    setLoadedVideosCount(prevCount => prevCount + videosPerLoad);
+  }
+  // Effect to load the next batch of videos when the component mounts
+  useEffect(() => {
+    loadNextVideos();
+  }, [videoList]);
+
   return (
-    <>
-      <div className="app">
-        <div className="containers">
-          {videoList.length != 0
-            ? videoList.map((video) => {
-                var comments = 100;
-                var likes = 100;
-                var shares = 100;
-                var description = "demo testing purposes description";
-                var channel = "demo channel";
-                var song = "demo song";
-                var video_id=video.video_id
-                var video_path= video.video_path.split("/")[2];
-                console.log(video_path)
-                var video_name = video_path.split('.')[0];
-                console.log(video_name)
-                console.log(video_id)
-                var url = `https://app.test.fractalnetworks.co/hls/playlist_${video_name}.m3u8`;
-                var lastId=videoList[0].video_id
-                // alert(lastId)
-
-
-                return (
-                  <Video
-                    key={video.video_id}
-                    comments={comments}
-                    video_id={video_id}
-                    mutedRef={mutedRef}
-                    likes={likes}
-                    shares={shares}
-                    description={description}
-                    channel={channel}
-                    song={song}
-                    type="original"
-                    url={url}
-                    lastId={lastId}
-                  />
-                );
-              })
-            : "No Videos to Load"}
-        </div>
+    <div className="app">
+      <div className="containers">
+        {loadedVideos.map((video, index) => (
+          <Video
+            key={video.video_id}
+            comments={100}
+            video_id={video.video_id}
+            mutedRef={mutedRef}
+            likes={100}
+            shares={100}
+            description="demo testing purposes description"
+            channel="demo channel"
+            song="demo song"
+            type="original"
+            url={`https://app.test.fractalnetworks.co/hls/playlist_${video.video_path.split("/")[2].split(".")[0]}.m3u8`}
+            lastId={videoList[0].video_id}
+          />
+        ))}
+        {videoList.length === 0 && "No Videos to Load"}
       </div>
-    </>
+    </div>
   );
 };
+
+export default PlayOriginalVideos;

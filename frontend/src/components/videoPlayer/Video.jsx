@@ -6,7 +6,6 @@ import Hls from "hls.js";
 
 import VideoSidebar from "./VideoSidebar";
 function Video({
-
   mutedRef,
   url,
   song,
@@ -54,8 +53,6 @@ useEffect(()=>{
     newHls.attachMedia(videoRef.current);
     hlsLoaded.current = true;
     if (lastId==-1 || lastId==video_id){
-      alert('no id provided or last id and videoid are same with id')
-      alert(lastId)
       videoRef.current.play()
     }
   } else{
@@ -85,8 +82,6 @@ useEffect(()=>{
           //videoRef.current.play(); // Start playing the video immediately after attaching HLS instance
           setPlaying(true);
           if (!mutedRef.current) {
-            console.log("not muted");
-
             videoRef.current.muted = false;
           }
         } else {
