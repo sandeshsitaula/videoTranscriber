@@ -3,7 +3,7 @@ import "./css/Video.css";
 import VideoFooter from "./VideoFooter";
 import axiosInstance from "../../axiosInstance";
 import Hls from "hls.js";
-
+import {Oval} from 'react-loader-spinner'
 import VideoSidebar from "./VideoSidebar";
 function Video({
   mutedRef,
@@ -127,6 +127,17 @@ useEffect(()=>{
 
   return (
     <div className="video">
+   {!videoRef.current &&  <div style={{position: 'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)'}}>
+    <Oval
+  visible={true}
+  height="80"
+  width="80"
+  color="#4fa94d"
+  ariaLabel="oval-loading"
+  wrapperStyle={{}}
+  wrapperClass=""
+  />
+  </div> }
       <video
         onClick={onVideoPress}
         className="player"
