@@ -3,9 +3,10 @@ import "./css/Video.css";
 import VideoFooter from "./VideoFooter";
 import axiosInstance from "../../axiosInstance";
 import Hls from "hls.js";
-import {Oval} from 'react-loader-spinner'
+import { Oval } from 'react-loader-spinner';
 import VideoSidebar from "./VideoSidebar";
-function Video({
+
+export default function Video({
   mutedRef,
   url,
   song,
@@ -16,17 +17,37 @@ function Video({
   comments,
   shares,
   type,
-  lastId=-1,
-  currIndex=null,
-  totalLoadedVideoCount=null,
-  loadNextVideos=null
+  lastId = -1,
+  currIndex = null,
+  totalLoadedVideoCount = null,
+  loadNextVideos = null,
 }) {
   const [playing, setPlaying] = useState(true);
   const videoRef = useRef(null);
-  const hlsLoaded = useRef(false);
+  const hlsInstanceRef = useRef(null);
   const listUpdated=useRef(null)
+  const [loading, setLoading] = useState(true);
+  const instance=useRef(null)
 
-  const onVideoPress = () => {
+
+  const attachHlsMedia = async () => {
+    setLoading(true);
+    try {
+      instance.current.attachMedia(videoRef.current);
+      videoRef.current.play();
+      setPlaying(true);
+    } catch (error) {
+
+      console.error("Error attaching HLS media:", error);
+    } finally {
+      setLoading(false);
+    }
+    console.log("outside hre")
+      videoRef.current.play();
+      setPlaying(true);
+  };
+
+   const onVideoPress = () => {
     if (mutedRef.current) {
       mutedRef.current = false; // If currently muted, unmute it
       videoRef.current.muted = false;
@@ -40,62 +61,59 @@ function Video({
       setPlaying(true);
     }
   };
-useEffect(()=>{
-  async function prefetcher(){
-    var backend_url=""
-          if (type=="cut"){
-            backend_url=`streamcutvideo/${video_id}`
-          }else{
-            backend_url=`streamoriginalvideo/${video_id}`
-          }
-          const response = await axiosInstance.get(
-            backend_url
-          );
+  useEffect(() => {
+    async function prefetcher() {
+      var backend_url = ""
+      if (type == "cut") {
+        backend_url = `streamcutvideo/${video_id}`
+      } else {
+        backend_url = `streamoriginalvideo/${video_id}`
+      }
+      const response = await axiosInstance.get(
+        backend_url
+      );
       if (Hls.isSupported()) {
-    var newHls = new Hls();
-    newHls.loadSource(url);
-    newHls.attachMedia(videoRef.current);
-    hlsLoaded.current = true;
-    if (lastId==-1 || lastId==video_id){
-      videoRef.current.play()
+      const  hlsInstance=new Hls();
+        hlsInstance.loadSource(url);
+      hlsInstanceRef.current = true;
+      instance.current=hlsInstance
+        if (lastId==-1||lastId==video_id){
+        attachHlsMedia();
+        }
+      } else {
+        alert("HLS not supported");
+      }
     }
-  } else{
-    alert("not supported")
-  }
-}
-          prefetcher()
-},[])
+    prefetcher();
+  }, [url]);
+
   useEffect(() => {
     const videoElement = videoRef.current;
-
     const options = {
       root: null,
       rootMargin: "0px",
-      threshold: 0.2, // Adjust threshold as needed
+      threshold: 0.2,
     };
 
-    const handleIntersection = async (entries) => {
-      entries.forEach(async (entry) => {
-        if (entry.isIntersecting) {
-          // Load video content when it comes into view
-          if (hlsLoaded.current) {
-            videoRef.current.play();
-            setPlaying(true);
-          }
-          //videoRef.current.play(); // Start playing the video immediately after attaching HLS instance
-          if (!mutedRef.current) {
-            videoRef.current.muted = false;
-          }
+    const handleIntersection = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && hlsInstanceRef.current && loading) {
+          attachHlsMedia();
+          videoRef.current.play()
+          setPlaying(true)
+
+        } else if (!entry.isIntersecting && hlsInstanceRef.current) {
+          videoRef.current.pause();
+          setPlaying(false);
+        }
+
+        if (entry.isIntersecting){
           if (totalLoadedVideoCount && currIndex && !listUpdated.current && totalLoadedVideoCount-2==currIndex){
             loadNextVideos()
             listUpdated.current=true
 
             console.log("updated"+listUpdated.current)
-          }
-        } else {
-          videoRef.current.pause();
-          setPlaying(false);
-        }
+          }}
       });
     };
 
@@ -110,7 +128,7 @@ useEffect(()=>{
         observer.unobserve(videoElement);
       }
     };
-  }, [url]);
+  }, [url, loading]);
 
   useEffect(() => {
     if (!mutedRef.current) {
@@ -120,37 +138,35 @@ useEffect(()=>{
 
   useEffect(() => {
     if (videoRef.current) {
-      // Set the muted property of the video element
       videoRef.current.muted = mutedRef.current;
     }
-  }, [hlsLoaded]);
+  }, [videoRef.current]);
 
   return (
     <div className="video">
-   {!videoRef.current &&  <div style={{position: 'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)'}}>
-    <Oval
-  visible={true}
-  height="80"
-  width="80"
-  color="#4fa94d"
-  ariaLabel="oval-loading"
-  wrapperStyle={{}}
-  wrapperClass=""
-  />
-  </div> }
+      {loading && (
+
+       <div style={{position: 'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)'}}>
+          <Oval
+            visible={loading}
+            height="40"
+            width="40"
+            color="#ffffff"
+            ariaLabel="loading-spinner"
+          />
+        </div>
+      )}
       <video
         onClick={onVideoPress}
         className="player"
         muted={mutedRef.current}
         ref={videoRef}
         loop
+        autoPlay
         playsInline
-      >
-      </video>
-
+      ></video>
       <div className="bottom-controls">
         <div className="footer-left">
-          {/* The left part of the container */}
           <VideoFooter
             channel={channel}
             description={description}
@@ -162,4 +178,3 @@ useEffect(()=>{
     </div>
   );
 }
-export default Video;
