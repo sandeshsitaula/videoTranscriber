@@ -27,7 +27,6 @@ export const PlayOriginalVideos = () => {
     if (videoList.length==0){
       return
     }
-    alert("next video in loading")
 
     const nextVideos = videoList.slice(loadedVideosCount, loadedVideosCount + videosPerLoad);
     setLoadedVideos(prevVideos => [...prevVideos, ...nextVideos]);

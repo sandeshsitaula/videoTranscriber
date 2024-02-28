@@ -18,7 +18,7 @@ if (userAgent.includes('android')){
         setBackCameraExists(true);
 }
     else if(userAgent.includes('iphone')||userAgent.includes('ipad')){
-      setISIOS(true)
+      setIsIOS(true)
       setBackCameraExists(true);
   }else{
     setBackCameraExists(false)

@@ -42,7 +42,6 @@ export default function Video({
     } finally {
       setLoading(false);
     }
-    console.log("outside hre")
       videoRef.current.play();
       setPlaying(true);
   };
@@ -107,6 +106,11 @@ export default function Video({
           setPlaying(false);
         }
 
+        if (entry.isIntersecting && !loading){
+          videoRef.current.play()
+          setPlaying(true)
+        }
+
         if (entry.isIntersecting){
           if (totalLoadedVideoCount && currIndex && !listUpdated.current && totalLoadedVideoCount-2==currIndex){
             loadNextVideos()
@@ -148,7 +152,6 @@ export default function Video({
 
        <div style={{position: 'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)'}}>
           <Oval
-            visible={loading}
             height="40"
             width="40"
             color="#ffffff"
