@@ -83,35 +83,25 @@ export function CaptureEvent(props) {
     }
   }, []);
 
-  const startNewRecording = () => {
+  const startNewRecording = (swap=false) => {
     setRecordedChunks([]);
-    stopRecording();
+    if (swap){
+      startIntialCamera()
+      console.log(facingMode)
+    }
     setIntialState(false);
     startRecording(facingMode);
   };
 
   const startRecording = async (facingMode = "user") => {
     try {
-      const mergedStream = await recordingLogic(facingMode);
-
-      if (!mergedStream) {
-        console.error("Failed to obtain a valid media stream");
-        return;
-      }
-      if (MediaRecorder.isTypeSupported("video/webm; codecs=vp9")) {
-        var options = {
-          mimeType: "video/webm; codecs=vp9",
-          videoBitsPerSecond: 8000000,
-        };
-      } else if (MediaRecorder.isTypeSupported("video/webm")) {
-        var options = { mimeType: "video/webm", videoBitsPerSecond: 8000000 };
-      } else if (MediaRecorder.isTypeSupported("video/mp4")) {
-        var options = { mimeType: "video/mp4", videoBitsPerSecond: 8000000 };
-      } else {
-        alert("no suitable mimetype found for this device");
-        console.error("no suitable mimetype found for this device");
-      }
-      const recorder = new MediaRecorder(mergedStream, options);
+      console.log("inside start recording"+facingMode)
+      let recorder
+     if (facingMode=='user'){
+        recorder=frontMediaRecorder
+    }else{
+      recorder=backMediaRecorder
+    }
       recorder.ondataavailable = handleDataAvailable;
       recorder.start();
       if (facingMode == "user") {
@@ -124,8 +114,7 @@ export function CaptureEvent(props) {
     }
   };
 
-  const stopRecording = () => {
-    console.log(recordedChunks);
+  const stopRecording = (swap=false) => {
     if (frontMediaRecorder) {
       frontMediaRecorder.stop();
       setFrontMediaRecorder(null);
@@ -134,10 +123,12 @@ export function CaptureEvent(props) {
       backMediaRecorder.stop();
       setBackMediaRecorder(null);
     }
+    if (swap){
     if (videoRef.current.srcObject) {
       const tracks = videoRef.current.srcObject.getTracks();
       tracks.forEach((track) => track.stop()); // Stop tracks associated with the back camera
       videoRef.current.srcObject = null; // Reset srcObject
+    }
     }
   };
 
@@ -155,6 +146,7 @@ export function CaptureEvent(props) {
     //       alert("Recording in progress");
     //       return;
     //     }
+    var eventName=prompt("Enter event name")
     if (recordedChunks.length == 0) {
       alert("Nothing to Upload.Record something first");
       return;
@@ -184,22 +176,22 @@ export function CaptureEvent(props) {
 
   const swapCamera = () => {
     if (frontMediaRecorder) {
-      stopRecording();
       setFacingMode("environment");
+      stopRecording(true);
       if (intialState) {
         console.log("in intial state");
         startIntialCamera("environment");
       } else {
-        startRecording("environment");
+        startNewRecording(true);
       }
     }
     if (backMediaRecorder) {
       setFacingMode("user");
-      stopRecording();
+      stopRecording(true);
       if (intialState) {
         startIntialCamera("user");
       } else {
-        startRecording("user");
+        startNewRecording(true);
       }
     }
     // Start recording with the updated facing mode
