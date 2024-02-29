@@ -8,7 +8,7 @@ export const PlayOriginalVideos = () => {
   const [videoList, setVideoList] = useState([]); // State to store all videos
   const [loadedVideos, setLoadedVideos] = useState([]); // State to store the loaded videos
   const [loadedVideosCount, setLoadedVideosCount] = useState(0); // State to keep track of loaded videos count
-  const videosPerLoad = 5; // Number of videos to load per batch
+  const videosPerLoad = 6; // Number of videos to load per batch
 
   useEffect(() => {
     async function getVideos() {

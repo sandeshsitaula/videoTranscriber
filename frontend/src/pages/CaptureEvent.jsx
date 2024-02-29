@@ -1,5 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { Button, FormControl } from "react-bootstrap";
+import { PiRecordFill } from "react-icons/pi";
+import { FaRecordVinyl } from "react-icons/fa6";
+import { MdDone } from "react-icons/md";
+import './css/CaptureEvent.css'
+import {CameraSwitch} from '../assets/cameraSwitch.svg';
 export function CaptureEvent(props) {
   const [eventName, setEventName] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -8,24 +13,22 @@ export function CaptureEvent(props) {
   const [backMediaRecorder, setBackMediaRecorder] = useState(null);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [isIOS, setIsIOS] = useState(false);
-  const [facingMode,setFacingMode]=useState('user')
+  const [facingMode, setFacingMode] = useState("user");
   const [backCameraExists, setBackCameraExists] = useState(true);
+  const [time,setTime]=useState('')
   const videoRef = useRef(null);
 
   useEffect(() => {
     const userAgent = window.navigator.userAgent.toLowerCase();
-if (userAgent.includes('android')){
-        setBackCameraExists(true);
-}
-    else if(userAgent.includes('iphone')||userAgent.includes('ipad')){
-      setIsIOS(true)
+    if (userAgent.includes("android")) {
       setBackCameraExists(true);
-  }else{
-    setBackCameraExists(false)
-  }
-
+    } else if (userAgent.includes("iphone") || userAgent.includes("ipad")) {
+      setIsIOS(true);
+      setBackCameraExists(true);
+    } else {
+      setBackCameraExists(false);
+    }
   }, []);
-
 
   async function recordingLogic(facingMode) {
     const constraints = {
@@ -40,26 +43,28 @@ if (userAgent.includes('android')){
     return mergedStream;
   }
 
-
- async function startIntialCamera(facingMode) {
+  async function startIntialCamera(facingMode) {
     try {
-         const mergedStream = await recordingLogic(facingMode);
-setIntialState(true)
-if (!mergedStream) {
-    console.error('Failed to obtain a valid media stream');
-    return;
-}
-      console.log(mergedStream)
+      const mergedStream = await recordingLogic(facingMode);
+      setIntialState(true);
+      if (!mergedStream) {
+        console.error("Failed to obtain a valid media stream");
+        return;
+      }
+      console.log(mergedStream);
       if (MediaRecorder.isTypeSupported("video/webm; codecs=vp9")) {
-      var options = { mimeType: "video/webm; codecs=vp9", videoBitsPerSecond:8000000 };
-    } else if (MediaRecorder.isTypeSupported("video/webm")) {
-      var options = { mimeType: "video/webm",videoBitsPerSecond:8000000 };
-    } else if (MediaRecorder.isTypeSupported("video/mp4")) {
-      var options = { mimeType: "video/mp4", videoBitsPerSecond: 8000000 };
-    } else {
-      alert("no suitable mimetype found for this device");
-      console.error("no suitable mimetype found for this device");
-    }
+        var options = {
+          mimeType: "video/webm; codecs=vp9",
+          videoBitsPerSecond: 8000000,
+        };
+      } else if (MediaRecorder.isTypeSupported("video/webm")) {
+        var options = { mimeType: "video/webm", videoBitsPerSecond: 8000000 };
+      } else if (MediaRecorder.isTypeSupported("video/mp4")) {
+        var options = { mimeType: "video/mp4", videoBitsPerSecond: 8000000 };
+      } else {
+        alert("no suitable mimetype found for this device");
+        console.error("no suitable mimetype found for this device");
+      }
       const recorder = new MediaRecorder(mergedStream, options);
       recorder.start();
       if (facingMode == "user") {
@@ -71,12 +76,12 @@ if (!mergedStream) {
       console.error("Error accessing media devices:", error);
     }
   }
-   useEffect(() => {
-     console.log("calling startintial acmera");
-     if (intialState){
-     startIntialCamera("user");
-     }
-   }, []);
+  useEffect(() => {
+    console.log("calling startintial acmera");
+    if (intialState) {
+      startIntialCamera("user");
+    }
+  }, []);
 
   const startNewRecording = () => {
     setRecordedChunks([]);
@@ -89,20 +94,23 @@ if (!mergedStream) {
     try {
       const mergedStream = await recordingLogic(facingMode);
 
-if (!mergedStream) {
-    console.error('Failed to obtain a valid media stream');
-    return;
-}
+      if (!mergedStream) {
+        console.error("Failed to obtain a valid media stream");
+        return;
+      }
       if (MediaRecorder.isTypeSupported("video/webm; codecs=vp9")) {
-      var options = { mimeType: "video/webm; codecs=vp9", videoBitsPerSecond:8000000 };
-    } else if (MediaRecorder.isTypeSupported("video/webm")) {
-      var options = { mimeType: "video/webm",videoBitsPerSecond:8000000 };
-    } else if (MediaRecorder.isTypeSupported("video/mp4")) {
-      var options = { mimeType: "video/mp4", videoBitsPerSecond: 8000000 };
-    } else {
-      alert("no suitable mimetype found for this device");
-      console.error("no suitable mimetype found for this device");
-    }
+        var options = {
+          mimeType: "video/webm; codecs=vp9",
+          videoBitsPerSecond: 8000000,
+        };
+      } else if (MediaRecorder.isTypeSupported("video/webm")) {
+        var options = { mimeType: "video/webm", videoBitsPerSecond: 8000000 };
+      } else if (MediaRecorder.isTypeSupported("video/mp4")) {
+        var options = { mimeType: "video/mp4", videoBitsPerSecond: 8000000 };
+      } else {
+        alert("no suitable mimetype found for this device");
+        console.error("no suitable mimetype found for this device");
+      }
       const recorder = new MediaRecorder(mergedStream, options);
       recorder.ondataavailable = handleDataAvailable;
       recorder.start();
@@ -117,7 +125,7 @@ if (!mergedStream) {
   };
 
   const stopRecording = () => {
-    console.log(recordedChunks)
+    console.log(recordedChunks);
     if (frontMediaRecorder) {
       frontMediaRecorder.stop();
       setFrontMediaRecorder(null);
@@ -131,7 +139,6 @@ if (!mergedStream) {
       tracks.forEach((track) => track.stop()); // Stop tracks associated with the back camera
       videoRef.current.srcObject = null; // Reset srcObject
     }
-
   };
 
   const handleDataAvailable = (event) => {
@@ -144,10 +151,10 @@ if (!mergedStream) {
     setEventName(e.target.value);
   }
   async function handleUpload() {
-//     if (frontMediaRecorder || backMediaRecorder) {
-//       alert("Recording in progress");
-//       return;
-//     }
+    //     if (frontMediaRecorder || backMediaRecorder) {
+    //       alert("Recording in progress");
+    //       return;
+    //     }
     if (recordedChunks.length == 0) {
       alert("Nothing to Upload.Record something first");
       return;
@@ -178,7 +185,7 @@ if (!mergedStream) {
   const swapCamera = () => {
     if (frontMediaRecorder) {
       stopRecording();
-      setFacingMode('environment')
+      setFacingMode("environment");
       if (intialState) {
         console.log("in intial state");
         startIntialCamera("environment");
@@ -187,7 +194,7 @@ if (!mergedStream) {
       }
     }
     if (backMediaRecorder) {
-      setFacingMode('user')
+      setFacingMode("user");
       stopRecording();
       if (intialState) {
         startIntialCamera("user");
@@ -201,34 +208,74 @@ if (!mergedStream) {
     <>
       <div
         style={{
-          display: "flex",
           backgroundColor: "#282828",
-          flexDirection: "column",
-          alignItems: "center",
+          width: "100%",
+          margin: "0",
+          padding: "0",
         }}
       >
         <video
           muted={true}
-          style={{ height: "80vh", marginBottom: "1rem" }}
+          style={{
+            padding: "0px",
+            width: "100%",
+            height: "100vh",
+            margin: "0",
+          }}
           ref={videoRef}
           playsInline
           autoPlay
         />
         <div>
-      {(!frontMediaRecorder&&!backMediaRecorder)&&  <Button style={{marginRight:'1rem'}} onClick={startIntialCamera}>
-        Start Camera
-        </Button>}
+          <div className="controllerContainer">
+          <CameraSwitch/>
+
+            <div style={{display:'flex'}} className="icons">
+
+            {/* either in intial state or not recording */}
+        {(intialState||(!frontMediaRecorder&&  !backMediaRecorder))&&    <PiRecordFill onClick={startNewRecording}  style={{cursor:'pointer', fontSize: "5rem", color: "red" }} /> }
+
+        {/* Recording in progress */}
+           <p style={{color:'white'}}>{time}</p>
+           <br />
+        {(!intialState&& (frontMediaRecorder||backMediaRecorder)) &&(
+          <>
+          <FaRecordVinyl style={{cursor:'pointer', fontSize: "5rem", color: "red" }} />
+            <div
+              style={{
+                backgroundColor: "red",
+                fontSize: "2rem",
+                width: "2.5rem",
+                textAlign: "center",
+                borderRadius: "50%",
+                height:'100%',
+              }}
+            >
+            <MdDone style={{cursor:'pointer', fontSize: "2rem", color: "white" }} />
+            </div>
+          </>
+
+        )}
+            </div>
+          </div>
+          {!frontMediaRecorder && !backMediaRecorder && (
+            <Button style={{ marginRight: "1rem" }} onClick={startIntialCamera}>
+              Start Camera
+            </Button>
+          )}
 
           <Button style={{ marginRight: "1rem" }} onClick={startNewRecording}>
             Start New Recording
           </Button>
 
-         <Button style={{ marginRight: "1rem"}} onClick={stopRecording}>
+          <Button style={{ marginRight: "1rem" }} onClick={stopRecording}>
             Stop Recording
           </Button>
 
           {(frontMediaRecorder || backMediaRecorder) && backCameraExists && (
-            <Button style={{marginTop:'1rem'}} onClick={swapCamera}>Swap Camera</Button>
+            <Button style={{ marginTop: "1rem" }} onClick={swapCamera}>
+              Swap Camera
+            </Button>
           )}
 
           <br />

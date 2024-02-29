@@ -127,7 +127,7 @@ def video_streamer(video_path,typeof):
         return
 
     playlist_path=f'{output_directory}/playlist_{video_id}.m3u8'
-    # ffmpeg_command = ['ffmpeg','-i', original,'-c:v', 'libx264','-c:a', 'aac','-hls_time', '10','-hls_list_size', '0','-hls_segment_filename', f'{output_directory}/segment_{video_id}_%d.ts',f'{output_directory}/playlist_{video_id}.m3u8']
+
     ffmpeg_command = [
     'ffmpeg', '-i', video_path, '-c:v', 'libx264', '-c:a', 'aac', '-hls_time', '10',
     '-hls_list_size', '0', '-hls_segment_filename', f'{output_directory}/segment_{video_id}_%d.ts',

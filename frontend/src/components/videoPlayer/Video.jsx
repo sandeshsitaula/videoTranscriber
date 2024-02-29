@@ -33,7 +33,6 @@ export default function Video({
   const attachHlsMedia = async () => {
     setLoading(true);
     try {
-      instance.current.attachMedia(videoRef.current);
       videoRef.current.play();
       setPlaying(true);
     } catch (error) {
@@ -42,8 +41,6 @@ export default function Video({
     } finally {
       setLoading(false);
     }
-      videoRef.current.play();
-      setPlaying(true);
   };
 
    const onVideoPress = () => {
@@ -75,7 +72,7 @@ export default function Video({
       const  hlsInstance=new Hls();
         hlsInstance.loadSource(url);
       hlsInstanceRef.current = true;
-      instance.current=hlsInstance
+      hlsInstance.attachMedia(videoRef.current);
         if (lastId==-1||lastId==video_id){
         attachHlsMedia();
         }
@@ -112,7 +109,7 @@ export default function Video({
         }
 
         if (entry.isIntersecting){
-          if (totalLoadedVideoCount && currIndex && !listUpdated.current && totalLoadedVideoCount-2==currIndex){
+          if (totalLoadedVideoCount && currIndex && !listUpdated.current && totalLoadedVideoCount-4==currIndex){
             loadNextVideos()
             listUpdated.current=true
 
@@ -132,7 +129,7 @@ export default function Video({
         observer.unobserve(videoElement);
       }
     };
-  }, [url, loading]);
+  }, [url,loading]);
 
   useEffect(() => {
     if (!mutedRef.current) {
@@ -165,7 +162,6 @@ export default function Video({
         muted={mutedRef.current}
         ref={videoRef}
         loop
-        autoPlay
         playsInline
       ></video>
       <div className="bottom-controls">
