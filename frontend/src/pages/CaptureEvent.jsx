@@ -4,7 +4,7 @@ import { PiRecordFill } from "react-icons/pi";
 import { FaRecordVinyl } from "react-icons/fa6";
 import { MdDone } from "react-icons/md";
 import './css/CaptureEvent.css'
-import {CameraSwitch} from '../assets/cameraSwitch.svg';
+import CameraSwitch from '../assets/cameraswitch.svg';
 export function CaptureEvent(props) {
   const [eventName, setEventName] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -228,8 +228,9 @@ export function CaptureEvent(props) {
         />
         <div>
           <div className="controllerContainer">
-          <CameraSwitch/>
-
+    {(frontMediaRecorder || backMediaRecorder) && backCameraExists &&
+      <img onClick={swapCamera} style={{cursor:'pointer'}} src={CameraSwitch} alt="SVG Image" />
+    }
             <div style={{display:'flex'}} className="icons">
 
             {/* either in intial state or not recording */}
@@ -239,8 +240,10 @@ export function CaptureEvent(props) {
            <p style={{color:'white'}}>{time}</p>
            <br />
         {(!intialState&& (frontMediaRecorder||backMediaRecorder)) &&(
-          <>
-          <FaRecordVinyl style={{cursor:'pointer', fontSize: "5rem", color: "red" }} />
+
+          <FaRecordVinyl onClick={stopRecording} style={{cursor:'pointer', fontSize: "5rem", color: "red" }} />
+         )}
+         {recordedChunks.length>0&&(
             <div
               style={{
                 backgroundColor: "red",
@@ -248,12 +251,12 @@ export function CaptureEvent(props) {
                 width: "2.5rem",
                 textAlign: "center",
                 borderRadius: "50%",
-                height:'100%',
+                height:'4rem',
               }}
+             onClick={handleUpload}
             >
             <MdDone style={{cursor:'pointer', fontSize: "2rem", color: "white" }} />
             </div>
-          </>
 
         )}
             </div>
@@ -288,7 +291,7 @@ export function CaptureEvent(props) {
             value={eventName}
           />
           <br />
-          <Button onClick={handleUpload} disabled={uploading}>
+          <Button onClick={handleUpload}>
             {uploading ? "Uploading" : "Upload Video"}
           </Button>
         </div>
