@@ -45,13 +45,12 @@ export function CaptureEvent(props) {
 
   async function startIntialCamera(facingMode) {
     try {
+      alert(facingMode)
       const mergedStream = await recordingLogic(facingMode);
-      setIntialState(true);
       if (!mergedStream) {
         console.error("Failed to obtain a valid media stream");
         return;
       }
-      console.log(mergedStream);
       if (MediaRecorder.isTypeSupported("video/webm; codecs=vp9")) {
         var options = {
           mimeType: "video/webm; codecs=vp9",
@@ -66,7 +65,6 @@ export function CaptureEvent(props) {
         console.error("no suitable mimetype found for this device");
       }
       const recorder = new MediaRecorder(mergedStream, options);
-      recorder.start();
       if (facingMode == "user") {
         setFrontMediaRecorder(recorder);
       } else {
@@ -86,35 +84,36 @@ export function CaptureEvent(props) {
   const startNewRecording = (swap=false) => {
     setRecordedChunks([]);
     if (swap){
-      startIntialCamera()
+      startIntialCamera(facingMode)
       console.log(facingMode)
     }
-    setIntialState(false);
+    setIntialState((prev)=>!prev);
     startRecording(facingMode);
   };
 
+
   const startRecording = async (facingMode = "user") => {
     try {
-      console.log("inside start recording"+facingMode)
+      console.log("inside start recording"+facingMode+intialState)
       let recorder
+
      if (facingMode=='user'){
         recorder=frontMediaRecorder
     }else{
       recorder=backMediaRecorder
     }
+    recorder.start()
       recorder.ondataavailable = handleDataAvailable;
-      recorder.start();
-      if (facingMode == "user") {
-        setFrontMediaRecorder(recorder);
-      } else {
-        setBackMediaRecorder(recorder);
-      }
+    console.log(recorder)
     } catch (error) {
       console.error("Error accessing media devices:", error);
     }
   };
 
-  const stopRecording = (swap=false) => {
+const stopRecording = (swap = false) => {
+  console.log(recordedChunks)
+  if (swap) {
+    console.log("here them ")
     if (frontMediaRecorder) {
       frontMediaRecorder.stop();
       setFrontMediaRecorder(null);
@@ -123,14 +122,25 @@ export function CaptureEvent(props) {
       backMediaRecorder.stop();
       setBackMediaRecorder(null);
     }
-    if (swap){
     if (videoRef.current.srcObject) {
       const tracks = videoRef.current.srcObject.getTracks();
-      tracks.forEach((track) => track.stop()); // Stop tracks associated with the back camera
-      videoRef.current.srcObject = null; // Reset srcObject
+      tracks.forEach((track) => track.stop());
+      videoRef.current.srcObject = null;
     }
+  } else {
+    alert('i am here')
+    setIntialState(true);
+    // Stop recording process without resetting any state
+    if (frontMediaRecorder) {
+      frontMediaRecorder.stop()
+//       frontMediaRecorder.ondataavailable=null
     }
-  };
+    if (backMediaRecorder) {
+      backMediaRecorder.stop()
+//       backMediaRecorder.ondataavailable=null
+    }
+  }
+};
 
   const handleDataAvailable = (event) => {
     if (event.data.size > 0) {
@@ -141,11 +151,8 @@ export function CaptureEvent(props) {
   function handleEventNameChange(e) {
     setEventName(e.target.value);
   }
+
   async function handleUpload() {
-    //     if (frontMediaRecorder || backMediaRecorder) {
-    //       alert("Recording in progress");
-    //       return;
-    //     }
     var eventName=prompt("Enter event name")
     if (recordedChunks.length == 0) {
       alert("Nothing to Upload.Record something first");
@@ -226,14 +233,13 @@ export function CaptureEvent(props) {
             <div style={{display:'flex'}} className="icons">
 
             {/* either in intial state or not recording */}
-        {(intialState||(!frontMediaRecorder&&  !backMediaRecorder))&&    <PiRecordFill onClick={startNewRecording}  style={{cursor:'pointer', fontSize: "5rem", color: "red" }} /> }
+        {intialState && <PiRecordFill onClick={()=>startNewRecording(false)}  style={{cursor:'pointer', fontSize: "5rem", color: "red" }} /> }
 
         {/* Recording in progress */}
            <p style={{color:'white'}}>{time}</p>
            <br />
-        {(!intialState&& (frontMediaRecorder||backMediaRecorder)) &&(
-
-          <FaRecordVinyl onClick={stopRecording} style={{cursor:'pointer', fontSize: "5rem", color: "red" }} />
+        {!intialState&&(
+          <FaRecordVinyl onClick={()=>stopRecording(false)} style={{cursor:'pointer', fontSize: "5rem", color: "red" }} />
          )}
          {recordedChunks.length>0&&(
             <div
