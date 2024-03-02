@@ -42,6 +42,7 @@ export const PlayOriginalVideos = () => {
     <div className="app">
       <div className="containers">
         {loadedVideos.map((video, index) => (
+          <div style={{height:'100vh'}}>
           <Video
             key={video.video_id}
             comments={100}
@@ -59,6 +60,7 @@ export const PlayOriginalVideos = () => {
             totalLoadedVideoCount={loadedVideosCount}
             loadNextVideos={loadNextVideos}
           />
+          </div>
         ))}
         {videoList.length === 0 && "No Videos to Load"}
       </div>

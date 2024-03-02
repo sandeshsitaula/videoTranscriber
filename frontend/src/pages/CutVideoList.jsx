@@ -39,6 +39,7 @@ export const CutVideoList = () => {
                 var lastId=cutVideoList[0].cut_video_id
               
                 return (
+                  <div style={{height:'100%'}}>
                   <Video
                     key={video.cut_video_id}
                     comments={comments}
@@ -53,6 +54,7 @@ export const CutVideoList = () => {
                     url={url}
                     lastId={lastId}
                   />
+                  </div>
                 );
               })
             : "No Videos to Load"}

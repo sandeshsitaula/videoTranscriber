@@ -18,6 +18,7 @@ export function CaptureEvent(props) {
   const [time,setTime]=useState('')
   const videoRef = useRef(null);
   const recorderRef=useRef(null)
+
   useEffect(() => {
     const userAgent = window.navigator.userAgent.toLowerCase();
     if (userAgent.includes("android")) {
@@ -31,7 +32,6 @@ export function CaptureEvent(props) {
   }, []);
 
   async function recordingLogic(facingMode) {
-    alert('recordinglogic'+facingMode)
     const constraints = {
       video: {
         facingMode: facingMode, // 'user' for front camera, 'environment' for back camera
@@ -44,10 +44,6 @@ export function CaptureEvent(props) {
     // Capture audio from the surrounding environment
     return mergedStream;
   }
-useEffect(()=>{
-  console.log(recorderRef.current)
-  console.log(recordedChunks)
-})
   async function startIntialCamera(facingMode) {
     try {
       const mergedStream = await recordingLogic(facingMode);
@@ -76,29 +72,22 @@ useEffect(()=>{
         setBackMediaRecorder(recorder);
       }
       recorderRef.current=recorder
-      console.log(recorderRef.current)
     } catch (error) {
       console.error("Error accessing media devices:", error);
     }
   }
   useEffect(() => {
-    console.log("calling startintial acmera");
     if (intialState) {
       startIntialCamera("user");
     }
   }, []);
 
   const startNewRecording = async(swap=false,facingMode=facingMode) => {
-   alert('in startnew recording'+swap)
     if (swap){
-      alert('in intial mode')
      await startIntialCamera(facingMode)
     }else{
-      alert("in swap mode")
     setRecordedChunks([]);
-
     }
-
     setIntialState(false);
     startRecording(facingMode);
   };
@@ -106,27 +95,15 @@ useEffect(()=>{
 
   const startRecording = async (facingMode = "user") => {
     try {
-      alert("inside sttart recording"+facingMode+intialState)
-      console.log("inside start recording"+facingMode+intialState)
 
-
-    //  if (facingMode=='user'){
-    //     recorder=frontMediaRecorder
-    // }else{
-    //   recorder=backMediaRecorder
-    // }
-    alert(recorderRef.current)
     recorderRef.current.start()
       recorderRef.current.ondataavailable = handleDataAvailable;
-      console.log(recorderRef.current)
-//     console.log(recorder)
     } catch (error) {
       console.error("Error accessing media devices:", error);
     }
   };
 
 const stopRecording = (swap = false) => {
-  console.log(recordedChunks)
 
   if (swap) {
     recorderRef.current.stop()
@@ -147,14 +124,11 @@ const stopRecording = (swap = false) => {
   } else {
     recorderRef.current.stop()
     setIntialState(true);
-    // Stop recording process without resetting any state
     if (frontMediaRecorder) {
       frontMediaRecorder.stop()
-//       frontMediaRecorder.ondataavailable=null
     }
     if (backMediaRecorder) {
       backMediaRecorder.stop()
-//       backMediaRecorder.ondataavailable=null
     }
   }
 };
@@ -206,7 +180,6 @@ const stopRecording = (swap = false) => {
         startIntialCamera("environment");
         return
       } else {
-        alert("not intial state")
         startNewRecording(true,'environment');
         return
       }
@@ -246,10 +219,9 @@ const stopRecording = (swap = false) => {
         />
         <div>
           <div className="controllerContainer">
-   {/* {(frontMediaRecorder || backMediaRecorder) &&
+  {(!!recorderRef.current) && backCameraExists&&
       <img onClick={swapCamera} style={{cursor:'pointer'}} src={CameraSwitch} alt="SVG Image" />
-    }*/}
-     <img onClick={swapCamera} style={{cursor:'pointer'}} src={CameraSwitch} alt="SVG Image" />
+    }
 
             <div style={{display:'flex'}} className="icons">
 
@@ -262,7 +234,7 @@ const stopRecording = (swap = false) => {
         {!intialState&&(
           <FaRecordVinyl onClick={()=>stopRecording(false)} style={{cursor:'pointer', fontSize: "5rem", color: "red" }} />
          )}
-         {recordedChunks.length>0&&(
+         {recordedChunks.length>0&&intialState&&(
             <div
               style={{
                 backgroundColor: "red",
@@ -280,40 +252,7 @@ const stopRecording = (swap = false) => {
         )}
             </div>
           </div>
-          {!frontMediaRecorder && !backMediaRecorder && (
-            <Button style={{ marginRight: "1rem" }} onClick={startIntialCamera}>
-              Start Camera
-            </Button>
-          )}
-
-          <Button style={{ marginRight: "1rem" }} onClick={startNewRecording}>
-            Start New Recording
-          </Button>
-
-          <Button style={{ marginRight: "1rem" }} onClick={stopRecording}>
-            Stop Recording
-          </Button>
-
-          {(frontMediaRecorder || backMediaRecorder) && backCameraExists && (
-            <Button style={{ marginTop: "1rem" }} onClick={swapCamera}>
-              Swap Camera
-            </Button>
-          )}
-
-          <br />
-          <br />
-          <FormControl
-            placeholder="EventName"
-            name="eventName"
-            type="text"
-            onChange={(e) => handleEventNameChange(e)}
-            value={eventName}
-          />
-          <br />
-          <Button onClick={handleUpload}>
-            {uploading ? "Uploading" : "Upload Video"}
-          </Button>
-        </div>
+      </div>
       </div>
     </>
   );
