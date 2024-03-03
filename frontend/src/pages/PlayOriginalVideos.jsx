@@ -24,42 +24,50 @@ export const PlayOriginalVideos = () => {
 
   // Function to load the next batch of videos
   const loadNextVideos = () => {
-    if (videoList.length==0){
-      return
+    if (videoList.length == 0) {
+      return;
     }
 
-    const nextVideos = videoList.slice(loadedVideosCount, loadedVideosCount + videosPerLoad);
+    const nextVideos = videoList.slice(
+      loadedVideosCount,
+      loadedVideosCount + videosPerLoad
+    );
     setLoadedVideos(prevVideos => [...prevVideos, ...nextVideos]);
     setLoadedVideosCount(prevCount => prevCount + videosPerLoad);
   };
 
   // Effect to load the next batch of videos when the component mounts
-  useEffect(() => {
-    loadNextVideos();
-  }, [videoList]);
+  useEffect(
+    () => {
+      loadNextVideos();
+    },
+    [videoList]
+  );
 
   return (
     <div className="app">
       <div className="containers">
         {loadedVideos.map((video, index) => (
-          <div style={{height:'100vh'}}>
-          <Video
-            key={video.video_id}
-            comments={100}
-            video_id={video.video_id}
-            mutedRef={mutedRef}
-            likes={100}
-            shares={100}
-            description="demo testing purposes description"
-            channel="demo channel"
-            song="demo song"
-            type="original"
-            url={`https://app.test.fractalnetworks.co/hls/playlist_${video.video_path.split("/")[2].split(".")[0]}.m3u8`}
-            lastId={videoList[0].video_id}
-            currIndex={index}
-            totalLoadedVideoCount={loadedVideosCount}
-            loadNextVideos={loadNextVideos}
-          />
+          <div style={{ height: "100vh" }}>
+            <Video
+              key={video.video_id}
+              comments={100}
+              video_id={video.video_id}
+              mutedRef={mutedRef}
+              likes={100}
+              shares={100}
+              description="demo testing purposes description"
+              channel="demo channel"
+              song="demo song"
+              type="original"
+              url={`https://app.test.fractalnetworks.co/hls/playlist_${
+                video.video_path.split("/")[2].split(".")[0]
+              }.m3u8`}
+              lastId={videoList[0].video_id}
+              currIndex={index}
+              totalLoadedVideoCount={loadedVideosCount}
+              loadNextVideos={loadNextVideos}
+            />
           </div>
         ))}
         {videoList.length === 0 && "No Videos to Load"}

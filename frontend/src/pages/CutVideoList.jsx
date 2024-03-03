@@ -24,7 +24,7 @@ export const CutVideoList = () => {
       <div className="app">
         <div className="containers">
           {cutVideoList.length != 0
-            ? cutVideoList.map((video) => {
+            ? cutVideoList.map(video => {
                 var comments = 100;
                 var likes = 100;
                 var shares = 100;
@@ -36,24 +36,24 @@ export const CutVideoList = () => {
                 var video_ids_list = video_name.split("_");
                 var video_id = video_ids_list[video_ids_list.length - 2];
                 var url = `https://app.test.fractalnetworks.co/hls/playlist_${video_id}.m3u8`;
-                var lastId=cutVideoList[0].cut_video_id
-              
+                var lastId = cutVideoList[0].cut_video_id;
+
                 return (
-                  <div style={{height:'100%'}}>
-                  <Video
-                    key={video.cut_video_id}
-                    comments={comments}
-                    video_id={cut_video_id}
-                    mutedRef={mutedRef}
-                    likes={likes}
-                    shares={shares}
-                    description={description}
-                    channel={channel}
-                    song={song}
-                    type="cut"
-                    url={url}
-                    lastId={lastId}
-                  />
+                  <div style={{ height: "100%" }}>
+                    <Video
+                      key={video.cut_video_id}
+                      comments={comments}
+                      video_id={cut_video_id}
+                      mutedRef={mutedRef}
+                      likes={likes}
+                      shares={shares}
+                      description={description}
+                      channel={channel}
+                      song={song}
+                      type="cut"
+                      url={url}
+                      lastId={lastId}
+                    />
                   </div>
                 );
               })

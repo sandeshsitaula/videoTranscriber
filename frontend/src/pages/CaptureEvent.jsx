@@ -89,7 +89,7 @@ export function CaptureEvent(props) {
     if (swap) {
       await startIntialCamera(facingMode);
     } else {
-      setTime('00:00')
+      setTime("00:00");
       setRecordedChunks([]);
     }
     setIntialState(false);
@@ -138,7 +138,6 @@ export function CaptureEvent(props) {
         videoRef.current.srcObject = null;
       }
     } else {
-
       recorderRef.current.stop();
       setIntialState(true);
       if (frontMediaRecorder) {
@@ -237,10 +236,19 @@ export function CaptureEvent(props) {
         />
         <div>
           <div className="controllerContainer">
-            <div style={{position:'absolute',bottom:'130px',left:'10%'}}>
-            {!!recorderRef.current &&!backCameraExists && (
-               <MdCameraswitch style={{fontSize:'3rem',color:'white',cursor:'pointer'}}   onClick={swapCamera} />)}
-               </div>
+            <div style={{ position: "absolute", bottom: "130px", left: "10%" }}>
+              {!!recorderRef.current &&
+                backCameraExists && (
+                  <MdCameraswitch
+                    style={{
+                      fontSize: "3rem",
+                      color: "white",
+                      cursor: "pointer"
+                    }}
+                    onClick={swapCamera}
+                  />
+                )}
+            </div>
             <div className="icons">
               {/* either in intial state or not recording */}
               {intialState && (
