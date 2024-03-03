@@ -12,8 +12,12 @@ if [ $MIGRATION_STATUS -ne 0 ]; then
     python manage.py migrate
 fi
 
-# Start the Django development server
-echo "Starting Django development server..."
 
+if [ -z "$DJANGO_ENV" ]; then
+	gunicorn --workers 25 -b 0.0.0.0:8000 videotranscriberproject.wsgi
+else
+	# Start the Django development server
+	echo "Starting Django development server..."
+	python manage.py runserver 0.0.0.0:8000
+fi
 
-python manage.py runserver 0.0.0.0:8000
