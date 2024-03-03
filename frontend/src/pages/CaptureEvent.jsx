@@ -5,8 +5,11 @@ import { FaRecordVinyl } from "react-icons/fa6";
 import { MdDone } from "react-icons/md";
 import './css/CaptureEvent.css'
 import CameraSwitch from '../assets/cameraswitch.svg';
+import RecordStart from '../assets/RecordStart.png'
+import RecordStop from '../assets/RecordStop.png'
+import Tick from '../assets/tick.png'
 export function CaptureEvent(props) {
-  const [eventName, setEventName] = useState("");
+  const [eventName, setEventName] = useState("00:00");
   const [uploading, setUploading] = useState(false);
   const [intialState, setIntialState] = useState(true);
   const [frontMediaRecorder, setFrontMediaRecorder] = useState(null);
@@ -18,7 +21,7 @@ export function CaptureEvent(props) {
   const [time,setTime]=useState('')
   const videoRef = useRef(null);
   const recorderRef=useRef(null)
-
+  const timerIntervalRef = useRef(null); // Ref to store interval ID
   useEffect(() => {
     const userAgent = window.navigator.userAgent.toLowerCase();
     if (userAgent.includes("android")) {
@@ -98,6 +101,20 @@ export function CaptureEvent(props) {
 
     recorderRef.current.start()
       recorderRef.current.ondataavailable = handleDataAvailable;
+      let seconds = 0;
+      let minutes = 0;
+     timerIntervalRef.current = setInterval(() => {
+        seconds++;
+        if (seconds === 60) {
+          seconds = 0;
+          minutes++;
+        }
+        setTime(
+          `${minutes.toString().padStart(2, "0")}:${seconds
+            .toString()
+            .padStart(2, "0")}`
+        );
+      }, 1000);
     } catch (error) {
       console.error("Error accessing media devices:", error);
     }
@@ -105,6 +122,7 @@ export function CaptureEvent(props) {
 
 const stopRecording = (swap = false) => {
 
+    clearInterval(timerIntervalRef.current)
   if (swap) {
     recorderRef.current.stop()
      recorderRef.current=null;
@@ -122,6 +140,7 @@ const stopRecording = (swap = false) => {
       videoRef.current.srcObject = null;
     }
   } else {
+    setTime('00:00')
     recorderRef.current.stop()
     setIntialState(true);
     if (frontMediaRecorder) {
@@ -144,7 +163,8 @@ const stopRecording = (swap = false) => {
   }
 
   async function handleUpload() {
-    var eventName=prompt("Enter event name")
+    var eventName=crypto.randomUUID()
+    console.log(eventName)
     if (recordedChunks.length == 0) {
       alert("Nothing to Upload.Record something first");
       return;
@@ -222,35 +242,37 @@ const stopRecording = (swap = false) => {
   {(!!recorderRef.current) && backCameraExists&&
       <img onClick={swapCamera} style={{cursor:'pointer'}} src={CameraSwitch} alt="SVG Image" />
     }
-
-            <div style={{display:'flex'}} className="icons">
+            <div className="icons">
 
             {/* either in intial state or not recording */}
-        {intialState && <PiRecordFill onClick={()=>startNewRecording(false,facingMode)}  style={{cursor:'pointer', fontSize: "5rem", color: "red" }} /> }
+        {intialState &&
+          <div onClick={()=>startNewRecording(false,facingMode)}  style={{cursor:'pointer',  color: "red" }}>
+         <img src={RecordStart} height="100" width="100" />
+          </div>
+        }
 
-        {/* Recording in progress */}
-           <p style={{color:'white'}}>{time}</p>
-           <br />
+    <p style={{color:'white',margin:'0',marginLeft:'1.5rem',padding:'0'}}>{time}</p>
         {!intialState&&(
-          <FaRecordVinyl onClick={()=>stopRecording(false)} style={{cursor:'pointer', fontSize: "5rem", color: "red" }} />
+          <div onClick={()=>stopRecording(false)} style={{cursor:'pointer',margin:'0',padding:'0', color: "red" }} >
+
+         <img src={RecordStop} height="100" width="100" />
+          </div>
          )}
+         </div>
          {recordedChunks.length>0&&intialState&&(
             <div
               style={{
-                backgroundColor: "red",
-                fontSize: "2rem",
-                width: "2.5rem",
-                textAlign: "center",
-                borderRadius: "50%",
-                height:'4rem',
+              position:'absolute',
+              bottom:'130px',
+              right:'30%',
+              cursor:'pointer'
               }}
              onClick={handleUpload}
             >
-            <MdDone style={{cursor:'pointer', fontSize: "2rem", color: "white" }} />
+            <img src={Tick} height="60" width="60" />
             </div>
 
         )}
-            </div>
           </div>
       </div>
       </div>
