@@ -19,7 +19,7 @@ export function CaptureEvent(props) {
   const [isIOS, setIsIOS] = useState(false);
   const [facingMode, setFacingMode] = useState("user");
   const [backCameraExists, setBackCameraExists] = useState(true);
-  const [time, setTime] = useState("");
+  let [time, setTime] = useState("00:00");
   const videoRef = useRef(null);
   const recorderRef = useRef(null);
   const timerIntervalRef = useRef(null); // Ref to store interval ID
@@ -84,12 +84,16 @@ export function CaptureEvent(props) {
       startIntialCamera("user");
     }
   }, []);
-
+  function resetTime() {
+    time = "00:00";
+  }
   const startNewRecording = async (swap = false, facingMode = facingMode) => {
     if (swap) {
       await startIntialCamera(facingMode);
+      setTime(time);
     } else {
-      setTime("00:00");
+      resetTime();
+      alert("inside alertswap");
       setRecordedChunks([]);
     }
     setIntialState(false);
@@ -100,8 +104,9 @@ export function CaptureEvent(props) {
     try {
       recorderRef.current.start();
       recorderRef.current.ondataavailable = handleDataAvailable;
-      let seconds = 0;
-      let minutes = 0;
+
+      let seconds = parseInt(time.split(":")[1]);
+      let minutes = parseInt(time.split(":")[0]);
       timerIntervalRef.current = setInterval(() => {
         seconds++;
         if (seconds === 60) {
@@ -237,17 +242,17 @@ export function CaptureEvent(props) {
         <div>
           <div className="controllerContainer">
             <div style={{ position: "absolute", bottom: "130px", left: "10%" }}>
-              {!!recorderRef.current &&
-                backCameraExists && (
+              {backCameraExists && (
+                <div onClick={swapCamera}>
                   <MdCameraswitch
                     style={{
                       fontSize: "3rem",
                       color: "white",
                       cursor: "pointer"
                     }}
-                    onClick={swapCamera}
                   />
-                )}
+                </div>
+              )}
             </div>
             <div className="icons">
               {/* either in intial state or not recording */}
