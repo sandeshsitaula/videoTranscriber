@@ -3,11 +3,12 @@ import { Button, FormControl } from "react-bootstrap";
 import { PiRecordFill } from "react-icons/pi";
 import { FaRecordVinyl } from "react-icons/fa6";
 import { MdDone } from "react-icons/md";
-import './css/CaptureEvent.css'
-import CameraSwitch from '../assets/cameraswitch.svg';
-import RecordStart from '../assets/RecordStart.png'
-import RecordStop from '../assets/RecordStop.png'
-import Tick from '../assets/tick.png'
+import "./css/CaptureEvent.css";
+import CameraSwitch from "../assets/cameraswitch.svg";
+import RecordStart from "../assets/RecordStart.png";
+import RecordStop from "../assets/RecordStop.png";
+import Tick from "../assets/tick.png";
+import { MdCameraswitch } from "react-icons/md";
 export function CaptureEvent(props) {
   const [eventName, setEventName] = useState("00:00");
   const [uploading, setUploading] = useState(false);
@@ -18,9 +19,9 @@ export function CaptureEvent(props) {
   const [isIOS, setIsIOS] = useState(false);
   const [facingMode, setFacingMode] = useState("user");
   const [backCameraExists, setBackCameraExists] = useState(true);
-  const [time,setTime]=useState('')
+  const [time, setTime] = useState("");
   const videoRef = useRef(null);
-  const recorderRef=useRef(null)
+  const recorderRef = useRef(null);
   const timerIntervalRef = useRef(null); // Ref to store interval ID
   useEffect(() => {
     const userAgent = window.navigator.userAgent.toLowerCase();
@@ -37,9 +38,9 @@ export function CaptureEvent(props) {
   async function recordingLogic(facingMode) {
     const constraints = {
       video: {
-        facingMode: facingMode, // 'user' for front camera, 'environment' for back camera
+        facingMode: facingMode // 'user' for front camera, 'environment' for back camera
       },
-      audio: true,
+      audio: true
     };
 
     const mergedStream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -57,7 +58,7 @@ export function CaptureEvent(props) {
       if (MediaRecorder.isTypeSupported("video/webm; codecs=vp9")) {
         var options = {
           mimeType: "video/webm; codecs=vp9",
-          videoBitsPerSecond: 8000000,
+          videoBitsPerSecond: 8000000
         };
       } else if (MediaRecorder.isTypeSupported("video/webm")) {
         var options = { mimeType: "video/webm", videoBitsPerSecond: 8000000 };
@@ -70,11 +71,10 @@ export function CaptureEvent(props) {
       const recorder = new MediaRecorder(mergedStream, options);
       if (facingMode == "user") {
         setFrontMediaRecorder(recorder);
-
       } else {
         setBackMediaRecorder(recorder);
       }
-      recorderRef.current=recorder
+      recorderRef.current = recorder;
     } catch (error) {
       console.error("Error accessing media devices:", error);
     }
@@ -85,25 +85,24 @@ export function CaptureEvent(props) {
     }
   }, []);
 
-  const startNewRecording = async(swap=false,facingMode=facingMode) => {
-    if (swap){
-     await startIntialCamera(facingMode)
-    }else{
-    setRecordedChunks([]);
+  const startNewRecording = async (swap = false, facingMode = facingMode) => {
+    if (swap) {
+      await startIntialCamera(facingMode);
+    } else {
+      setTime('00:00')
+      setRecordedChunks([]);
     }
     setIntialState(false);
     startRecording(facingMode);
   };
 
-
   const startRecording = async (facingMode = "user") => {
     try {
-
-    recorderRef.current.start()
+      recorderRef.current.start();
       recorderRef.current.ondataavailable = handleDataAvailable;
       let seconds = 0;
       let minutes = 0;
-     timerIntervalRef.current = setInterval(() => {
+      timerIntervalRef.current = setInterval(() => {
         seconds++;
         if (seconds === 60) {
           seconds = 0;
@@ -120,41 +119,40 @@ export function CaptureEvent(props) {
     }
   };
 
-const stopRecording = (swap = false) => {
+  const stopRecording = (swap = false) => {
+    clearInterval(timerIntervalRef.current);
+    if (swap) {
+      recorderRef.current.stop();
+      recorderRef.current = null;
+      if (frontMediaRecorder) {
+        frontMediaRecorder.stop();
+        setFrontMediaRecorder(null);
+      }
+      if (backMediaRecorder) {
+        backMediaRecorder.stop();
+        setBackMediaRecorder(null);
+      }
+      if (videoRef.current.srcObject) {
+        const tracks = videoRef.current.srcObject.getTracks();
+        tracks.forEach(track => track.stop());
+        videoRef.current.srcObject = null;
+      }
+    } else {
 
-    clearInterval(timerIntervalRef.current)
-  if (swap) {
-    recorderRef.current.stop()
-     recorderRef.current=null;
-    if (frontMediaRecorder) {
-      frontMediaRecorder.stop();
-      setFrontMediaRecorder(null);
+      recorderRef.current.stop();
+      setIntialState(true);
+      if (frontMediaRecorder) {
+        frontMediaRecorder.stop();
+      }
+      if (backMediaRecorder) {
+        backMediaRecorder.stop();
+      }
     }
-    if (backMediaRecorder) {
-      backMediaRecorder.stop();
-      setBackMediaRecorder(null);
-    }
-    if (videoRef.current.srcObject) {
-      const tracks = videoRef.current.srcObject.getTracks();
-      tracks.forEach((track) => track.stop());
-      videoRef.current.srcObject = null;
-    }
-  } else {
-    setTime('00:00')
-    recorderRef.current.stop()
-    setIntialState(true);
-    if (frontMediaRecorder) {
-      frontMediaRecorder.stop()
-    }
-    if (backMediaRecorder) {
-      backMediaRecorder.stop()
-    }
-  }
-};
+  };
 
-  const handleDataAvailable = (event) => {
+  const handleDataAvailable = event => {
     if (event.data.size > 0) {
-      setRecordedChunks((prevChunks) => [...prevChunks, event.data]);
+      setRecordedChunks(prevChunks => [...prevChunks, event.data]);
     }
   };
 
@@ -163,8 +161,8 @@ const stopRecording = (swap = false) => {
   }
 
   async function handleUpload() {
-    var eventName=crypto.randomUUID()
-    console.log(eventName)
+    var eventName = crypto.randomUUID();
+    console.log(eventName);
     if (recordedChunks.length == 0) {
       alert("Nothing to Upload.Record something first");
       return;
@@ -198,10 +196,10 @@ const stopRecording = (swap = false) => {
       stopRecording(true);
       if (intialState) {
         startIntialCamera("environment");
-        return
+        return;
       } else {
-        startNewRecording(true,'environment');
-        return
+        startNewRecording(true, "environment");
+        return;
       }
     }
     if (backMediaRecorder) {
@@ -210,7 +208,7 @@ const stopRecording = (swap = false) => {
       if (intialState) {
         startIntialCamera("user");
       } else {
-        startNewRecording(true,'user');
+        startNewRecording(true, "user");
       }
     }
     // Start recording with the updated facing mode
@@ -222,7 +220,7 @@ const stopRecording = (swap = false) => {
           backgroundColor: "#282828",
           width: "100%",
           margin: "0",
-          padding: "0",
+          padding: "0"
         }}
       >
         <video
@@ -231,7 +229,7 @@ const stopRecording = (swap = false) => {
             padding: "0px",
             width: "100%",
             height: "100vh",
-            margin: "0",
+            margin: "0"
           }}
           ref={videoRef}
           playsInline
@@ -239,42 +237,61 @@ const stopRecording = (swap = false) => {
         />
         <div>
           <div className="controllerContainer">
-  {(!!recorderRef.current) && backCameraExists&&
-      <img onClick={swapCamera} style={{cursor:'pointer'}} src={CameraSwitch} alt="SVG Image" />
-    }
+            <div style={{position:'absolute',bottom:'130px',left:'10%'}}>
+            {!!recorderRef.current &&!backCameraExists && (
+               <MdCameraswitch style={{fontSize:'3rem',color:'white',cursor:'pointer'}}   onClick={swapCamera} />)}
+               </div>
             <div className="icons">
+              {/* either in intial state or not recording */}
+              {intialState && (
+                <div
+                  onClick={() => startNewRecording(false, facingMode)}
+                  style={{ cursor: "pointer", color: "red" }}
+                >
+                  <img src={RecordStart} height="100" width="100" />
+                </div>
+              )}
 
-            {/* either in intial state or not recording */}
-        {intialState &&
-          <div onClick={()=>startNewRecording(false,facingMode)}  style={{cursor:'pointer',  color: "red" }}>
-         <img src={RecordStart} height="100" width="100" />
-          </div>
-        }
-
-    <p style={{color:'white',margin:'0',marginLeft:'1.5rem',padding:'0'}}>{time}</p>
-        {!intialState&&(
-          <div onClick={()=>stopRecording(false)} style={{cursor:'pointer',margin:'0',padding:'0', color: "red" }} >
-
-         <img src={RecordStop} height="100" width="100" />
-          </div>
-         )}
-         </div>
-         {recordedChunks.length>0&&intialState&&(
-            <div
-              style={{
-              position:'absolute',
-              bottom:'130px',
-              right:'30%',
-              cursor:'pointer'
-              }}
-             onClick={handleUpload}
-            >
-            <img src={Tick} height="60" width="60" />
+              <p
+                style={{
+                  color: "red",
+                  margin: "0",
+                  marginLeft: "1.5rem",
+                  padding: "0"
+                }}
+              >
+                {time}
+              </p>
+              {!intialState && (
+                <div
+                  onClick={() => stopRecording(false)}
+                  style={{
+                    cursor: "pointer",
+                    margin: "0",
+                    padding: "0",
+                    color: "red"
+                  }}
+                >
+                  <img src={RecordStop} height="100" width="100" />
+                </div>
+              )}
             </div>
-
-        )}
+            {recordedChunks.length > 0 &&
+              intialState && (
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "130px",
+                    right: "10%",
+                    cursor: "pointer"
+                  }}
+                  onClick={handleUpload}
+                >
+                  <img src={Tick} height="60" width="60" />
+                </div>
+              )}
           </div>
-      </div>
+        </div>
       </div>
     </>
   );
