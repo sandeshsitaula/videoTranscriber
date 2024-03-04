@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from "../axiosInstance";
 import Video from "../components/videoPlayer/Video";
@@ -7,8 +8,11 @@ export const PlayOriginalVideos = () => {
   const mutedRef = useRef(true);
   const [videoList, setVideoList] = useState([]); // State to store all videos
   const [loadedVideos, setLoadedVideos] = useState([]); // State to store the loaded videos
-  const [loadedVideosCount, setLoadedVideosCount] = useState(0); // State to keep track of loaded videos count
+  const [loadedVideosCount,setLoadedVideosCount]=useState(0)
+
+  const [tempLoadedVideosCount,setTempLoadedVideosCount]=useState(0)
   const videosPerLoad = 6; // Number of videos to load per batch
+  const previousIndex = useRef(0); // Ref to store the previous index
 
   useEffect(() => {
     async function getVideos() {
@@ -22,7 +26,8 @@ export const PlayOriginalVideos = () => {
     getVideos();
   }, []);
 
-  // Function to load the next batch of videos
+
+
   const loadNextVideos = () => {
     if (videoList.length == 0) {
       return;
@@ -33,8 +38,10 @@ export const PlayOriginalVideos = () => {
       loadedVideosCount + videosPerLoad
     );
     setLoadedVideos(prevVideos => [...prevVideos, ...nextVideos]);
-    setLoadedVideosCount(prevCount => prevCount + videosPerLoad);
+    setLoadedVideosCount((prev)=>prev+videosPerLoad)
+    setTempLoadedVideosCount((prev)=>prev+videosPerLoad)
   };
+
 
   // Effect to load the next batch of videos when the component mounts
   useEffect(
@@ -48,9 +55,9 @@ export const PlayOriginalVideos = () => {
     <div className="app">
       <div className="containers">
         {loadedVideos.map((video, index) => (
-          <div style={{ height: "100vh" }}>
+          <div key={video.video_id} style={{ height: "100vh" }}>
             <Video
-              key={video.video_id}
+            key={video.video_id}
               comments={100}
               video_id={video.video_id}
               mutedRef={mutedRef}
@@ -67,6 +74,7 @@ export const PlayOriginalVideos = () => {
               currIndex={index}
               totalLoadedVideoCount={loadedVideosCount}
               loadNextVideos={loadNextVideos}
+              previousIndex={previousIndex}
             />
           </div>
         ))}

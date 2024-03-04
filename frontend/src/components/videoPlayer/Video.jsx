@@ -20,7 +20,8 @@ export default function Video({
   lastId = -1,
   currIndex = null,
   totalLoadedVideoCount = null,
-  loadNextVideos = null
+  loadNextVideos = null,
+  previousIndex=null,
 }) {
   const [playing, setPlaying] = useState(true);
   const videoRef = useRef(null);
@@ -28,7 +29,7 @@ export default function Video({
   const listUpdated = useRef(null);
   const [loading, setLoading] = useState(true);
   const instance = useRef(null);
-
+let hlsInstance
   const attachHlsMedia = async () => {
     setLoading(true);
     try {
@@ -66,9 +67,9 @@ export default function Video({
         }
         const response = await axiosInstance.get(backend_url);
         if (Hls.isSupported()) {
-          const hlsInstance = new Hls();
+           hlsInstance = new Hls();
           hlsInstance.loadSource(url);
-          hlsInstanceRef.current = true;
+          hlsInstanceRef.current = hlsInstance;
           hlsInstance.attachMedia(videoRef.current);
           if (lastId == -1 || lastId == video_id) {
             attachHlsMedia();
@@ -93,11 +94,11 @@ export default function Video({
 
       const handleIntersection = entries => {
         entries.forEach(entry => {
-          if (entry.isIntersecting && hlsInstanceRef.current && loading) {
+          if (entry.isIntersecting && !!hlsInstanceRef.current && loading) {
             attachHlsMedia();
             videoRef.current.play();
             setPlaying(true);
-          } else if (!entry.isIntersecting && hlsInstanceRef.current) {
+          } else if (!entry.isIntersecting && !!hlsInstanceRef.current) {
             videoRef.current.pause();
             setPlaying(false);
           }
@@ -105,6 +106,7 @@ export default function Video({
           if (entry.isIntersecting && !loading) {
             videoRef.current.play();
             setPlaying(true);
+            previousIndex.current=currIndex
           }
 
           if (entry.isIntersecting) {
@@ -116,7 +118,6 @@ export default function Video({
             ) {
               loadNextVideos();
               listUpdated.current = true;
-
               console.log("updated" + listUpdated.current);
             }
           }
@@ -138,9 +139,21 @@ export default function Video({
     [url, loading]
   );
 
+useEffect(()=>{
+ if(previousIndex.current>5&&currIndex<previousIndex.current-5&&!!videoRef.current&&!!hlsInstanceRef.current){
+   console.log("error at index")
+        hlsInstanceRef.current.detachMedia(); // Detach media from HLS instance
+        hlsInstanceRef.current.destroy(); // Destroy HLS instance
+        hlsInstanceRef.current = null; // Reset HLS instance reference
+            // Remove video element from DOM
+            videoRef.current=""
+
+}
+},[previousIndex.current])
+
   useEffect(
     () => {
-      if (!mutedRef.current) {
+      if (!mutedRef.current&&!!videoRef.current) {
         videoRef.current.muted = false;
       }
     },
@@ -149,7 +162,7 @@ export default function Video({
 
   useEffect(
     () => {
-      if (videoRef.current) {
+      if (!!videoRef.current) {
         videoRef.current.muted = mutedRef.current;
       }
     },
@@ -193,6 +206,7 @@ export default function Video({
         </div>
         <VideoSidebar comments={comments} shares={shares} likes={likes} />
       </div>
+
     </div>
   );
 }
