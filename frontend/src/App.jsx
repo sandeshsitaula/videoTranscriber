@@ -6,7 +6,7 @@ import { OriginalVideoList } from "./pages/OriginalVideoList";
 import {CaptureEvent} from './pages/CaptureEvent'
 import { CutVideoList } from "./pages/CutVideoList";
 
-import { PlayOriginalVideos } from "./pages/PlayOriginalVideos";
+import PlayOriginalVideos  from "./pages/PlayOriginalVideos";
 import Video from "./components/videoPlayer/Video";
 import UploadForm from "./components/cutVideo/UploadForm";
 import {PlayOriginalVideo} from './components/videoPlayer/PlayOriginalVideo';

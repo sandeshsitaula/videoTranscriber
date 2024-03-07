@@ -44,8 +44,8 @@ services:
       context: frontend/.
       dockerfile: Dockerfile
     image: video_transcriber_frontend_image
-    environment: 
-      - REACT_APP_URL=http://django:8000/
+    env_file:
+      - .env
     networks: 
       - mynetwork
     volumes:
