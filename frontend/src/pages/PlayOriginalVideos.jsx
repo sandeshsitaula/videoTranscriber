@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from "../axiosInstance";
 import Video from "../components/videoPlayer/Video";
 import "./css/CutVideo.css";
-
+import ReactFullpage from '@fullpage/react-fullpage';
 export const PlayOriginalVideos = () => {
   const mutedRef = useRef(true);
   const [videoList, setVideoList] = useState([]); // State to store all videos
@@ -52,6 +52,47 @@ export const PlayOriginalVideos = () => {
   );
 
   return (
+      <ReactFullpage
+    //fullpage options
+    scrollingSpeed = {1000} /* Options here */
+
+    render={({ state, fullpageApi }) => {
+      return (
+        <ReactFullpage.Wrapper>
+           {loadedVideos.map((video, index) => (
+          <div key={video.video_id} style={{ height: "100vh" }}>
+            <Video
+            key={video.video_id}
+              comments={100}
+              video_id={video.video_id}
+              mutedRef={mutedRef}
+              likes={100}
+              shares={100}
+              description="demo testing purposes description"
+              channel="demo channel"
+              song="demo song"
+              type="original"
+              url={`https://app.test.fractalnetworks.co/hls/playlist_${
+                video.video_path.split("/")[2].split(".")[0]
+              }.m3u8`}
+              lastId={videoList[0].video_id}
+              currIndex={index}
+              totalLoadedVideoCount={loadedVideosCount}
+              loadNextVideos={loadNextVideos}
+              previousIndex={previousIndex}
+            />
+          </div>
+        ))}
+        </ReactFullpage.Wrapper>
+      );
+    }}
+  />
+
+  );
+};
+
+export default PlayOriginalVideos;
+  {/*
     <div className="app">
       <div className="containers">
         {loadedVideos.map((video, index) => (
@@ -81,7 +122,4 @@ export const PlayOriginalVideos = () => {
         {videoList.length === 0 && "No Videos to Load"}
       </div>
     </div>
-  );
-};
-
-export default PlayOriginalVideos;
+    */}

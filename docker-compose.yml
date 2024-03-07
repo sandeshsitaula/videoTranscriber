@@ -68,19 +68,8 @@ services:
 
   link_frontend:
     image: fractalnetworks/gateway-client:latest
-    environment:
-      LINK_DOMAIN: test.fractalnetworks.co
-      EXPOSE: react_frontend:5000
-      GATEWAY_CLIENT_WG_PRIVKEY: AMuk8o8Sj1iZ8IGSumccVTuxKkDkBTmiCRbQsnlGMGQ=
-      GATEWAY_LINK_WG_PUBKEY: 2ZseM+CKfU1E6yI5AfRh0+A7XGFfJV6uS4jCkL3sKQI=
-      GATEWAY_ENDPOINT: 195.201.1.131:32788
-      # Remove following to disable basic authentication
-      # Remove following line to get certs from Let's Encrypt
-      #
-      TLS_INTERNAL: true
-      # CADDY_TLS_PROXY: true
-      # CADDY_TLS_INSECURE: true
-      # FORWARD_ONLY: true
+    env_file: 
+      - .env.frontend
     networks:
       - mynetwork
     restart: unless-stopped
@@ -89,19 +78,8 @@ services:
 
   link_nginx:
     image: fractalnetworks/gateway-client:latest
-    environment:
-      LINK_DOMAIN: app.test.fractalnetworks.co
-      EXPOSE: nginx:80
-      GATEWAY_CLIENT_WG_PRIVKEY: yDx53zDmh3lc3FaxVjLFsgFLC+1Hv1ieDalWPtM5Xlw=
-      GATEWAY_LINK_WG_PUBKEY: Xdrhdbb8ePxUyqY8gTLcM7RxZAteqQNczNj+//NHbV0=
-      GATEWAY_ENDPOINT: 195.201.1.131:32791
-      # Remove following to disable basic authentication
-      #BASIC_AUTH: admin:admin
-      # Remove following line to get certs from Let's Encrypt
-      TLS_INTERNAL: true
-      # CADDY_TLS_PROXY: true
-      # CADDY_TLS_INSECURE: true
-      # FORWARD_ONLY: true
+    env_file:
+      - .env.nginx
     networks:
       - mynetwork
     restart: unless-stopped
@@ -110,19 +88,8 @@ services:
 
   link_backend:
     image: fractalnetworks/gateway-client:latest
-    environment:
-      LINK_DOMAIN: api.test.fractalnetworks.co
-      EXPOSE: django:8000
-      GATEWAY_CLIENT_WG_PRIVKEY: MFKTqBbrqr9aNaY+ZZ6kPgLs3AhTOhtk9+v170pYmlY=
-      GATEWAY_LINK_WG_PUBKEY: HxF5YldhqYEGLS04Febup8vqqIwJVtS9W2/24JOSwjs=
-      GATEWAY_ENDPOINT: 195.201.1.131:32790
-      # Remove following to disable basic authentication
-      #BASIC_AUTH: admin:admin
-      # Remove following line to get certs from Let's Encrypt
-      TLS_INTERNAL: true
-      # CADDY_TLS_PROXY: true
-      # CADDY_TLS_INSECURE: true
-      # FORWARD_ONLY: true
+    env_file:
+      - .env.backend
     networks:
       - mynetwork
     restart: unless-stopped
