@@ -50,6 +50,8 @@ services:
       - mynetwork
     volumes:
       - ./frontend:/app/frontend/
+    ports:
+      - "5000:5000"
     depends_on:
       - django
     container_name: react_container_video
@@ -63,46 +65,66 @@ services:
     networks:
       - mynetwork
     container_name: nginx_container_video
+
   link_frontend:
     image: fractalnetworks/gateway-client:latest
     environment:
       LINK_DOMAIN: test.fractalnetworks.co
       EXPOSE: react_frontend:5000
-      GATEWAY_CLIENT_WG_PRIVKEY: aBTbAkY9bdUMC/cQ9xZKvicUyz3G4LZqmOBFobPrmXY=
-      GATEWAY_LINK_WG_PUBKEY: QXqO6OAFBk37m3O1KQhcRyZ16ioq7WtPeRvcdsFr424=
-      GATEWAY_ENDPOINT: 195.201.1.131:32774
-      BASIC_AUTH: fractal:fractalnetworksusb33java
-    cap_add:
-      - NET_ADMIN
+      GATEWAY_CLIENT_WG_PRIVKEY: AMuk8o8Sj1iZ8IGSumccVTuxKkDkBTmiCRbQsnlGMGQ=
+      GATEWAY_LINK_WG_PUBKEY: 2ZseM+CKfU1E6yI5AfRh0+A7XGFfJV6uS4jCkL3sKQI=
+      GATEWAY_ENDPOINT: 195.201.1.131:32788
+      # Remove following to disable basic authentication
+      # Remove following line to get certs from Let's Encrypt
+      #
+      TLS_INTERNAL: true
+      # CADDY_TLS_PROXY: true
+      # CADDY_TLS_INSECURE: true
+      # FORWARD_ONLY: true
     networks:
       - mynetwork
-    volumes:
-      - link_frontend:/root/.local/share/caddy
-  link_backend:
-    image: fractalnetworks/gateway-client:latest
-    environment:
-      LINK_DOMAIN: api.test.fractalnetworks.co
-      EXPOSE: django:8000
-      GATEWAY_CLIENT_WG_PRIVKEY: CLW4iFDXNP2suztmNO9Ov2NzI+qVDU41RNfh1tzW7V0=
-      GATEWAY_LINK_WG_PUBKEY: wVruQlAtmVNSCvXSMnsO+IQAA45utof3LBzJ17dVjQM=
-      GATEWAY_ENDPOINT: 195.201.1.131:32773
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
-    networks:
-      - mynetwork
-    volumes:
-      - link_backend:/root/.local/share/caddy
+
   link_nginx:
     image: fractalnetworks/gateway-client:latest
     environment:
       LINK_DOMAIN: app.test.fractalnetworks.co
       EXPOSE: nginx:80
-      GATEWAY_CLIENT_WG_PRIVKEY: wOIIYxxDUE8GW/Y6g00HLgtjPJPuj3xcTrhzF8rG10k=
-      GATEWAY_LINK_WG_PUBKEY: pEetLPkRoBCuOlgFGnTXwKNtSdyY4tc8XY2M73WMzFk=
-      GATEWAY_ENDPOINT: 195.201.1.131:32772
-    cap_add:
-      - NET_ADMIN
+      GATEWAY_CLIENT_WG_PRIVKEY: yDx53zDmh3lc3FaxVjLFsgFLC+1Hv1ieDalWPtM5Xlw=
+      GATEWAY_LINK_WG_PUBKEY: Xdrhdbb8ePxUyqY8gTLcM7RxZAteqQNczNj+//NHbV0=
+      GATEWAY_ENDPOINT: 195.201.1.131:32791
+      # Remove following to disable basic authentication
+      #BASIC_AUTH: admin:admin
+      # Remove following line to get certs from Let's Encrypt
+      TLS_INTERNAL: true
+      # CADDY_TLS_PROXY: true
+      # CADDY_TLS_INSECURE: true
+      # FORWARD_ONLY: true
     networks:
       - mynetwork
-    volumes:
-      - link_nginx:/root/.local/share/caddy
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+
+  link_backend:
+    image: fractalnetworks/gateway-client:latest
+    environment:
+      LINK_DOMAIN: api.test.fractalnetworks.co
+      EXPOSE: django:8000
+      GATEWAY_CLIENT_WG_PRIVKEY: MFKTqBbrqr9aNaY+ZZ6kPgLs3AhTOhtk9+v170pYmlY=
+      GATEWAY_LINK_WG_PUBKEY: HxF5YldhqYEGLS04Febup8vqqIwJVtS9W2/24JOSwjs=
+      GATEWAY_ENDPOINT: 195.201.1.131:32790
+      # Remove following to disable basic authentication
+      #BASIC_AUTH: admin:admin
+      # Remove following line to get certs from Let's Encrypt
+      TLS_INTERNAL: true
+      # CADDY_TLS_PROXY: true
+      # CADDY_TLS_INSECURE: true
+      # FORWARD_ONLY: true
+    networks:
+      - mynetwork
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
