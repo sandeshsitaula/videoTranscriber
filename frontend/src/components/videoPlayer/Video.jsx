@@ -30,6 +30,8 @@ export default function Video({
   const [loading, setLoading] = useState(true);
   const instance = useRef(null);
   let hlsInstance;
+
+
   const attachHlsMedia = async () => {
     setLoading(true);
     try {
@@ -94,19 +96,24 @@ export default function Video({
 
       const handleIntersection = entries => {
         entries.forEach(entry => {
+
           if (entry.isIntersecting && !!hlsInstanceRef.current && loading) {
             attachHlsMedia();
-            videoRef.current.play();
-            setPlaying(true);
-          } else if (!entry.isIntersecting && !!hlsInstanceRef.current) {
+          } else if (!entry.isIntersecting) {
             videoRef.current.pause();
             setPlaying(false);
+          }
+          if (entry.isIntersecting){
+            videoRef.current.play();
+            setPlaying(true)
           }
 
           if (entry.isIntersecting && !loading) {
             videoRef.current.play();
             setPlaying(true);
+            if (previousIndex){
             previousIndex.current = currIndex;
+            }
           }
 
           if (entry.isIntersecting) {
@@ -117,6 +124,7 @@ export default function Video({
               totalLoadedVideoCount - 4 == currIndex
             ) {
               loadNextVideos();
+
               listUpdated.current = true;
               console.log("updated" + listUpdated.current);
             }
@@ -178,7 +186,7 @@ export default function Video({
   );
 
   return (
-    <div className="video">
+    <div style={{width:'337px'}} className="video">
       {loading && (
         <div
           style={{

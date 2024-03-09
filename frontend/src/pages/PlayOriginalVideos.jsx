@@ -10,7 +10,7 @@ const PlayOriginalVideos = () => {
   const [loadedVideos, setLoadedVideos] = useState([]); // State to store the loaded videos
   const [loadedVideosCount,setLoadedVideosCount]=useState(0)
 
-  const [tempLoadedVideosCount,setTempLoadedVideosCount]=useState(0)
+  const [,setTempLoadedVideosCount]=useState(0)
   const videosPerLoad = 6; 
   const previousIndex = useRef(0); 
 
@@ -36,8 +36,10 @@ const PlayOriginalVideos = () => {
       loadedVideosCount + videosPerLoad
     );
     setLoadedVideos(prevVideos => [...prevVideos, ...nextVideos]);
+
     setLoadedVideosCount((prev)=>prev+videosPerLoad)
-    setTempLoadedVideosCount((prev)=>prev+videosPerLoad)
+
+
   };
 
 
@@ -49,41 +51,51 @@ const PlayOriginalVideos = () => {
     [videoList]
   );
   return (
-    <div className="app">
-      <div className="containers">
-  {loadedVideos.length>0 &&  <ReactFullpage
+    <div style={{display:'flex',justifyContent:'center',backgroundColor:"gray"}}>
+{/*    <div className="app">
+//       <div className="containers">
+  */}
+  {loadedVideosCount>0&&
+
+    <ReactFullpage
+
       licenseKey={import.meta.env.VITE_FULLPAGE_LICENSE_KEY} // Replace with your license key
-      scrollingSpeed={1000} // Optional: Adjust scrolling speed (milliseconds)
+
+        dragAndMove= {true}
+        lazyLoading={true}
+            keyboardScrolling={ true}
+        scroll={true}
+      scrollingSpeed={700} // Optional: Adjust scrolling speed (milliseconds)
       render={({ state, fullpageApi }) => (
         <ReactFullpage.Wrapper>
-           {loadedVideos.map((video, index) => (
-           <div className="section" key={video.video_id} >
-            <Video
-            key={video.video_id}
-              comments={100}
-              video_id={video.video_id}
-              mutedRef={mutedRef}
-              likes={100}
-              shares={100}
-              description="demo testing purposes description"
-              channel="demo channel"
-              song="demo song"
-              type="original"
-              url={`https://app.test.fractalnetworks.co/hls/playlist_${
-                video.video_path.split("/")[2].split(".")[0]
-              }.m3u8`}
-              lastId={videoList[0].video_id}
-              currIndex={index}
-              totalLoadedVideoCount={loadedVideosCount}
-              loadNextVideos={loadNextVideos}
-              previousIndex={previousIndex}
-            />
-          </div>))}
+           {loadedVideosCount && loadedVideos.map((video, index) => {
+          return(
+           <div className="section "  style={{backgroundColor:"#000"}}key={index} >
+                <Video
+                  comments={100}
+                  video_id={video.video_id}
+                  mutedRef={mutedRef}
+                  likes={100}
+                  shares={100}
+                  description="demo testing purposes description"
+                  channel="demo channel"
+                  song={video.video_path.split("/")[2].split(".")[0]}
+                  type="original"
+                  url={`${import.meta.env.VITE_NGINX_URL}/hls/playlist_${
+                    video.video_path.split("/")[2].split(".")[0]
+                  }.m3u8`}
+                  lastId={videoList[0].video_id}
+                  currIndex={index}
+                  totalLoadedVideoCount={loadedVideosCount}
+                  loadNextVideos={loadNextVideos}
+                  previousIndex={previousIndex}
+                />
+
+          </div>)})}
         </ReactFullpage.Wrapper>
       )}
     />}
-</div>
-</div>
+    </div>
   );
 };
 
