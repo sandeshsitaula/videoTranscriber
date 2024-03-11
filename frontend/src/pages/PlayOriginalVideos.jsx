@@ -51,8 +51,6 @@ const PlayOriginalVideos = () => {
   );
   return (
 
-
-
            <div className="app">
        <div className="containers">
            { loadedVideos.map((video, index) => {
@@ -66,7 +64,7 @@ const PlayOriginalVideos = () => {
                   shares={100}
                   description="demo testing purposes description"
                   channel="demo channel"
-                  song={video.video_path.split("/")[2].split(".")[0]}
+                  song={video.video_path.split("/")[2]}
                   type="original"
                   url={`${import.meta.env.VITE_NGINX_URL}/hls/playlist_${
                     video.video_path.split("/")[2].split(".")[0]

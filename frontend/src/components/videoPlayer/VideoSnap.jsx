@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import "./css/Video.css";
+import "./css/VideoSnap.css";
 import VideoFooter from "./VideoFooter";
 import axiosInstance from "../../axiosInstance";
 import Hls from "hls.js";

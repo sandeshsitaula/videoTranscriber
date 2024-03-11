@@ -62,6 +62,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./backend/media/hls:/usr/share/nginx/html/hls
+      - ./backend/media/video:/usr/share/nginx/html/videos
     networks:
       - mynetwork
     container_name: nginx_container_video
