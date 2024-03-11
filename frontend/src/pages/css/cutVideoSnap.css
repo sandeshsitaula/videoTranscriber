@@ -1,0 +1,39 @@
+.app {
+  background-color: #000;
+  display: grid;
+  height:100%;
+  place-items: center;
+}
+
+.containers {
+  padding:0px;
+  height:100%;
+  overflow:scroll;
+ width: 337px;
+  color:white;
+    scroll-snap-type: y mandatory;
+
+}
+.swiper { height: 100vh;
+  overflow:scroll!important;
+
+    scroll-snap-type: y mandatory;
+
+}
+.swiper-container {
+  height: 300px;
+
+    scroll-snap-type: y mandatory;
+}
+.swiper-slide{
+  height:100vh!important;
+    scroll-snap-type: y mandatory;
+}
+.containers::-webkit-scrollbar {
+  display: none;
+}
+
+.containers {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

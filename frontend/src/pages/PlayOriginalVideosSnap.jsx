@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/virtual';
 
-import "./css/CutVideo.css";
+import "./css/cutVideoSnap.css";
 import VideoSnap from "../components/videoPlayer/VideoSnap";
 // Import Swiper React components
 
