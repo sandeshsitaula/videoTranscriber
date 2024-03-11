@@ -68,7 +68,7 @@ export default function Video({
           backend_url = `streamoriginalvideo/${video_id}`;
         }
         const response = await axiosInstance.get(backend_url);
-        if (!Hls.isSupported()) {
+        if (Hls.isSupported()) {
           hlsInstance = new Hls();
           hlsInstance.loadSource(url);
           hlsInstanceRef.current = hlsInstance;
@@ -207,14 +207,26 @@ export default function Video({
           />
         </div>
       )}
-      <video
+        {Hls.isSupported()?
+  ( <video
         onClick={onVideoPress}
         className="player"
         muted={mutedRef.current}
         ref={videoRef}
         loop
         playsInline
-      />
+      />  )
+  :
+  ( <video
+    src={`https://app01.test.fractalnetworks.co/videos/${song}`}
+        onClick={onVideoPress}
+        className="player"
+        muted={mutedRef.current}
+        ref={videoRef}
+        loop
+        playsInline
+      />)}
+
       <div className="bottom-controls">
         <div className="footer-left">
           <VideoFooter
