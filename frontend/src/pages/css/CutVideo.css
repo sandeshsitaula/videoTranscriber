@@ -13,7 +13,16 @@
   color:white;
 
 }
+.swiper { height: 100vh;
+  overflow:scroll!important;
 
+}
+.swiper-container {
+  height: 300px;
+}
+.swiper-slide{
+  height:100vh!important;
+}
 .containers::-webkit-scrollbar {
   display: none;
 }

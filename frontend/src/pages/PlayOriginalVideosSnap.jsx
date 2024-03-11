@@ -1,7 +1,16 @@
 import React, { useState, useEffect,useRef } from "react";
 import axiosInstance from "../axiosInstance";
+
+import { Virtual } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/virtual';
+
 import "./css/CutVideo.css";
 import VideoSnap from "../components/videoPlayer/VideoSnap";
+// Import Swiper React components
 
 const PlayOriginalVideosSnap = () => {
   const mutedRef = useRef(true);
@@ -49,15 +58,17 @@ const PlayOriginalVideosSnap = () => {
     },
     [videoList]
   );
+    const slides = Array.from({ length: 1000 }).map(
+    (el, index) => `Slide ${index + 1}`
+  );
+
   return (
-
-
-
-           <div className="app">
-       <div className="containers">
-           { loadedVideos.map((video, index) => {
-          return(
-           <div  style={{backgroundColor:"#000"}}key={index} >
+<div className="app">
+<div className="containers">
+{loadedVideos.length>0 &&   <Swiper direction="vertical" spaceBetween={0} slidesPerView={1} >
+      {loadedVideos.map((video, index) => (
+        <SwiperSlide key={index}>
+        <div  style={{backgroundColor:"#000"}}key={index} >
                 <VideoSnap
                   comments={100}
                   video_id={video.video_id}
@@ -78,11 +89,15 @@ const PlayOriginalVideosSnap = () => {
                   previousIndex={previousIndex}
                 />
 
-          </div>)})}
-
-
           </div>
-    </div>
+
+        </SwiperSlide>
+      ))}
+    </Swiper>
+}
+</div>
+</div>
+
   );
 };
 
