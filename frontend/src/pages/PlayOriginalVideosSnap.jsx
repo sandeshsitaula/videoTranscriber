@@ -1,17 +1,17 @@
 import React, { useState, useEffect,useRef } from "react";
 import axiosInstance from "../axiosInstance";
 import "./css/CutVideo.css";
-import Video from "../components/videoPlayer/Video";
+import VideoSnap from "../components/videoPlayer/VideoSnap";
 
-const PlayOriginalVideos = () => {
+const PlayOriginalVideosSnap = () => {
   const mutedRef = useRef(true);
   const [videoList, setVideoList] = useState([]); // State to store all videos
   const [loadedVideos, setLoadedVideos] = useState([]); // State to store the loaded videos
   const [loadedVideosCount,setLoadedVideosCount]=useState(0)
 
   const [,setTempLoadedVideosCount]=useState(0)
-  const videosPerLoad = 6; 
-  const previousIndex = useRef(0); 
+  const videosPerLoad = 6;
+  const previousIndex = useRef(0);
 
   useEffect(() => {
     async function getVideos() {
@@ -58,7 +58,7 @@ const PlayOriginalVideos = () => {
            { loadedVideos.map((video, index) => {
           return(
            <div  style={{backgroundColor:"#000"}}key={index} >
-                <Video
+                <VideoSnap
                   comments={100}
                   video_id={video.video_id}
                   mutedRef={mutedRef}
@@ -86,4 +86,4 @@ const PlayOriginalVideos = () => {
   );
 };
 
-export default PlayOriginalVideos;
+export default PlayOriginalVideosSnap;

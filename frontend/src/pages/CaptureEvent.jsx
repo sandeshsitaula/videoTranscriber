@@ -9,6 +9,7 @@ import RecordStart from "../assets/RecordStart.png";
 import RecordStop from "../assets/RecordStop.png";
 import Tick from "../assets/tick.png";
 import { MdCameraswitch } from "react-icons/md";
+
 export function CaptureEvent(props) {
   const [eventName, setEventName] = useState("00:00");
   const [uploading, setUploading] = useState(false);
@@ -215,7 +216,6 @@ export function CaptureEvent(props) {
         startNewRecording(true, "user");
       }
     }
-    // Start recording with the updated facing mode
   };
   return (
     <>
@@ -300,7 +300,7 @@ export function CaptureEvent(props) {
                   }}
                   onClick={handleUpload}
                 >
-                  <img src={Tick} height="60" width="60" />
+                <img src={Tick} height="60" width="60" />
                 </div>
               )}
           </div>
