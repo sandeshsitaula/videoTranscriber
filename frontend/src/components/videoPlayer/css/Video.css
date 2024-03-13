@@ -1,4 +1,4 @@
-.video {
+.videoscroll {
   position: relative;
   width: 100%;
     height: 100vh   !important;
@@ -6,7 +6,7 @@
 /*      min-height: -webkit-fill-available;
 height:100vh;
 height:100dvh;*/
-
+  scroll-snap-align: none;
 /* height:100%; */
   text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 

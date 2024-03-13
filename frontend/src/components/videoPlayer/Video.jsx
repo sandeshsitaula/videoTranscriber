@@ -189,7 +189,7 @@ export default function Video({
   );
 
   return (
-    <div style={{width:'337px'}} className="video">
+    <div style={{width:'337px'}} className="videoscroll">
       {loading && (
         <div
           style={{

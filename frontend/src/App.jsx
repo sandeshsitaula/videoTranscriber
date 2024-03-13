@@ -28,8 +28,9 @@ function App() {
             <Route path="/playvideo/:video_id/:video_name"
 element={<PlayOriginalVideo />} />
             <Route path="/captureevent" element={<CaptureEvent handleFileUpload={handleFileUpload} />}/>
-            <Route path="/playallscroll" element={<PlayOriginalVideos />} />
+
             <Route path="/playallsnap" element={<PlayOriginalVideosSnap />} />
+              <Route path="/playallscroll" element={<PlayOriginalVideos />} />
           </Routes>
         </Router>
       }
