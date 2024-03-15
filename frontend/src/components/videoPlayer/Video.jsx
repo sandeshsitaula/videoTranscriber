@@ -80,7 +80,6 @@ export default function Video({
                     console.log("HLS not supported");
 
           videoRef.current.src=`https://app01.test.fractalnetworks.co/videos/${song}`
-          console.log(videoRef.src)
         }
       }
       prefetcher();
@@ -114,11 +113,11 @@ export default function Video({
           if (entry.isIntersecting && !loading) {
             videoRef.current.play();
             setPlaying(true);
-            if (previousIndex){
-            previousIndex.current = currIndex;
-            }
-          }
 
+          }
+          if (entry.isIntersecting && previousIndex){
+            previousIndex.current = currIndex;
+          }
           if (entry.isIntersecting) {
             if (
               totalLoadedVideoCount &&

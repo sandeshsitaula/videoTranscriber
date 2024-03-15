@@ -35,7 +35,7 @@ export const CutVideoList = () => {
                 var video_name = video.cut_video_path.split("/")[2];
                 var video_ids_list = video_name.split("_");
                 var video_id = video_ids_list[video_ids_list.length - 2];
-                var url = `https://app.test.fractalnetworks.co/hls/playlist_${video_id}.m3u8`;
+                var url = `https://app01.test.fractalnetworks.co/hls/playlist_${video_id}.m3u8`;
                 var lastId = cutVideoList[0].cut_video_id;
 
                 return (

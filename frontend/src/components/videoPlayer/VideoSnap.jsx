@@ -21,7 +21,8 @@ export default function Video({
   currIndex = null,
   totalLoadedVideoCount = null,
   loadNextVideos = null,
-  previousIndex = null
+  previousIndex = null,
+  setCurrentIndex=null,
 }) {
   const [playing, setPlaying] = useState(true);
   const videoRef = useRef(null);
@@ -111,11 +112,14 @@ export default function Video({
           if (entry.isIntersecting && !loading) {
             videoRef.current.play();
             setPlaying(true);
-            if (previousIndex){
-            previousIndex.current = currIndex;
-            }
           }
+          if (entry.isIntersecting && previousIndex){
+            if (!!setCurrentIndex){
 
+          setCurrentIndex(currIndex)
+            }
+            previousIndex.current = currIndex;
+          }
           if (entry.isIntersecting) {
             if (
               totalLoadedVideoCount &&

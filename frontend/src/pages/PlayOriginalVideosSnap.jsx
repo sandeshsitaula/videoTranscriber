@@ -13,9 +13,10 @@ const VideoComponent = () => {
   const [loadedVideos, setLoadedVideos] = useState([]);
   const [loadedVideosCount, setLoadedVideosCount] = useState(0);
   const videosPerLoad = 6;
+  const [currentIndex,setCurrentIndex]=useState(0)
   const previousIndex = useRef(0);
     const containerRef = useRef(null);
-useEffect(()=>console.log(previousIndex.current))
+useEffect(()=>console.log(currentIndex))
   useEffect(() => {
     async function getVideos() {
       try {
@@ -58,6 +59,7 @@ useEffect(()=>console.log(previousIndex.current))
             <SwiperSlide key={index}>
               <div style={{ backgroundColor: "#000" }} key={index}>
                 <VideoSnap
+                setCurrentIndex={setCurrentIndex}
                   comments={100}
                   video_id={video.video_id}
                   mutedRef={mutedRef}
