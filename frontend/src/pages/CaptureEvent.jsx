@@ -10,6 +10,7 @@ import RecordStop from "../assets/RecordStop.png";
 import Tick from "../assets/tick.png";
 import { MdCameraswitch } from "react-icons/md";
 
+import { handleFileUpload } from "../utils/handleFileUpload";
 export function CaptureEvent(props) {
   const [eventName, setEventName] = useState("00:00");
   const [uploading, setUploading] = useState(false);
@@ -34,6 +35,32 @@ export function CaptureEvent(props) {
     } else {
       setBackCameraExists(false);
     }
+   return()=>{
+     console.log('returning')
+  if (recorderRef && recorderRef.current){
+  recorderRef.current.stop();
+
+      recorderRef.current = null;
+  }
+
+
+  navigator.mediaDevices.enumerateDevices()
+  .then(devices => {
+    devices.forEach(device => {
+      if (device.kind === 'videoinput') {
+        navigator.mediaDevices.getUserMedia({ video: { deviceId: device.deviceId } })
+          .then(stream => {
+            stream.getTracks().forEach(track => {
+              track.stop(); // Stop the track, effectively disabling the camera
+            });
+          })
+          .catch(error => console.error('Error disabling camera:', error));
+      }
+    });
+  })
+  .catch(error => console.error('Error enumerating devices:', error));
+
+  }
   }, []);
 
   async function recordingLogic(facingMode) {
@@ -84,6 +111,7 @@ export function CaptureEvent(props) {
     if (intialState) {
       startIntialCamera("user");
     }
+
   }, []);
   function resetTime() {
     time = "00:00";
@@ -180,9 +208,9 @@ export function CaptureEvent(props) {
       setUploading(true);
       var response;
       if (isIOS) {
-        response = await props.handleFileUpload(recordedChunks, eventName);
+        response = await handleFileUpload(recordedChunks, eventName);
       } else {
-        response = await props.handleFileUpload(recordedChunks, "", eventName);
+        response = await handleFileUpload(recordedChunks, "", eventName);
       }
 
       alert("sucessfully uploaded");

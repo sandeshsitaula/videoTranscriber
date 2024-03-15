@@ -14,7 +14,10 @@ const VideoComponent = () => {
   const [loadedVideosCount, setLoadedVideosCount] = useState(0);
   const videosPerLoad = 6;
   const previousIndex = useRef(0);
-
+    const containerRef = useRef(null);
+useEffect(()=>{
+      containerRef.current.scrollTo(0, 300);
+},[])
   useEffect(() => {
     async function getVideos() {
       try {
@@ -47,10 +50,10 @@ const VideoComponent = () => {
     setLoadedVideosCount(prev => prev + videosPerLoad);
   };
   return (
-    <div className="app">
+    <div ref={containerRef} className="app">
       <div className="containers">
         <Swiper
-        initialSlide={6} // Set initial index
+        initialSlide={0} // Set initial index
         direction="vertical" initialstate={3} spaceBetween={0} slidesPerView={1}>
 
           {loadedVideos.map((video, index) => (
