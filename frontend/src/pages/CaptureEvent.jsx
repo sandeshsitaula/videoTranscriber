@@ -35,32 +35,34 @@ export function CaptureEvent(props) {
     } else {
       setBackCameraExists(false);
     }
-   return()=>{
-     console.log('returning')
-  if (recorderRef && recorderRef.current){
-  recorderRef.current.stop();
+    return () => {
+      console.log("returning");
+      if (recorderRef && recorderRef.current) {
+        recorderRef.current.stop();
 
-      recorderRef.current = null;
-  }
-
-
-  navigator.mediaDevices.enumerateDevices()
-  .then(devices => {
-    devices.forEach(device => {
-      if (device.kind === 'videoinput') {
-        navigator.mediaDevices.getUserMedia({ video: { deviceId: device.deviceId } })
-          .then(stream => {
-            stream.getTracks().forEach(track => {
-              track.stop(); // Stop the track, effectively disabling the camera
-            });
-          })
-          .catch(error => console.error('Error disabling camera:', error));
+        recorderRef.current = null;
       }
-    });
-  })
-  .catch(error => console.error('Error enumerating devices:', error));
 
-  }
+      navigator.mediaDevices
+        .enumerateDevices()
+        .then(devices => {
+          devices.forEach(device => {
+            if (device.kind === "videoinput") {
+              navigator.mediaDevices
+                .getUserMedia({ video: { deviceId: device.deviceId } })
+                .then(stream => {
+                  stream.getTracks().forEach(track => {
+                    track.stop(); // Stop the track, effectively disabling the camera
+                  });
+                })
+                .catch(error =>
+                  console.error("Error disabling camera:", error)
+                );
+            }
+          });
+        })
+        .catch(error => console.error("Error enumerating devices:", error));
+    };
   }, []);
 
   async function recordingLogic(facingMode) {
@@ -111,7 +113,6 @@ export function CaptureEvent(props) {
     if (intialState) {
       startIntialCamera("user");
     }
-
   }, []);
   function resetTime() {
     time = "00:00";
@@ -328,7 +329,7 @@ export function CaptureEvent(props) {
                   }}
                   onClick={handleUpload}
                 >
-                <img src={Tick} height="60" width="60" />
+                  <img src={Tick} height="60" width="60" />
                 </div>
               )}
           </div>
