@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import axiosInstance from "../../axiosInstance";
 import { CutVideoModal } from "./CutVideoModal";
-
-const UploadForm = (props) => {
+import {handleFileUpload} from '../../utils/handleFileUpload'
+const UploadForm = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [videoName, setVideoName] = useState("");
@@ -28,7 +28,7 @@ const UploadForm = (props) => {
     setUploading(true);
     try {
       //handle uplad is in utils folder 
-      const result = await props.handleFileUpload(file, videoName);
+      const result = await handleFileUpload(file, videoName);
       setSubtitleData(result.data.data);
     } catch (error) {
       alert(error.error);

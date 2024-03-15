@@ -11,7 +11,6 @@ import PlayOriginalVideosSnap  from "./pages/PlayOriginalVideosSnap";
 import Video from "./components/videoPlayer/Video";
 import UploadForm from "./components/cutVideo/UploadForm";
 import {PlayOriginalVideo} from './components/videoPlayer/PlayOriginalVideo';
-import { handleFileUpload } from "./utils/handleFileUpload";
 function App() {
   return (
     <>
@@ -22,12 +21,12 @@ function App() {
             <Route path="/video" element={<Video />} />
             <Route
               path="/cutvideo"
-              element={<UploadForm handleFileUpload={handleFileUpload} />}
+              element={<UploadForm  />}
             />
             <Route path="/cutvideolist/:video_id" element={<CutVideoList />} />
             <Route path="/playvideo/:video_id/:video_name"
 element={<PlayOriginalVideo />} />
-            <Route path="/captureevent" element={<CaptureEvent handleFileUpload={handleFileUpload} />}/>
+            <Route path="/captureevent" element={<CaptureEvent  />}/>
 
             <Route path="/playallsnap" element={<PlayOriginalVideosSnap />} />
               <Route path="/playallscroll" element={<PlayOriginalVideos />} />

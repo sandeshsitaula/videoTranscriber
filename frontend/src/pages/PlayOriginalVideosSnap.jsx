@@ -15,9 +15,7 @@ const VideoComponent = () => {
   const videosPerLoad = 6;
   const previousIndex = useRef(0);
     const containerRef = useRef(null);
-useEffect(()=>{
-      containerRef.current.scrollTo(0, 300);
-},[])
+useEffect(()=>console.log(previousIndex.current))
   useEffect(() => {
     async function getVideos() {
       try {
