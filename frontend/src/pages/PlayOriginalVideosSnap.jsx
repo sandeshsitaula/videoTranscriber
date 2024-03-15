@@ -7,16 +7,14 @@ import { CaptureEvent } from "./CaptureEvent";
 import "./css/cutVideoSnap.css";
 import VideoSnap from "../components/videoPlayer/VideoSnap";
 import { useNavigate } from "react-router-dom";
-const VideoComponent = () => {
+const VideoComponent = (props) => {
   const mutedRef = useRef(true);
   const [videoList, setVideoList] = useState([]);
   const [loadedVideos, setLoadedVideos] = useState([]);
   const [loadedVideosCount, setLoadedVideosCount] = useState(0);
   const videosPerLoad = 6;
-  const [currentIndex,setCurrentIndex]=useState(0)
   const previousIndex = useRef(0);
     const containerRef = useRef(null);
-useEffect(()=>console.log(currentIndex))
   useEffect(() => {
     async function getVideos() {
       try {
@@ -59,7 +57,7 @@ useEffect(()=>console.log(currentIndex))
             <SwiperSlide key={index}>
               <div style={{ backgroundColor: "#000" }} key={index}>
                 <VideoSnap
-                setCurrentIndex={setCurrentIndex}
+                setCurrentIndex={props.setCurrentIndex}  //to keep track of current INdex
                   comments={100}
                   video_id={video.video_id}
                   mutedRef={mutedRef}
@@ -89,14 +87,10 @@ useEffect(()=>console.log(currentIndex))
 const PlayOriginalVideosSnap = () => {
   let [activeComponent,setActiveComponent]=useState("video")
   const [swipeProcessed, setSwipeProcessed] = useState(false);
-  const activeComponentRef = useRef(null);
+  const [currentIndex,setCurrentIndex]=useState(0)
       let MIN_SWIPE_DISTANCE = 100;
 let varactiveComponent="video"
-activeComponentRef.current="captureEvent"
-  function setActive(active) {
-    setActiveComponent(active);
-  }
-
+useEffect(()=>console.log(currentIndex))
   const navigate = useNavigate();
   useEffect(() => {
     const handleTouchStart = event => {
@@ -171,7 +165,7 @@ activeComponentRef.current="captureEvent"
 
   return (
     <>
-      {activeComponent == "video" && <VideoComponent />}
+      {activeComponent == "video" && <VideoComponent setCurrentIndex={setCurrentIndex}/>}
 
       {/* CaptureEvent component (shown on swipe left) */}
       {activeComponent == "captureEvent" && <CaptureEvent />}
