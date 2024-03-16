@@ -101,11 +101,11 @@ export default function Video({
 
           if (entry.isIntersecting && !!hlsInstanceRef.current && loading) {
             attachHlsMedia();
-          } else if (!entry.isIntersecting) {
+          } else if (!entry.isIntersecting &&videoRef&& !!videoRef.current) {
             videoRef.current.pause();
             setPlaying(false);
           }
-          if (entry.isIntersecting){
+          if (entry.isIntersecting&& videoRef && !!videoRef.current){
             videoRef.current.play();
             setPlaying(true)
           }
@@ -140,11 +140,11 @@ export default function Video({
         observer.observe(videoElement);
       }
 
-      return () => {
-        if (videoElement) {
-          observer.unobserve(videoElement);
-        }
-      };
+//       return () => {
+//         if (videoElement) {
+//           observer.unobserve(videoElement);
+//         }
+//       };
     },
     [url, loading]
   );

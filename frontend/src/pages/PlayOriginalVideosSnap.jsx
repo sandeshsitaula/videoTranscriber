@@ -33,7 +33,14 @@ const VideoComponent = props => {
     },
     [videoList]
   );
-
+useEffect(()=>{
+  var count=parseInt(localStorage.getItem('currentIndex'))+props.currentIndex
+  console.log(count)
+  setLoadedVideosCount(count)
+  localStorage.setItem('currentIndexa',props.currentIndex)
+console.log(localStorage.getItem('currentIndexa'))
+  console.log('component changed')
+},[props.componentChange])
   const loadNextVideos = () => {
     if (videoList.length === 0) {
       return;
@@ -92,6 +99,14 @@ const PlayOriginalVideosSnap = () => {
   const [swipeProcessed, setSwipeProcessed] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [componentChange,setComponentChange]=useState(true)
+  localStorage.setItem('currentIndex',0)
+  function currentIndexSetter(num){
+  setCurrentIndex(num)
+  }
+
+  useEffect(()=>{
+    console.log('current index is '+currentIndex)
+  })
   let MIN_SWIPE_DISTANCE = 100;
   let varactiveComponent = "video";
   const navigate = useNavigate();
@@ -119,30 +134,27 @@ const PlayOriginalVideosSnap = () => {
         }
         if (Math.abs(deltaX) > MIN_SWIPE_DISTANCE) {
           // Adjusted for minimum swipe distance
-          console.log(
-            deltaX,
-            activeComponent,
-            MIN_SWIPE_DISTANCE,
-            varactiveComponent
-          );
           if (deltaX > 0) {
             if (varactiveComponent == "video") {
               MIN_SWIPE_DISTANCE *= 1000;
               setActiveComponent("captureEvent");
+
               varactiveComponent = "captureEvent";
 
             } else if (varactiveComponent == "additionalComponent") {
               MIN_SWIPE_DISTANCE *= 1000;
               setActiveComponent("video");
-
               varactiveComponent = "video";
               setComponentChange((prev)=>!prev)
             }
           } else if (deltaX < 0) {
             if (varactiveComponent == "video") {
               MIN_SWIPE_DISTANCE *= 1000;
+
               setActiveComponent("additionalComponent");
+
               varactiveComponent = "additionalComponent";
+
             } else if (varactiveComponent == "captureEvent") {
               MIN_SWIPE_DISTANCE *= 1000;
               setActiveComponent("video");
@@ -175,11 +187,11 @@ const PlayOriginalVideosSnap = () => {
   return (
     <>
       {activeComponent == "video" && (
-        <VideoComponent setCurrentIndex={setCurrentIndex} currentIndex={currentIndex} componentChange={componentChange}/>
+        <VideoComponent setCurrentIndex={currentIndexSetter} currentIndex={currentIndex} componentChange={componentChange}/>
       )}
 
       {/* CaptureEvent component (shown on swipe left) */}
-      {activeComponent == "captureEvent" && <CaptureEvent />}
+      {activeComponent == "captureEvent" && <CaptureEvent currentIndex={currentIndex}/>}
 
       {/* AdditionalComponent component (shown on swipe right) */}
       {activeComponent == "additionalComponent" && <div>hello</div>}

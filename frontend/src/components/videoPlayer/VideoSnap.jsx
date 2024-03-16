@@ -38,6 +38,7 @@ export default function Video({
     try {
       videoRef.current.play();
       setPlaying(true);
+
     } catch (error) {
       console.error("Error attaching HLS media:", error);
     } finally {
@@ -100,24 +101,24 @@ export default function Video({
 
           if (entry.isIntersecting && !!hlsInstanceRef.current && loading) {
             attachHlsMedia();
-          } else if (!entry.isIntersecting) {
+          } else if (!entry.isIntersecting&& videoRef&&videoRef.current) {
             videoRef.current.pause();
             setPlaying(false);
           }
-          if (entry.isIntersecting){
+          if (entry.isIntersecting && videoRef&&videoRef.current){
             videoRef.current.play();
             setPlaying(true)
           }
 
-          if (entry.isIntersecting && !loading) {
+          if (entry.isIntersecting && !loading&&videoRef.current) {
             videoRef.current.play();
             setPlaying(true);
           }
-          if (entry.isIntersecting && previousIndex){
-            if (!!setCurrentIndex){
+          if (entry.isIntersecting){
+            setCurrentIndex(currIndex)
 
-          setCurrentIndex(currIndex)
-            }
+          }
+          if (entry.isIntersecting && previousIndex){
             previousIndex.current = currIndex;
           }
           if (entry.isIntersecting) {
