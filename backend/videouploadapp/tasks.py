@@ -127,9 +127,7 @@ def video_streamer(video_path,typeof):
     if typeof=="cut":
         video_id=video_name.split('_')[-2]
     else:
-        print('video_id',video_name)
         video_id=video_name.split('.')[0]
-        print(video_id)
 
     output_directory='media/hls'
     if os.path.exists(f'{output_directory}/playlist_{video_id}.m3u8'):

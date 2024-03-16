@@ -30,10 +30,13 @@ def get_all_reply_video_list(request,original_video_id):
 @csrf_exempt
 def stream_reply_video(request,reply_video_id):
     try:
-        pass
+        video=video_reply_model.objects.get(id=reply_video_id)
+        #defined in tasks.py
+        print(video.video_name)
+        video_streamer(video.video_name,"reply")
+        return JsonResponse({'status':'ok','message':"Started Streaming"})
 
     except Exception as e:
         error=str(e)
         print(error)
         return JsonResponse({'status':"error","message":f"unexpected error occured"})
-
