@@ -7,6 +7,7 @@ import json
 from videouploadapp.tasks import generate_subtitles,cut_video,video_streamer
 from django.http import StreamingHttpResponse
 from videouploadapp.models import cut_video_subtitle_storage_model,subtitle_storage_model
+import traceback
 @csrf_exempt
 def video_upload(request):
     try:
@@ -18,6 +19,12 @@ def video_upload(request):
             video_filename = request.POST.get('videoName')
             total_videos = int(request.POST.get('totalVideos'))
             current_video = int(request.POST.get('currentVideo'))
+            reply_video_index=request.POST.get('replyVideoIndex')
+            if reply_video_index is None:
+                reply_video_index=-1
+            else:
+                reply_video_index=int(reply_video_index)
+            print('reply video index',reply_video_index)
             # Define the directory where you want to save the audio file
 
             #To give proper extension type
@@ -28,7 +35,7 @@ def video_upload(request):
                 extension_type='mp4'
                 filename=video_filename
 
-
+            print("something went wrong fine till here though")
             if total_videos==1:
                 filename=filename.split('_')[0]
             audio_dir = 'media/audio'
@@ -46,6 +53,7 @@ def video_upload(request):
             with open(temp_chunk_path, 'wb+') as destination:
                 for chunk in video_chunk.chunks():
                     destination.write(chunk)
+            print("fine till here")
 
             # If it's the last chunk, merge all chunks and convert to audio
             if chunk_number == total_chunks - 1:
@@ -68,7 +76,7 @@ def video_upload(request):
                     video_base_filepath=os.path.join(video_dir,base_filename)
 
                     if total_videos>1:
-                        input_files = [f"{video_base_filepath}_{i}.{extension_type}" for i in range(total_videos)]
+                        input_files = [f"{video_base_filepath}_{str(i)}.{extension_type}" for i in range(total_videos)]
 
                         command = ["mkvmerge"]
                         # Add the -o option followed by the output file name
@@ -89,7 +97,7 @@ def video_upload(request):
                     audio_file_path = os.path.join(audio_dir, audio_file_name)
                     # Run ffmpeg to convert the video to audio
                     subprocess.run(['ffmpeg', '-y','-i', concatenated_chunks_path, '-vn', '-acodec', 'pcm_s16le', '-ar', '44100', '-ac', '2', audio_file_path], check=True)
-                    generated_subtitle_data=generate_subtitles(audio_file_path,concatenated_chunks_path)
+                    generated_subtitle_data=generate_subtitles(audio_file_path,concatenated_chunks_path,reply_video_index)
 
                     for i in range(total_chunks):
                         os.remove(os.path.join(video_dir, f'temp_chunk_{filename}{i}.{extension_type}'))
@@ -111,6 +119,7 @@ def video_upload(request):
 
     except Exception as e:
         error=str(e)
+        traceback.print_exc()  # Print the stack trace
         print(error)
         return JsonResponse({'status':"Error",'message':f"Unexpected error {error}"},status=400)
 

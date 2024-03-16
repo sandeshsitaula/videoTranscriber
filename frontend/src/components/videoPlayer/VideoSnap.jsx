@@ -115,7 +115,7 @@ export default function Video({
             setPlaying(true);
           }
           if (entry.isIntersecting){
-            setCurrentIndex(currIndex)
+            setCurrentIndex(video_id)
 
           }
           if (entry.isIntersecting && previousIndex){

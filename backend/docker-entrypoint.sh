@@ -13,7 +13,7 @@ if [ $MIGRATION_STATUS -ne 0 ]; then
 fi
 
 
-if [  -z "$DJANGO_ENV" ]; then
+if [   "$DJANGO_ENV" ]; then
 	gunicorn --workers 6 -b 0.0.0.0:8000 videotranscriberproject.wsgi
 else
 	# Start the Django development server

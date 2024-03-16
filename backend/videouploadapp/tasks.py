@@ -4,9 +4,10 @@ import os
 import subprocess
 from videouploadapp.models import subtitle_storage_model,cut_video_subtitle_storage_model
 import uuid #for appending uuid to cut video
-
+from replyapp.models import video_reply_model
 #uses openai-whisper tiny model to generate subtitles
-def generate_subtitles(audio_path,video_name):
+def generate_subtitles(audio_path,video_name,reply_video_index=-1):
+    print("in subtitl generation ",reply_video_index)
     subtitle_string=""
     try:
         if_video_exists=subtitle_storage_model.objects.filter(video_name=video_name)[:1]
@@ -27,8 +28,16 @@ def generate_subtitles(audio_path,video_name):
                     formatted_word=word['word'].lstrip()
                     word_array.append(formatted_word)
                     timestamp_array.append((word['start'], word['end']))
+            if (reply_video_index!=-1):
+                replied_to=subtitle_storage_model.objects.get(id=reply_video_index)
+                video_reply_model.objects.create(
+                    video_name=video_name,
+                    subtitle_array=word_array,
+                    timestamp_array=timestamp_array,
+                    replied_to=replied_to)
 
-            subtitle_storage_model.objects.create(
+            else:
+                subtitle_storage_model.objects.create(
                 video_name=video_name,
                 subtitle_array= word_array,
                 timestamp_array=timestamp_array
