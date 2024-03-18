@@ -129,7 +129,6 @@ export default function Video({
               loadNextVideos();
 
               listUpdated.current = true;
-              console.log("updated" + listUpdated.current);
             }
           }
         });
@@ -159,7 +158,6 @@ export default function Video({
         !!videoRef.current &&
         !!hlsInstanceRef.current
       ) {
-        console.log("error at index");
         hlsInstanceRef.current.detachMedia(); // Detach media from HLS instance
         hlsInstanceRef.current.destroy(); // Destroy HLS instance
         hlsInstanceRef.current = null; // Reset HLS instance reference
