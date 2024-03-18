@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
+#Model name are just temporary and will probably be changed in new project (actual implementation)
 #for orignal video when first uploaded
 class subtitle_storage_model(models.Model):
     video_name=models.CharField(max_length=1000)

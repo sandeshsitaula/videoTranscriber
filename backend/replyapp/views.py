@@ -1,14 +1,11 @@
 # views.py
-import os
-import subprocess
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import json
-from videouploadapp.tasks import generate_subtitles,cut_video,video_streamer
-from django.http import StreamingHttpResponse
-from videouploadapp.models import cut_video_subtitle_storage_model,subtitle_storage_model
-import traceback
+from videouploadapp.tasks import cut_video,video_streamer
+from videouploadapp.models import subtitle_storage_model
 from replyapp.models import video_reply_model
+
+
 @csrf_exempt
 def get_all_reply_video_list(request,original_video_id):
     try:

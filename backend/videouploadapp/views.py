@@ -8,6 +8,7 @@ from videouploadapp.tasks import generate_subtitles,cut_video,video_streamer
 from django.http import StreamingHttpResponse
 from videouploadapp.models import cut_video_subtitle_storage_model,subtitle_storage_model
 import traceback
+
 @csrf_exempt
 def video_upload(request):
     try:
@@ -15,16 +16,18 @@ def video_upload(request):
             video_chunk = request.FILES['video']
             chunk_number = int(request.POST.get('chunkNumber'))
             total_chunks = int(request.POST.get('totalChunks'))
+
+            #For now event_name and video_filename are used along with reply_video_index but later it will be like video_name and type where type will denote the type of incoming data and based on that type necessary action can be performed
             event_name=request.POST.get('eventName')
             video_filename = request.POST.get('videoName')
             total_videos = int(request.POST.get('totalVideos'))
             current_video = int(request.POST.get('currentVideo'))
             reply_video_index=request.POST.get('replyVideoIndex')
+
             if reply_video_index is None:
                 reply_video_index=-1
             else:
                 reply_video_index=int(reply_video_index)
-            print('reply video index',reply_video_index)
             # Define the directory where you want to save the audio file
 
             #To give proper extension type
@@ -37,6 +40,7 @@ def video_upload(request):
 
             print("something went wrong fine till here though")
             if total_videos==1:
+                # basically removes the chunk number like video_0.mp4
                 filename=filename.split('_')[0]
             audio_dir = 'media/audio'
             video_dir='media/video'
@@ -53,7 +57,6 @@ def video_upload(request):
             with open(temp_chunk_path, 'wb+') as destination:
                 for chunk in video_chunk.chunks():
                     destination.write(chunk)
-            print("fine till here")
 
             # If it's the last chunk, merge all chunks and convert to audio
             if chunk_number == total_chunks - 1:
@@ -71,6 +74,7 @@ def video_upload(request):
                 #if last video then run this if
                 if  current_video==total_videos-1:
                     #for concatenating multiple
+                    # handles for file like demo_something_0.mp4 basically joines the needed name again
                     base_filename_temp=filename.split('_')
                     base_filename = '_'.join(base_filename_temp[:-1])
                     video_base_filepath=os.path.join(video_dir,base_filename)
@@ -78,6 +82,7 @@ def video_upload(request):
                     if total_videos>1:
                         input_files = [f"{video_base_filepath}_{str(i)}.{extension_type}" for i in range(total_videos)]
 
+                        # uses mkvmerge for merging multiple vidoes needed for merging front and back camera swapping
                         command = ["mkvmerge"]
                         # Add the -o option followed by the output file name
                         command.extend(["-o", f'{video_base_filepath}.{extension_type} '])
@@ -147,6 +152,7 @@ def get_all_original_video_list(request):
     try:
         videos=subtitle_storage_model.objects.all().order_by('-id')
         video_data=[]
+        #django rest framework not used so serializer is not used here as well so directly appending for now
         for video in videos:
             video_data.append({'video_id':video.id,'video_path':video.video_name})
 
