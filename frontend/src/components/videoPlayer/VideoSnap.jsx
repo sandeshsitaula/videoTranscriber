@@ -22,7 +22,7 @@ export default function Video({
   totalLoadedVideoCount = null,
   loadNextVideos = null,
   previousIndex = null,
-  setCurrentIndex=null,
+  setCurrentIndex = null
 }) {
   const [playing, setPlaying] = useState(true);
   const videoRef = useRef(null);
@@ -32,13 +32,11 @@ export default function Video({
   const instance = useRef(null);
   let hlsInstance;
 
-
   const attachHlsMedia = async () => {
     setLoading(true);
     try {
       videoRef.current.play();
       setPlaying(true);
-
     } catch (error) {
       console.error("Error attaching HLS media:", error);
     } finally {
@@ -66,13 +64,11 @@ export default function Video({
         var backend_url = "";
         if (type == "cut") {
           backend_url = `streamcutvideo/${video_id}`;
-        } else if(type=="reply"){
-
+        } else if (type == "reply") {
           backend_url = `reply/streamreplyvideo/${video_id}`;
-        }
-          else{
+        } else {
           backend_url = `streamoriginalvideo/${video_id}`;
-          }
+        }
         const response = await axiosInstance.get(backend_url);
         if (Hls.isSupported()) {
           hlsInstance = new Hls();
@@ -102,27 +98,25 @@ export default function Video({
 
       const handleIntersection = entries => {
         entries.forEach(entry => {
-
           if (entry.isIntersecting && !!hlsInstanceRef.current && loading) {
             attachHlsMedia();
-          } else if (!entry.isIntersecting&& videoRef&&videoRef.current) {
+          } else if (!entry.isIntersecting && videoRef && videoRef.current) {
             videoRef.current.pause();
             setPlaying(false);
           }
-          if (entry.isIntersecting && videoRef&&videoRef.current){
-            videoRef.current.play();
-            setPlaying(true)
-          }
-
-          if (entry.isIntersecting && !loading&&videoRef.current) {
+          if (entry.isIntersecting && videoRef && videoRef.current) {
             videoRef.current.play();
             setPlaying(true);
           }
-          if (entry.isIntersecting && !!setCurrentIndex){
-            setCurrentIndex(video_id)
 
+          if (entry.isIntersecting && !loading && videoRef.current) {
+            videoRef.current.play();
+            setPlaying(true);
           }
-          if (entry.isIntersecting && previousIndex){
+          if (entry.isIntersecting && !!setCurrentIndex) {
+            setCurrentIndex(video_id);
+          }
+          if (entry.isIntersecting && previousIndex) {
             previousIndex.current = currIndex;
           }
           if (entry.isIntersecting) {
@@ -195,7 +189,7 @@ export default function Video({
   );
 
   return (
-    <div style={{width:'337px'}} className="video">
+    <div style={{ width: "337px" }} className="video">
       {loading && (
         <div
           style={{

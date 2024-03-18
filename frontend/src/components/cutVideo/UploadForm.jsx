@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import axiosInstance from "../../axiosInstance";
 import { CutVideoModal } from "./CutVideoModal";
-import {handleFileUpload} from '../../utils/handleFileUpload'
+import { handleFileUpload } from "../../utils/handleFileUpload";
 const UploadForm = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -15,7 +15,7 @@ const UploadForm = () => {
   const [cutVideoName, setCutVideoName] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleFileChange = (event) => {
+  const handleFileChange = event => {
     setFile(event.target.files);
     var tempVideoName = event.target.files[0].name
       .split(".")
@@ -27,7 +27,7 @@ const UploadForm = () => {
     if (!file) return;
     setUploading(true);
     try {
-      //handle uplad is in utils folder 
+      //handle uplad is in utils folder
       const result = await handleFileUpload(file, videoName);
       setSubtitleData(result.data.data);
     } catch (error) {
@@ -38,7 +38,7 @@ const UploadForm = () => {
     }
   }
 
-  const handleFileDownload = async (target) => {
+  const handleFileDownload = async target => {
     if (loading) {
       alert("In progress.Wait a while");
       return;
@@ -95,31 +95,32 @@ const UploadForm = () => {
               <Button variant="primary" onClick={() => setShowModal(true)}>
                 Cut Video
               </Button>
-              {originalVideoName.length > 0 && cutVideoName.length > 0 && (
-                <div
-                  style={{
-                    display: "flex",
-                    marginTop: "2rem",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Button
-                    variant="primary"
-                    onClick={() => handleFileDownload(originalVideoName)}
-                    disabled={loading}
+              {originalVideoName.length > 0 &&
+                cutVideoName.length > 0 && (
+                  <div
+                    style={{
+                      display: "flex",
+                      marginTop: "2rem",
+                      justifyContent: "center"
+                    }}
                   >
-                    Download Original Video
-                  </Button>
-                  <Button
-                    style={{ marginLeft: "2rem" }}
-                    variant="primary"
-                    onClick={() => handleFileDownload(cutVideoName)}
-                    disabled={loading}
-                  >
-                    Download Cut Video
-                  </Button>
-                </div>
-              )}
+                    <Button
+                      variant="primary"
+                      onClick={() => handleFileDownload(originalVideoName)}
+                      disabled={loading}
+                    >
+                      Download Original Video
+                    </Button>
+                    <Button
+                      style={{ marginLeft: "2rem" }}
+                      variant="primary"
+                      onClick={() => handleFileDownload(cutVideoName)}
+                      disabled={loading}
+                    >
+                      Download Cut Video
+                    </Button>
+                  </div>
+                )}
             </div>
 
             <h4>Generated Subtitles</h4>

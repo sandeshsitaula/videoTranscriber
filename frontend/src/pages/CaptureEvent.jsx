@@ -209,18 +209,29 @@ export function CaptureEvent(props) {
       setUploading(true);
       var response;
 
-      if (!!props.currentIndex){
-       if (isIOS) {
-        response = await handleFileUpload(recordedChunks, eventName,"",props.currentIndex);
+      if (!!props.currentIndex) {
+        if (isIOS) {
+          response = await handleFileUpload(
+            recordedChunks,
+            eventName,
+            "",
+            props.currentIndex
+          );
+        } else {
+          response = await handleFileUpload(
+            recordedChunks,
+            "",
+            eventName,
+            props.currentIndex
+          );
+        }
       } else {
-        response = await handleFileUpload(recordedChunks, "", eventName,props.currentIndex);
+        if (isIOS) {
+          response = await handleFileUpload(recordedChunks, eventName);
+        } else {
+          response = await handleFileUpload(recordedChunks, "", eventName);
+        }
       }
-      }else{
-      if (isIOS) {
-        response = await handleFileUpload(recordedChunks, eventName);
-      } else {
-        response = await handleFileUpload(recordedChunks, "", eventName);
-      }}
 
       alert("sucessfully uploaded");
     } catch (error) {

@@ -1,12 +1,11 @@
 import { Modal, FormControl, Form, Col, Button } from "react-bootstrap";
 import { useState } from "react";
 import axiosInstance from "../../axiosInstance";
-export const CutVideoModal = (props) => {
+export const CutVideoModal = props => {
   const [loading, setLoading] = useState(false);
 
   function handleChange(e) {
     props.setSubtitleToCut(e.target.value);
-    console.log(e.target.value);
   }
 
   async function handleSubmit() {
@@ -21,10 +20,9 @@ export const CutVideoModal = (props) => {
     try {
       const postData = {
         subtitleToCut: props.subtitleToCut,
-        videoName: props.videoName,
+        videoName: props.videoName
       };
       const response = await axiosInstance.post("cutvideo/", postData);
-      console.log(response.data);
       alert(response.data.message);
       props.setOriginalVideoName(response.data.original_video);
       props.setCutVideoName(response.data.cut_video);
@@ -52,7 +50,7 @@ export const CutVideoModal = (props) => {
         backdrop="static"
         keyboard={false}
       >
-        <Modal.Header closeButton></Modal.Header>
+        <Modal.Header closeButton />
         <Modal.Body
           style={{ display: "flex", justifyContent: "center", padding: "0px" }}
         >
@@ -66,7 +64,7 @@ export const CutVideoModal = (props) => {
                 <Form.Control
                   placeholder="Paste the part of generated subtitle"
                   as="textarea"
-                  onChange={(e) => {
+                  onChange={e => {
                     handleChange(e);
                   }}
                   value={props.subtitleToCut}
@@ -78,7 +76,7 @@ export const CutVideoModal = (props) => {
                   style={{
                     width: "75%",
                     marginButton: "4rem",
-                    marginTop: "2rem",
+                    marginTop: "2rem"
                   }}
                   variant="outline-success"
                   onClick={handleSubmit}

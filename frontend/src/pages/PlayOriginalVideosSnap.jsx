@@ -52,7 +52,7 @@ const VideoComponent = props => {
         <Swiper
           initialSlide={0} // Set initial index
           direction="vertical"
-//           initialstate={3}
+          //           initialstate={3}
           spaceBetween={0}
           slidesPerView={1}
         >
@@ -88,8 +88,6 @@ const VideoComponent = props => {
   );
 };
 
-
-
 const ReplyVideoComponent = props => {
   const mutedRef = useRef(true);
   const [videoList, setVideoList] = useState([]);
@@ -101,8 +99,10 @@ const ReplyVideoComponent = props => {
   useEffect(() => {
     async function getVideos() {
       try {
-        const response = await axiosInstance.get(`reply/getallreplyvideos/${props.currentVideoIndex}`);
-        console.log(response)
+        const response = await axiosInstance.get(
+          `reply/getallreplyvideos/${props.currentVideoIndex}`
+        );
+        console.log(response);
         setVideoList(response.data.data);
       } catch (error) {
         console.log(error);
@@ -169,21 +169,21 @@ const ReplyVideoComponent = props => {
       </div>
     </div>
   );
-}
+};
 
 const PlayOriginalVideosSnap = () => {
   let [activeComponent, setActiveComponent] = useState("video");
   const [swipeProcessed, setSwipeProcessed] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [componentChange,setComponentChange]=useState(true)
-  localStorage.setItem('currentIndex',0)
-  function currentIndexSetter(num){
-  setCurrentIndex(num)
+  const [componentChange, setComponentChange] = useState(true);
+  localStorage.setItem("currentIndex", 0);
+  function currentIndexSetter(num) {
+    setCurrentIndex(num);
   }
 
-  useEffect(()=>{
-    console.log('current index is '+currentIndex)
-  })
+  useEffect(() => {
+    console.log("current index is " + currentIndex);
+  });
   let MIN_SWIPE_DISTANCE = 100;
   let varactiveComponent = "video";
   const navigate = useNavigate();
@@ -217,12 +217,11 @@ const PlayOriginalVideosSnap = () => {
               setActiveComponent("captureEvent");
 
               varactiveComponent = "captureEvent";
-
             } else if (varactiveComponent == "additionalComponent") {
               MIN_SWIPE_DISTANCE *= 1000;
               setActiveComponent("video");
               varactiveComponent = "video";
-              setComponentChange((prev)=>!prev)
+              setComponentChange(prev => !prev);
             }
           } else if (deltaX < 0) {
             if (varactiveComponent == "video") {
@@ -231,12 +230,11 @@ const PlayOriginalVideosSnap = () => {
               setActiveComponent("additionalComponent");
 
               varactiveComponent = "additionalComponent";
-
             } else if (varactiveComponent == "captureEvent") {
               MIN_SWIPE_DISTANCE *= 1000;
               setActiveComponent("video");
               varactiveComponent = "video";
-              setComponentChange((prev)=>!prev)
+              setComponentChange(prev => !prev);
             }
           }
         }
@@ -264,14 +262,22 @@ const PlayOriginalVideosSnap = () => {
   return (
     <>
       {activeComponent == "video" && (
-        <VideoComponent setCurrentIndex={currentIndexSetter} currentIndex={currentIndex} componentChange={componentChange}/>
+        <VideoComponent
+          setCurrentIndex={currentIndexSetter}
+          currentIndex={currentIndex}
+          componentChange={componentChange}
+        />
       )}
 
       {/* CaptureEvent component (shown on swipe left) */}
-      {activeComponent == "captureEvent" && <CaptureEvent currentIndex={currentIndex}/>}
+      {activeComponent == "captureEvent" && (
+        <CaptureEvent currentIndex={currentIndex} />
+      )}
 
       {/* AdditionalComponent component (shown on swipe right) */}
-      {activeComponent == "additionalComponent" && <ReplyVideoComponent currentVideoIndex={currentIndex} />}
+      {activeComponent == "additionalComponent" && (
+        <ReplyVideoComponent currentVideoIndex={currentIndex} />
+      )}
     </>
   );
 };

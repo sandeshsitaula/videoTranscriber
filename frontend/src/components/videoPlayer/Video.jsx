@@ -31,7 +31,6 @@ export default function Video({
   const instance = useRef(null);
   let hlsInstance;
 
-
   const attachHlsMedia = async () => {
     setLoading(true);
     try {
@@ -77,9 +76,9 @@ export default function Video({
             attachHlsMedia();
           }
         } else {
-                    console.log("HLS not supported");
+          console.log("HLS not supported");
 
-          videoRef.current.src=`https://app01.test.fractalnetworks.co/videos/${song}`
+          videoRef.current.src = `https://app01.test.fractalnetworks.co/videos/${song}`;
         }
       }
       prefetcher();
@@ -98,24 +97,22 @@ export default function Video({
 
       const handleIntersection = entries => {
         entries.forEach(entry => {
-
           if (entry.isIntersecting && !!hlsInstanceRef.current && loading) {
             attachHlsMedia();
-          } else if (!entry.isIntersecting &&videoRef&& !!videoRef.current) {
+          } else if (!entry.isIntersecting && videoRef && !!videoRef.current) {
             videoRef.current.pause();
             setPlaying(false);
           }
-          if (entry.isIntersecting&& videoRef && !!videoRef.current){
+          if (entry.isIntersecting && videoRef && !!videoRef.current) {
             videoRef.current.play();
-            setPlaying(true)
+            setPlaying(true);
           }
 
           if (entry.isIntersecting && !loading) {
             videoRef.current.play();
             setPlaying(true);
-
           }
-          if (entry.isIntersecting && previousIndex){
+          if (entry.isIntersecting && previousIndex) {
             previousIndex.current = currIndex;
           }
           if (entry.isIntersecting) {
@@ -140,11 +137,11 @@ export default function Video({
         observer.observe(videoElement);
       }
 
-//       return () => {
-//         if (videoElement) {
-//           observer.unobserve(videoElement);
-//         }
-//       };
+      //       return () => {
+      //         if (videoElement) {
+      //           observer.unobserve(videoElement);
+      //         }
+      //       };
     },
     [url, loading]
   );
@@ -188,7 +185,7 @@ export default function Video({
   );
 
   return (
-    <div style={{width:'337px'}} className="videoscroll">
+    <div style={{ width: "337px" }} className="videoscroll">
       {loading && (
         <div
           style={{
@@ -206,25 +203,26 @@ export default function Video({
           />
         </div>
       )}
-        {Hls.isSupported()?
-  ( <video
-        onClick={onVideoPress}
-        className="player"
-        muted={mutedRef.current}
-        ref={videoRef}
-        loop
-        playsInline
-      />  )
-  :
-  ( <video
-    src={`https://app01.test.fractalnetworks.co/videos/${song}`}
-        onClick={onVideoPress}
-        className="player"
-        muted={mutedRef.current}
-        ref={videoRef}
-        loop
-        playsInline
-      />)}
+      {Hls.isSupported() ? (
+        <video
+          onClick={onVideoPress}
+          className="player"
+          muted={mutedRef.current}
+          ref={videoRef}
+          loop
+          playsInline
+        />
+      ) : (
+        <video
+          src={`https://app01.test.fractalnetworks.co/videos/${song}`}
+          onClick={onVideoPress}
+          className="player"
+          muted={mutedRef.current}
+          ref={videoRef}
+          loop
+          playsInline
+        />
+      )}
 
       <div className="bottom-controls">
         <div className="footer-left">

@@ -13,13 +13,13 @@ function VideoSidebar({ comments, shares, likes }) {
         {liked ? (
           <FaHeart
             style={{ color: "skyblue", marginLeft: "5px", fontSize: "2rem" }}
-            onClick={(e) => setLiked(false)}
+            onClick={e => setLiked(false)}
           />
         ) : (
           <FaHeart
             style={{ color: "white", marginLeft: "5px", fontSize: "2rem" }}
             fontSize="large"
-            onClick={(e) => setLiked(true)}
+            onClick={e => setLiked(true)}
           />
         )}
         <p>{liked ? `${likes + 1}` : `${likes}`}</p>
