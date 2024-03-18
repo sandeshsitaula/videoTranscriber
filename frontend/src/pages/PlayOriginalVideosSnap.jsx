@@ -33,14 +33,7 @@ const VideoComponent = props => {
     },
     [videoList]
   );
-useEffect(()=>{
-  var count=parseInt(localStorage.getItem('currentIndex'))+props.currentIndex
-  console.log(count)
-  setLoadedVideosCount(count)
-  localStorage.setItem('currentIndexa',props.currentIndex)
-console.log(localStorage.getItem('currentIndexa'))
-  console.log('component changed')
-},[props.componentChange])
+
   const loadNextVideos = () => {
     if (videoList.length === 0) {
       return;
@@ -59,7 +52,7 @@ console.log(localStorage.getItem('currentIndexa'))
         <Swiper
           initialSlide={0} // Set initial index
           direction="vertical"
-          initialstate={3}
+//           initialstate={3}
           spaceBetween={0}
           slidesPerView={1}
         >
@@ -94,6 +87,90 @@ console.log(localStorage.getItem('currentIndexa'))
     </div>
   );
 };
+
+
+
+const ReplyVideoComponent = props => {
+  const mutedRef = useRef(true);
+  const [videoList, setVideoList] = useState([]);
+  const [loadedVideos, setLoadedVideos] = useState([]);
+  const [loadedVideosCount, setLoadedVideosCount] = useState(0);
+  const videosPerLoad = 6;
+  const previousIndex = useRef(0);
+
+  useEffect(() => {
+    async function getVideos() {
+      try {
+        const response = await axiosInstance.get(`reply/getallreplyvideos/${props.currentVideoIndex}`);
+        console.log(response)
+        setVideoList(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getVideos();
+  }, []);
+
+  useEffect(
+    () => {
+      loadNextVideos();
+    },
+    [videoList]
+  );
+
+  const loadNextVideos = () => {
+    if (videoList.length === 0) {
+      return;
+    }
+
+    const nextVideos = videoList.slice(
+      loadedVideosCount,
+      loadedVideosCount + videosPerLoad
+    );
+    setLoadedVideos(prevVideos => [...prevVideos, ...nextVideos]);
+    setLoadedVideosCount(prev => prev + videosPerLoad);
+  };
+  return (
+    <div className="app">
+      <div className="containers">
+        <Swiper
+          initialSlide={0} // Set initial index
+          direction="vertical"
+          initialstate={3}
+          spaceBetween={0}
+          slidesPerView={1}
+        >
+          {loadedVideos.map((video, index) => (
+            <SwiperSlide key={index}>
+              <div style={{ backgroundColor: "#000" }} key={index}>
+                <VideoSnap
+                  comments={100}
+                  video_id={video.video_id}
+                  mutedRef={mutedRef}
+                  likes={100}
+                  shares={100}
+                  description="demo testing purposes description"
+                  channel="demo channel"
+                  song={video.video_path.split("/")[2]}
+                  type="reply"
+                  url={`${import.meta.env.VITE_NGINX_URL}/hls/playlist_${
+                    video.video_path.split("/")[2].split(".")[0]
+                  }.m3u8`}
+                  lastId={videoList[0].video_id}
+                  currIndex={index}
+                  totalLoadedVideoCount={loadedVideosCount}
+                  loadNextVideos={loadNextVideos}
+                  previousIndex={previousIndex}
+                />
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    </div>
+  );
+}
+
 const PlayOriginalVideosSnap = () => {
   let [activeComponent, setActiveComponent] = useState("video");
   const [swipeProcessed, setSwipeProcessed] = useState(false);
@@ -194,7 +271,7 @@ const PlayOriginalVideosSnap = () => {
       {activeComponent == "captureEvent" && <CaptureEvent currentIndex={currentIndex}/>}
 
       {/* AdditionalComponent component (shown on swipe right) */}
-      {activeComponent == "additionalComponent" && <div>hello</div>}
+      {activeComponent == "additionalComponent" && <ReplyVideoComponent currentVideoIndex={currentIndex} />}
     </>
   );
 };

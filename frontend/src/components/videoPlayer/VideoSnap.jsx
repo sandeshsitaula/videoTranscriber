@@ -66,9 +66,13 @@ export default function Video({
         var backend_url = "";
         if (type == "cut") {
           backend_url = `streamcutvideo/${video_id}`;
-        } else {
-          backend_url = `streamoriginalvideo/${video_id}`;
+        } else if(type=="reply"){
+
+          backend_url = `reply/streamreplyvideo/${video_id}`;
         }
+          else{
+          backend_url = `streamoriginalvideo/${video_id}`;
+          }
         const response = await axiosInstance.get(backend_url);
         if (Hls.isSupported()) {
           hlsInstance = new Hls();
@@ -114,7 +118,7 @@ export default function Video({
             videoRef.current.play();
             setPlaying(true);
           }
-          if (entry.isIntersecting){
+          if (entry.isIntersecting && !!setCurrentIndex){
             setCurrentIndex(video_id)
 
           }
