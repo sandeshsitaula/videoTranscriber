@@ -1,6 +1,5 @@
 ## VideoStreaming Project 
 
-###Endpoints 
 
 This project is used for capturing events by clients which can be streamed to other users using the website where the user can  with reply their own videos or view the replied videos.
 Other actions like liking,commenting or sharing the videos can also be performed(not implemented yet).
@@ -31,6 +30,10 @@ The endpoint for videostreaming in frontend is https://domainforfrontend/playall
 
 So basically ffmpeg generates a playlist_.m3u8 file along with various segments of the videofile which is connected to the volume with nginx from docker compose file and nginx takes care of serving the necessary hls file based on the request from frontend.
 
-The nginx configuration can be found in nginx folder in videotranscriber project in the server.
+The nginx configuration can be found in nginx folder in videotranscriber folder in the server.
+
+### For deployment 
+Simply run docker-compose up for deploying and if the domain name are changed in self hosted gateway then u will have to change in .env{service} file and .env file as well if the domain name changed is of backend or nginx and rest should work as normal.
+
 
 
