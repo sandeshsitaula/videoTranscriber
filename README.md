@@ -2,7 +2,7 @@
 
 
 This project is used for capturing events by clients which can be streamed to other users using the website where the user can   reply with their own videos or view the replied videos.
-Other actions like liking,commenting or sharing the videos can also be performed(not implemented yet).
+Other actions like cutting video,capturing eventliking,commenting or sharing the videos can also be performed(some of them not implemented yet).
 
 
 For this project Reactjs is used as frontend and django as backend and nginx for serving the video files from server to client using hls if supported or just serving pure video for emulators where hls is not supported . For hls (hls.js) library is used. 
