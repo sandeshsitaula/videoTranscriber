@@ -32,6 +32,16 @@ So basically ffmpeg generates a playlist_.m3u8 file along with various segments 
 
 The nginx configuration can be found in nginx folder in videotranscriber folder in the server.
 
+### Working for CaptureEvent
+
+Capture Event uses mediarecorder api in your browser to access the device camera for video recording.For devices like computer with only 1 camera it doesnot show icon for camera swapping . After u record a video then u can simply click on stop recording icon and then click on tick icon which is use for uploading the video to server . The video is also uploaded in chunks  of size 10MB and the size of django server file handling size is also increased to 10mb such that the file is directly stored in main memory of server which makes the overall process fast.
+
+After clicking in tick icon it wont show anything while uploading file to server so no need to click the icon again (some loading sign will be added in future to tackle this problem).
+Capture Event component is also responsible for recording the reply video.
+The endpoint for captureevent is https://domainforfrontend/catpureevent
+
+
+
 ### For deployment 
 Simply run docker-compose up for deploying and if the domain name are changed in self hosted gateway then u will have to change in .env{service} file and .env file as well if the domain name changed is of backend or nginx and rest should work as normal.
 
